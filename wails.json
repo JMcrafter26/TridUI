@@ -1,0 +1,16 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "TridscanUI",
+  "outputfilename": "TridscanUI",
+  "frontend:install": "pnpm install",
+  "frontend:build": "pnpm run build",
+  "frontend:dev:watcher": "pnpm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "JMcrafter26",
+    "email": "77780772+JMcrafter26@users.noreply.github.com"
+  },
+  "info": {
+    
+  }
+}

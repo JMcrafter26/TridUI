@@ -1,0 +1,5 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"hello_world": "Hello, {name} from en!",
+	"made_by_footer": "UI made with <Heart /> by <a href=\"https://go.jm26.net/github\" target=\"_blank\" rel=\"noopener noreferrer\">Cufiy</a><br>Based on <a href=\"https://mark0.net/soft-tridscan-e.html\" target=\"_blank\" rel=\"noopener noreferrer\">Tridscan</a> by <a href=\"https://mark0.net/\" target=\"_blank\" rel=\"noopener noreferrer\">Marco Pontello</a>"
+}

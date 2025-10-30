@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build script for macOS version of TridscanUI
+# Build script for macOS version of TridUI
 # 
 # Windows users: This script is for macOS only. 
 # For Windows builds, please use build-windows.bat instead.
@@ -7,7 +7,7 @@
 # ensure you convert line endings to LF (not CRLF) before transferring to a Mac.
 
 # Title
-echo "Building TridscanUI for macOS..."
+echo "Building TridUI for macOS..."
 
 # Navigate to the project root directory
 cd "$(dirname "$0")/.."
@@ -62,8 +62,8 @@ fi
 # wails build -platform darwin/universal $UPX_FLAGS -clean
 
 # Copy the app bundle to the bin/darwin directory
-if [ -d "build/bin/TridscanUI.app" ]; then
-    cp -R build/bin/TridscanUI.app build/bin/darwin/
+if [ -d "build/bin/TridUI.app" ]; then
+    cp -R build/bin/TridUI.app build/bin/darwin/
     echo "App bundle copied to build/bin/darwin/"
 fi
 

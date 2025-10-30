@@ -17,7 +17,7 @@ func main() {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:       "TridscanUI",
+		Title:       "TridUI",
 		Width:       500,
 		Height:      400,
 		Frameless:   true,

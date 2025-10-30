@@ -10,7 +10,7 @@ The structure is:
 
 ## Build Scripts
 
-This directory contains scripts for building TridscanUI on different platforms.
+This directory contains scripts for building TridUI on different platforms.
 
 ### Windows Build
 
@@ -27,7 +27,7 @@ Before building on Windows, ensure you have the following installed:
 
 #### Building on Windows
 
-To build TridscanUI for Windows:
+To build TridUI for Windows:
 
 1. Open a PowerShell or Command Prompt
 2. Navigate to the project directory
@@ -40,8 +40,8 @@ To build TridscanUI for Windows:
 
 #### Build Output on Windows
 
-- `TridscanUI-amd64.exe` - The standalone application executable
-- `TridscanUI-amd64-installer.exe` - The installer (if NSIS is installed)
+- `TridUI-amd64.exe` - The standalone application executable
+- `TridUI-amd64-installer.exe` - The installer (if NSIS is installed)
 
 ### macOS Build
 
@@ -57,7 +57,7 @@ Before building on macOS, ensure you have the following installed:
 
 #### Building on macOS
 
-To build TridscanUI for macOS:
+To build TridUI for macOS:
 
 1. Make the build script executable (only needed once):
    ```bash
@@ -69,7 +69,7 @@ To build TridscanUI for macOS:
    ./build/build-darwin.sh
    ```
 
-3. The built application will be available in `build/bin/darwin/TridscanUI.app`
+3. The built application will be available in `build/bin/darwin/TridUI.app`
 
 #### Advanced macOS Build Options
 
@@ -106,7 +106,7 @@ Before building on Linux, ensure you have the following installed:
 
 #### Building on Linux
 
-To build TridscanUI for Linux:
+To build TridUI for Linux:
 
 1. Make the build script executable (only needed once):
    ```bash
@@ -122,8 +122,8 @@ To build TridscanUI for Linux:
 
 #### Build Output on Linux
 
-- `TridscanUI-amd64` - The executable for x86_64 systems
-- `TridscanUI-arm64` - The executable for ARM64 systems (if built on such a system)
+- `TridUI-amd64` - The executable for x86_64 systems
+- `TridUI-arm64` - The executable for ARM64 systems (if built on such a system)
 
 #### Running on Linux
 

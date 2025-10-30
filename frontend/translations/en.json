@@ -3,7 +3,19 @@
 	"hello_world": "Hello, {name} from en!",
 	"about": {
 		"about": "About",
-		"description": "Tridscan UI is a lightweight desktop application that provides a user-friendly interface for Tridscan, a powerful tool for scanning and analyzing files.",
-		"made_by": "This application was created by <a href='https://go.jm26.net/github' class='link' target='_blank' rel='noopener noreferrer'>Cufiy</a> and is based on the original Tridscan software developed by <a href='https://mark0.net/' class='link' target='_blank' rel='noopener noreferrer'>Marco Pontello</a>."
+		"description": "Trid UI is a lightweight desktop application that provides a user-friendly interface for TrID, a powerful tool for scanning and analyzing files.",
+		"made_by": "This application was created by <a href='https://go.jm26.net/github' class='link' target='_blank' rel='noopener noreferrer'>Cufiy</a> and is based on the original Tridscan software developed by <a href='https://mark0.net/' class='link' target='_blank' rel='noopener noreferrer'>Marco Pontello</a>. The app icon is based on eye icon by icons8.com",
+		"check_for_updates": "Check for updates",
+		"view_on_github": "View on GitHub",
+		"about_and_credits": "About & Credits",
+		"license": "License",
+		"built_with": "Built with Wails + Svelte + DaisyUI",
+		"version": "Version"
+	},
+	"home": {
+		"click_to_browse": "Click to browse or drag a file here",
+		"any_file_type": "Any file type, any size",
+		"files_processed_locally": "Files are processed locally, nothing is uploaded",
+		"home": "Home"
 	}
 }

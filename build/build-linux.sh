@@ -1,11 +1,11 @@
 #!/bin/bash
-# Build script for Linux version of TridscanUI
+# Build script for Linux version of TridUI
 # 
-# This script builds the Linux version of TridscanUI.
+# This script builds the Linux version of TridUI.
 # Ensure this script has execute permissions with: chmod +x build-linux.sh
 
 # Title
-echo "Building TridscanUI for Linux..."
+echo "Building TridUI for Linux..."
 
 # Navigate to the project root directory
 cd "$(dirname "$0")/.."
@@ -53,12 +53,12 @@ if [ $? -ne 0 ]; then
 fi
 
 # Move the binary to the linux directory
-if [ -f "build/bin/TridscanUI" ]; then
+if [ -f "build/bin/TridUI" ]; then
     echo "Moving binary to build/bin/linux/"
-    cp "build/bin/TridscanUI" "build/bin/linux/TridscanUI$SAFE_PLATFORM"
+    cp "build/bin/TridUI" "build/bin/linux/TridUI$SAFE_PLATFORM"
     # Make sure it's executable
-    chmod +x "build/bin/linux/TridscanUI$SAFE_PLATFORM"
-    echo "Binary copied to build/bin/linux/TridscanUI$SAFE_PLATFORM"
+    chmod +x "build/bin/linux/TridUI$SAFE_PLATFORM"
+    echo "Binary copied to build/bin/linux/TridUI$SAFE_PLATFORM"
 fi
 
 echo "Build complete!"

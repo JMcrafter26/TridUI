@@ -3,9 +3,7 @@
 	import logo from '$lib/images/app-icon.png';
 	import { Github } from '@lucide/svelte';
 
-	const appName = 'Tridscan UI';
 	const version = '1.0.0';
-	const description = `A lightweight desktop UI for Tridscan. Select or drop a file on the Home screen to start a local scan.`;
 </script>
 
 <svelte:head>
@@ -21,34 +19,34 @@
 			</div>
 
 			<div class="flex-1 min-w-0">
-				<h1 class="text-2xl md:text-3xl font-semibold leading-tight">{appName}</h1>
-				<div class="text-sm text-muted mt-1">Version <span class="font-medium">{version}</span></div>
+				<h1 class="text-2xl md:text-3xl font-semibold leading-tight">TrID UI</h1>
+				<div class="text-sm text-muted mt-1">{m["about.version"]()} <span class="font-medium">{version}</span></div>
 
-				<p class="mt-4 text-sm text-base-content/80">{description}</p>
+				<p class="mt-4 text-sm text-base-content/80 select-text">{m["about.description"]()}</p>
 
 				<div class="mt-6 flex flex-wrap gap-3 items-center">
-					<a class="btn btn-primary btn-sm" href="/" title="Go to Home">Open Home</a>
 
-					<a class="btn btn-outline btn-sm" href="#" title="Check for updates (not implemented)">Check for updates</a>
+					<button class="btn btn-primary btn-sm" title="Check for updates (not implemented)">{m["about.check_for_updates"]()}</button>
 
 					<a class="inline-flex items-center gap-2 btn btn-ghost btn-sm" href="https://github.com/" target="_blank" rel="noopener noreferrer">
 						<span class="w-4 h-4 opacity-80">
 							<Github />
 						</span>
-						<span>View on GitHub</span>
+						<span>{m["about.view_on_github"]()}</span>
 					</a>
+
 				</div>
 			</div>
 
 			<div class="divider md:divider-horizontal"></div>
 
 			<div class="w-full md:w-56">
-				<h3 class="text-sm font-medium">About & Credits</h3>
+				<h3 class="text-sm font-medium">{m["about.about_and_credits"]()}</h3>
 				<p class="text-xs text-base-content/70 mt-2 select-text">{@html m["about.made_by"]()}</p>
 
 				<div class="mt-4 text-xs text-base-content/70">
-					<div>License: MIT</div>
-					<div class="mt-2">Built with Wails + Svelte + Tailwind</div>
+					<div>{m["about.license"]()}: GNU AGPL v3.0</div>
+					<div class="mt-2">{m["about.built_with"]()}</div>
 				</div>
 			</div>
 		</div>

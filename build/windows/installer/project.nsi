@@ -82,7 +82,7 @@ UninstPage custom un.ComponentsPageCreate un.ComponentsPageLeave
 
 Name "${INFO_PRODUCTNAME}"
 OutFile "..\..\bin\${INFO_PROJECTNAME}-${ARCH}-installer.exe" # Name of the installer's file.
-InstallDir "$AppData\TridscanUI" # Default installing folder is %APPDATA%\TridscanUI
+InstallDir "$AppData\TridUI" # Default installing folder is %APPDATA%\TridUI
 ShowInstDetails show # This will always show the installation details.
 
 Function .onInit
@@ -120,8 +120,8 @@ Function un.onInit
     !insertmacro MUI_UNGETLANGUAGE
 FunctionEnd
 
-!define MUI_UNWELCOMEPAGE_TITLE "Uninstalling TridscanUI"
-!define MUI_UNWELCOMEPAGE_TEXT "Welcome to the TridscanUI uninstaller."
+!define MUI_UNWELCOMEPAGE_TITLE "Uninstalling TridUI"
+!define MUI_UNWELCOMEPAGE_TEXT "Welcome to the TridUI uninstaller."
 
 ; Variables for uninstaller
 Var RemoveAllData
@@ -132,7 +132,7 @@ Var SorryDialog
 Var GitHubButton
 
 Function un.SorryPageCreate
-    !insertmacro MUI_HEADER_TEXT "We're Sorry to See You Go" "Thank you for trying TridscanUI"
+    !insertmacro MUI_HEADER_TEXT "We're Sorry to See You Go" "Thank you for trying TridUI"
     
     nsDialogs::Create 1018
     Pop $SorryDialog
@@ -147,14 +147,14 @@ Function un.SorryPageCreate
     ${NSD_CreateLabel} 10u 35u 90% 35u "If you ran into any issues, have suggestions, or just want to share your experience, please let us know. You can always reach out or get help using GitHub:"
     Pop $0
     
-    ${NSD_CreateLabel} 20u 70u 70% 15u "- Need assistance with TridscanUI? Have feedback/ideas? Want to stay in touch?"
+    ${NSD_CreateLabel} 20u 70u 70% 15u "- Need assistance with TridUI? Have feedback/ideas? Want to stay in touch?"
     Pop $0
 
     ${NSD_CreateButton} 10u 90u 120u 20u "Open GitHub page"
     Pop $GitHubButton
     ${NSD_OnClick} $GitHubButton un.OpenGitHub
     
-    ${NSD_CreateLabel} 10u 120u 90% 15u "Thank you for trying TridscanUI!"
+    ${NSD_CreateLabel} 10u 120u 90% 15u "Thank you for trying TridUI!"
     Pop $0
     
     nsDialogs::Show
@@ -165,7 +165,7 @@ Function un.SorryPageLeave
 FunctionEnd
 
 Function un.OpenGitHub
-    ExecShell "open" "https://github.com/JMcrafter26/TridscanUI"
+    ExecShell "open" "https://github.com/JMcrafter26/TridUI"
 FunctionEnd
 
 ; Uninstaller sections with different options
@@ -185,7 +185,7 @@ Function un.ComponentsPageCreate
         Abort
     ${EndIf}
     
-    ${NSD_CreateLabel} 0 10u 100% 20u "How would you like to uninstall TridscanUI?"
+    ${NSD_CreateLabel} 0 10u 100% 20u "How would you like to uninstall TridUI?"
     Pop $0
     
     ${NSD_CreateRadioButton} 10u 40u 90% 15u "Remove program only (keep downloaded content)"

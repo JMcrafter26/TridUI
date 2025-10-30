@@ -1,6 +1,6 @@
 {
-  "source": ["./build/bin/TridscanUI.app"],
-  "bundle_id": "net.cufiy.TridscanUI",
+  "source": ["./build/bin/TridUI.app"],
+  "bundle_id": "net.cufiy.TridUI",
   "apple_id": {
     "username": "@env:APPLE_DEVELOPER_EMAIL",
     "password": "@env:APPLE_DEVELOPER_APP_SPECIFIC_PASSWORD"
@@ -9,7 +9,7 @@
     "application_identity": "Developer ID Application: Cufiy"
   },
   "dmg": {
-    "output_path": "./build/bin/TridscanUI.dmg",
-    "volume_name": "TridscanUI"
+    "output_path": "./build/bin/TridUI.dmg",
+    "volume_name": "TridUI"
   }
 }

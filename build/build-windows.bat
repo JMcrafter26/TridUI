@@ -1,8 +1,8 @@
 @echo off
 setlocal enabledelayedexpansion
-title Build TridscanUI for Windows
+title Build TridUI for Windows
 
-echo ===== TridscanUI-Wails Windows Build Script =====
+echo ===== TridUI-Wails Windows Build Script =====
 echo.
 
 :: Check for required tools
@@ -98,13 +98,13 @@ echo.
 
 echo Step 5: Building Application...
 echo ------------------------------
-echo Building TridscanUI for %PLATFORM%...
+echo Building TridUI for %PLATFORM%...
 
 :: Format the output filename by replacing "windows/" with "-"
 set "SAFE_PLATFORM=%PLATFORM:windows/=-%"
 
 :: Build options
-set "BUILD_OPTS=-platform %PLATFORM% %useUpx% %useNsis% --o windows\TridscanUI%SAFE_PLATFORM%.exe -clean"
+set "BUILD_OPTS=-platform %PLATFORM% %useUpx% %useNsis% --o windows\TridUI%SAFE_PLATFORM%.exe -clean"
 
 :: Execute build command with a more descriptive message
 echo Running: wails build %BUILD_OPTS%
@@ -122,18 +122,18 @@ if not exist "build\bin\windows" (
 )
 
 :: Verify and relocate the binary
-if exist "build\bin\TridscanUI%SAFE_PLATFORM%.exe" (
+if exist "build\bin\TridUI%SAFE_PLATFORM%.exe" (
     echo Moving binary to build\bin\windows\...
-    move "build\bin\TridscanUI%SAFE_PLATFORM%.exe" "build\bin\windows\TridscanUI%SAFE_PLATFORM%.exe" >nul 2>&1
+    move "build\bin\TridUI%SAFE_PLATFORM%.exe" "build\bin\windows\TridUI%SAFE_PLATFORM%.exe" >nul 2>&1
     if %errorlevel% neq 0 (
         echo WARNING: Failed to move the executable. It may already be in the correct location.
     )
 )
 
 :: Move the installer if it was created
-if exist "build\bin\TridscanUI%SAFE_PLATFORM%-installer.exe" (
+if exist "build\bin\TridUI%SAFE_PLATFORM%-installer.exe" (
     echo Moving installer to build\bin\windows\...
-    move "build\bin\TridscanUI%SAFE_PLATFORM%-installer.exe" "build\bin\windows\TridscanUI%SAFE_PLATFORM%-installer.exe" >nul 2>&1
+    move "build\bin\TridUI%SAFE_PLATFORM%-installer.exe" "build\bin\windows\TridUI%SAFE_PLATFORM%-installer.exe" >nul 2>&1
     if %errorlevel% neq 0 (
         echo WARNING: Failed to move the installer. It may already be in the correct location.
     )
@@ -159,11 +159,11 @@ echo.
 echo Build completed successfully!
 echo.
 echo Output files:
-echo - Executable: build\bin\windows\TridscanUI%SAFE_PLATFORM%.exe
+echo - Executable: build\bin\windows\TridUI%SAFE_PLATFORM%.exe
 
 :: Check and report if installer was created
-if exist "build\bin\windows\TridscanUI%SAFE_PLATFORM%-installer.exe" (
-    echo - Installer: build\bin\windows\TridscanUI%SAFE_PLATFORM%-installer.exe
+if exist "build\bin\windows\TridUI%SAFE_PLATFORM%-installer.exe" (
+    echo - Installer: build\bin\windows\TridUI%SAFE_PLATFORM%-installer.exe
 )
 
 :: Check and report if sandbox host was copied

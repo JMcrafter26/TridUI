@@ -1,38 +1,19 @@
-# sv
+# TridUI Frontend
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+This is the frontend application for TridUI, built using SvelteKit and DaisyUI (and Tailwind CSS). It provides a user-friendly interface for interacting with the TridUI backend services.
 
-## Creating a project
+> [!NOTE]
+> Use `wails dev` from the root of the TridUI project to run both the frontend and backend together during development.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Setup
 
-```sh
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+```bash
+pnpm install
 ```
 
-## Developing
+## Development
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+```bash
+pnpm dev
 ```
 
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.

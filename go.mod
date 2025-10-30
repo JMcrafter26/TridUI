@@ -1,4 +1,4 @@
-module TridscanUI
+module TridUI
 
 go 1.23
 

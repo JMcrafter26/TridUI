@@ -1,5 +1,7 @@
 # Tridscan UI
 
+<img src="./icon.png" alt="Tridscan UI Icon" style="width: 128px; height: 128px;" />
+
 Tridscan UI is a lightweight desktop application that provides a user-friendly interface for Tridscan, a powerful tool for scanning and analyzing files. With Tridscan UI, users can easily select or drop files on the Home screen to initiate local scans, making it convenient to detect unrecognized filetypes.
 
 > [!WARNING]  

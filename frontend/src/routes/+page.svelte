@@ -125,7 +125,7 @@
 				</svg>
 				<div>
 					<h3 class="font-bold">Processing: {selectedFileName}</h3>
-					<div class="text-sm">Analyzing file with Tridscan...</div>
+					<div class="text-sm">Analyzing file with TrID...</div>
 				</div>
 			</div>
 		</div>

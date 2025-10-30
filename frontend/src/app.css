@@ -3,3 +3,25 @@
 @import "tailwindcss";
 
 @plugin "daisyui";
+
+body {
+  user-select: none;
+}
+
+a,
+img,
+.user-no-drag {
+  -webkit-user-drag: none;
+  user-drag: none;
+  --moz-user-drag: none;
+  -ms-user-drag: none;
+}
+
+
+.user-dragging {
+  -webkit-user-drag: unset !important;
+  user-drag: unset !important;
+  --moz-user-drag: unset !important;
+  -ms-user-drag: unset !important;
+}
+

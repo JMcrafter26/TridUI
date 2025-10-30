@@ -12,7 +12,12 @@ export default defineConfig({
 			// Write generated paraglide artifacts to a build folder instead of src
 			// This prevents the plugin from overwriting or replacing files inside `src/lib`
 			// (which can cause JSONs to be converted into generated JS files in-source).
-			outdir: './build/paraglide'
+			outdir: './src/lib/paraglide'
 		})
-	]
+	],
+	server: {
+		fs: {
+			allow: ['wailsjs']
+		}
+	}
 });

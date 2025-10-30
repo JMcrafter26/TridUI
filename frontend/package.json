@@ -20,6 +20,7 @@
 		"@inlang/paraglide-js": "^2.3.2",
 		"@neoconfetti/svelte": "^2.2.2",
 		"@sveltejs/adapter-auto": "^6.1.0",
+		"@sveltejs/adapter-static": "^3.0.10",
 		"@sveltejs/kit": "^2.43.2",
 		"@sveltejs/vite-plugin-svelte": "^6.2.0",
 		"@types/node": "^24",
@@ -39,7 +40,6 @@
 		"@lucide/svelte": "^0.548.0",
 		"@tailwindcss/vite": "^4.1.16",
 		"daisyui": "^5.3.10",
-		"dompurify": "^3.3.0",
 		"tailwindcss": "^4.1.16"
 	}
 }

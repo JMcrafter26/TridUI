@@ -1,16 +1,17 @@
-# README
+# Tridscan UI
 
-## About
+Tridscan UI is a lightweight desktop application that provides a user-friendly interface for Tridscan, a powerful tool for scanning and analyzing files. With Tridscan UI, users can easily select or drop files on the Home screen to initiate local scans, making it convenient to detect unrecognized filetypes.
 
-This is the official Wails Svelte template.
+> [!WARNING]  
+> Tridscan UI is currently in early development. Features may be incomplete or unstable. Use at your own risk.
 
-## Live Development
+## License and Attribution
 
-To run in live development mode, run `wails dev` in the project directory. This will run a Vite development
-server that will provide very fast hot reload of your frontend changes. If you want to develop in a browser
-and have access to your Go methods, there is also a dev server that runs on http://localhost:34115. Connect
-to this in your browser, and you can call your Go code from devtools.
+Tridscan UI is open-source software licensed under the GNU AGPLv3 license. The UI is developed by Cufiy (aka JMcrafter26 - me) and is based on Tridscan by [Marco Pontello](https://mark0.net/).
+Please refer to the LICENSE file for more details.
 
-## Building
+The trid.py scanner is licensed under the GNU AGPLv3 license.
 
-To build a redistributable, production mode package, use `wails build`.
+The trid.go scanner is a rewrite of trid.py in Go by JMcrafter26 (me) and is also licensed under the GNU AGPLv3 license.
+
+The app icon is based on eye icon by icons8.com

@@ -5,7 +5,7 @@
     "https://cdn.jsdelivr.net/npm/@inlang/plugin-m-function-matcher@2/dist/index.js"
   ],
   "plugin.inlang.messageFormat": {
-    "pathPattern": "./messages/{locale}.json"
+    "pathPattern": "./translations/{locale}.json"
   },
   "baseLocale": "en",
   "locales": [
@@ -23,5 +23,5 @@
     "it",
     "ru"
   ],
-  "telemetry": "false"
+  "telemetry": "off"
 }

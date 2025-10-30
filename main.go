@@ -17,9 +17,18 @@ func main() {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:  "TridscanUI",
-		Width:  500,
-		Height: 400,
+		Title:       "TridscanUI",
+		Width:       500,
+		Height:      400,
+		Frameless:   true,
+		AlwaysOnTop: false,
+		MaxHeight:   800,
+		MaxWidth:    600,
+		MinHeight:   300,
+		MinWidth:    400,
+		DragAndDrop: &options.DragAndDrop{
+			EnableFileDrop: true,
+		},
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},

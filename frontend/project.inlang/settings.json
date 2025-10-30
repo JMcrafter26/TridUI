@@ -2,8 +2,7 @@
   "$schema": "https://inlang.com/schema/project-settings",
   "modules": [
     "https://cdn.jsdelivr.net/npm/@inlang/plugin-message-format@4/dist/index.js",
-    "https://cdn.jsdelivr.net/npm/@inlang/plugin-m-function-matcher@2/dist/index.js",
-    "https://cdn.jsdelivr.net/npm/@inlang/plugin-json@latest/dist/index.js"
+    "https://cdn.jsdelivr.net/npm/@inlang/plugin-m-function-matcher@2/dist/index.js"
   ],
   "plugin.inlang.messageFormat": {
     "pathPattern": "./messages/{locale}.json"
@@ -11,16 +10,18 @@
   "baseLocale": "en",
   "locales": [
     "en",
-    "de"
+    "de",
+    "fr",
+    "it",
+    "ru"
   ],
   "sourceLanguageTag": "en",
   "languageTags": [
     "en",
-    "de"
+    "de",
+    "fr",
+    "it",
+    "ru"
   ],
-  "telemetry": "off",
-  "plugin.inlang.json": {
-		"pathPattern": "./json/{locale}.json",
-    	"ignore": ["node_modules", "dist"]
-	}
+  "telemetry": "false"
 }

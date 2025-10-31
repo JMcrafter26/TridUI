@@ -41,9 +41,9 @@ jobs:
           go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
       - name: Install frontend dependencies
+        working-directory: frontend
         run: |
-          cd frontend
-          pnpm install
+          pnpm install --no-frozen-lockfile
 
       - name: Clean build directory
         run: |

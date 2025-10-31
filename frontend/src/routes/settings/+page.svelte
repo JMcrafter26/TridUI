@@ -100,7 +100,7 @@
 		isUpdating = true;
 		updateError = '';
 		updateProgress = 0;
-		updateMessage = 'Starting download...';
+		updateMessage = m['settings.starting_download']();
 
 		try {
 			await UpdateDefinitions();
@@ -169,10 +169,14 @@
 		EventsOn('trid:update:progress', (data: any) => {
 			updateProgress = data.percentage || 0;
 			updateMessage = data.message || '';
+			// if message includes DOWNLOADING, replace it with localized string
+			if (data.message && data.message.toUpperCase().includes('DOWNLOADING')) {
+				updateMessage = m['settings.downloading']() + `: ${Math.floor((data.downloaded || 0) / 1024).toLocaleString()} KB / ${Math.floor((data.total || 0) / 1024).toLocaleString()} KB`;
+			}
 		});
 
 		EventsOn('trid:update:complete', () => {
-			updateMessage = 'Update completed successfully!';
+			updateMessage = m['settings.update_complete']();
 		});
 
 		return () => {
@@ -199,9 +203,9 @@
 				<div class="divider">{m['settings.trid_definitions']()}</div>
 
 				<!-- Definitions Status -->
-				<div class="alert {definitionsExist ? 'alert-success' : 'alert-warning'}">
+				<div class="alert {definitionsExist ? 'alert-info' : 'alert-warning'} alert-soft">
 					{#if definitionsExist}
-						<CircleCheck class="h-5 w-5" />
+						<Info class="h-5 w-5" />
 						<div class="flex-1">
 							<h3 class="font-bold">{m['settings.definitions_installed']()}</h3>
 							<div class="text-sm">
@@ -233,21 +237,23 @@
 
 				<!-- Update Status -->
 				{#if updateInfo && definitionsExist}
-					<div class="card bg-base-300">
-						<div class="card-body p-4">
+					<div class={'alert ' + (updateInfo.isUpToDate ? 'alert-success' : 'alert-warning') + ' alert-soft'}>
+						{#if updateInfo.isUpToDate}
+							<CircleCheck class="h-5 w-5" />
+						{:else}
+							<CircleAlert class="h-5 w-5" />
+						{/if}
+						<div class="flex-1 ml-2">
 							<div class="flex items-center justify-between">
-								<div class="flex items-center gap-2">
-									<Info class="h-5 w-5" />
-									<span class="font-semibold">
-										{updateInfo.isUpToDate ? m["settings.up_to_date"]() : m["settings.update_available"]()}
-									</span>
-								</div>
+								<span class="font-semibold">
+									{updateInfo.isUpToDate ? m["settings.up_to_date"]() : m["settings.update_available"]()}
+								</span>
 								{#if !updateInfo.isUpToDate}
 									<span class="badge badge-primary">{m['settings.new_version']()}</span>
 								{/if}
 							</div>
 							{#if updateInfo.error}
-								<div class="text-xs text-error mt-2">{updateInfo.error}</div>
+								<div class="text-xs text-error mt-1">{updateInfo.error}</div>
 							{/if}
 						</div>
 					</div>
@@ -311,7 +317,7 @@
 						</button>
 					{/if}
 
-					<button class="btn btn-ghost" on:click={openAppDirectory} aria-label={m["settings.open_app_directory"]()}>
+					<button class="btn" on:click={openAppDirectory} aria-label={m["settings.open_app_directory"]()}>
 						<FolderOpen class="h-4 w-4" />
 						{m['settings.open_app_directory']()}
 					</button>

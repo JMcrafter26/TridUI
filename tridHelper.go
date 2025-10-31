@@ -230,7 +230,7 @@ func (a *App) UpdateDefinitions() error {
 			Downloaded: downloaded,
 			Total:      total,
 			Percentage: int((downloaded * 100) / total),
-			Message:    fmt.Sprintf("Downloading: %d KB / %d KB", downloaded/1024, total/1024),
+			Message:    fmt.Sprintf("DOWNLOADING: %d KB / %d KB", downloaded/1024, total/1024),
 		}
 
 		// Emit progress event to frontend

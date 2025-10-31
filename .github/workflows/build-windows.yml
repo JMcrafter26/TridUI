@@ -1,0 +1,84 @@
+name: "Build Windows App"
+on:
+  workflow_dispatch:
+    # This allows manual triggering from the GitHub Actions tab
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+          check-latest: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install UPX
+        run: |
+          choco install upx -y
+
+      - name: Install NSIS
+        run: |
+          choco install nsis -y
+
+      - name: Install Wails
+        run: |
+          go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: |
+          pnpm install --no-frozen-lockfile
+
+      - name: Clean build directory
+        run: |
+          if (Test-Path "build\bin\windows") {
+            Remove-Item -Recurse -Force "build\bin\windows"
+          }
+          New-Item -ItemType Directory -Force -Path "build\bin\windows"
+
+      - name: Build Wails application (amd64)
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+        run: |
+          wails build -platform windows/amd64 -upx -nsis -clean -o "windows\TridUI-amd64.exe"
+          if (Test-Path "build\bin\TridUI-amd64.exe") {
+            Move-Item -Force "build\bin\TridUI-amd64.exe" "build\bin\windows\TridUI-amd64.exe"
+          }
+          if (Test-Path "build\bin\TridUI-amd64-installer.exe") {
+            Move-Item -Force "build\bin\TridUI-amd64-installer.exe" "build\bin\windows\TridUI-amd64-installer.exe"
+          }
+
+      - name: Build Wails application (arm64)
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+        run: |
+          wails build -platform windows/arm64 -upx -nsis -clean -o "windows\TridUI-arm64.exe"
+          if (Test-Path "build\bin\TridUI-arm64.exe") {
+            Move-Item -Force "build\bin\TridUI-arm64.exe" "build\bin\windows\TridUI-arm64.exe"
+          }
+          if (Test-Path "build\bin\TridUI-arm64-installer.exe") {
+            Move-Item -Force "build\bin\TridUI-arm64-installer.exe" "build\bin\windows\TridUI-arm64-installer.exe"
+          }
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: TridUI-windows
+          path: build/bin/windows/*
+          retention-days: 7

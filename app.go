@@ -25,3 +25,13 @@ func (a *App) startup(ctx context.Context) {
 func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
+
+// GetVersion returns the current application version
+func (a *App) GetVersion() string {
+	return GetVersion()
+}
+
+// CheckForUpdates checks for available updates from GitHub
+func (a *App) CheckForUpdates() (*UpdateInfo, error) {
+	return CheckForUpdates()
+}

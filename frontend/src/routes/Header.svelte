@@ -25,14 +25,14 @@
 	>
 		<!-- background pill with faint red/yellow tint on left -->
 		<div
-			class="absolute inset-0 rounded-full bg-linear-to-r from-primary/20 via-secondary/15 via-40% to-accent/20 transition-all duration-300 ease-out group-hover:from-primary/60 group-hover:via-secondary/50 group-hover:to-accent/60 group-active:from-primary/60 group-active:via-secondary/50 group-active:to-accent/60"
+			class="absolute inset-0 rounded-full bg-linear-to-r from-primary/20 via-secondary/15 via-40% to-accent/20 transition-all duration-300 ease-out group-hover:from-primary/70 group-hover:via-secondary/60 group-hover:to-accent/70 group-active:from-primary/70 group-active:via-secondary/60 group-active:to-accent/70 "
 		></div>
 
 		<!-- the continuous bar that splits on hover -->
 		<div class="absolute left-1/2 -translate-x-1/2 w-16 h-1.5 rounded-full bg-gray-300/50 pointer-events-none transition-all duration-200 ease-out group-hover:opacity-0"></div>
 
 		<!-- left portion of split bar (hidden initially, appears on hover) -->
-		<div class="absolute right-2 w-0 h-0 rounded-full bg-gray-300/50 pointer-events-none opacity-0 transition-all duration-300 ease-out group-hover:w-20 group-hover:h-4 group-hover:opacity-100 group-active:w-20 group-active:h-4 group-active:opacity-100"></div>
+		<div class="absolute right-2 w-0 h-0 rounded-full bg-gray-300/80 pointer-events-none opacity-0 transition-all duration-300 ease-out group-hover:w-20 group-hover:h-4 group-hover:opacity-100 group-active:w-20 group-active:h-4 group-active:opacity-100"></div>
 
 		<!-- traffic buttons that form from the right side of the bar -->
 		<div

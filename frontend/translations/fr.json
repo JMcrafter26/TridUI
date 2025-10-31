@@ -1,5 +1,13 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"header": {
+		"home": "Accueil",
+		"settings": "Paramètres",
+		"about": "À propos",
+		"close": "Fermer",
+		"minimize": "Réduire",
+		"pin": "Épingler"
+	},
 	"about": {
 		"about": "À propos",
 		"description": "Trid UI est une application de bureau légère qui fournit une interface conviviale pour TrID, un outil puissant pour scanner et analyser les fichiers.",
@@ -38,13 +46,16 @@
 		"definitions_not_found": "Définitions introuvables",
 		"definitions_not_found_explanation": "Les définitions TrID sont nécessaires pour scanner les fichiers. Veuillez les télécharger pour continuer.",
 		"download": "Télécharger",
-        "copied": "Copié !"
+		"copied": "Copié !",
+		"made_with_hearts_by": "Fait avec ❤️ par Cufiy"
 	},
 	"settings": {
 		"settings": "Paramètres",
 		"description": "Gérer les paramètres de votre application",
 		"language": "Langue",
 		"language_description": "Sélectionnez votre langue préférée",
+		"language_disclaimer": "Cette traduction est peut-être imparfaite. Si vous trouvez des problèmes, veuillez les signaler sur GitHub.",
+		"language_help_translation": "Si vous souhaitez aider à améliorer les traductions, veuillez visiter notre <a href='https://github.com/JMcrafter26/TridUI/issues' target='_blank' class='link'>page GitHub Issues</a>.",
 		"trid_definitions": "Définitions TrID",
 		"definitions_installed": "Définitions installées",
 		"definitions": "Définitions",
@@ -62,6 +73,10 @@
 		"definitions_info": "Les définitions TrID sont régulièrement mises à jour par Marco Pontello pour prendre en charge les nouveaux types de fichiers.",
 		"downloaded_from": "Les définitions sont téléchargées depuis",
 		"debug_tools": "Outils de débogage",
+		"checking_for_updates": "Vérification des mises à jour",
+		"check_for_updates": "Vérifier les mises à jour",
+		"download_definitions": "Télécharger les définitions",
+		"update_definitions": "Mettre à jour les définitions",
 		"theme": "Thème",
 		"theme_description": "Choisissez votre thème préféré",
 		"theme_light": "Clair",

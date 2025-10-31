@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { m } from '$lib/paraglide/messages.js';
+
 	import { House, Settings, Info, Menu, X, Minus, Pin } from '@lucide/svelte';
 	import { WindowSetAlwaysOnTop, WindowMinimise, Quit } from '../../wailsjs/runtime/runtime.js';
 	import { Greet } from '../../wailsjs/go/main/App.js';
@@ -39,15 +41,15 @@
 			class="absolute left-1/2 -translate-x-1/2 flex items-center gap-0 opacity-0 transition-all duration-300 ease-out group-hover:gap-1.5 group-hover:left-3 group-hover:translate-x-0 group-hover:opacity-100 group-active:gap-1.5 group-active:left-3 group-active:translate-x-0 group-active:opacity-100 pointer-events-auto"
 		>
 			<!-- close - morphs from bar segment -->
-			<button on:click={Quit} class="flex items-center justify-center w-0 h-0 rounded-full bg-primary ring-1 ring-black/10 shadow-sm transition-all duration-300 ease-out group-hover:w-5 group-hover:h-5 group-active:w-5 group-active:h-5 overflow-hidden pointer-events-auto cursor-pointer" title="Close">
+			<button on:click={Quit} class="flex items-center justify-center w-0 h-0 rounded-full bg-primary ring-1 ring-black/10 shadow-sm transition-all duration-300 ease-out group-hover:w-5 group-hover:h-5 group-active:w-5 group-active:h-5 overflow-hidden pointer-events-auto cursor-pointer" title="{m['header.close']()}" aria-label="{m['header.close']()}">
 				<X class="w-0 h-0 text-primary-content opacity-0 transition-all duration-300 ease-out group-hover:w-3.5 group-hover:h-3.5 group-hover:opacity-80 group-active:w-3.5 group-active:h-3.5 group-active:opacity-80 pointer-events-none" strokeWidth={2.5} />
 			</button>
 			<!-- minimize - morphs from bar segment -->
-			<button on:click={WindowMinimise} class="flex items-center justify-center w-0 h-0 rounded-full bg-secondary ring-1 ring-black/10 shadow-sm transition-all duration-300 ease-out delay-50 group-hover:w-5 group-hover:h-5 group-hover:delay-0 group-active:w-5 group-active:h-5 group-active:delay-0 overflow-hidden pointer-events-auto cursor-pointer" title="Minimize">
+			<button on:click={WindowMinimise} class="flex items-center justify-center w-0 h-0 rounded-full bg-secondary ring-1 ring-black/10 shadow-sm transition-all duration-300 ease-out delay-50 group-hover:w-5 group-hover:h-5 group-hover:delay-0 group-active:w-5 group-active:h-5 group-active:delay-0 overflow-hidden pointer-events-auto cursor-pointer" title="{m['header.minimize']()}" aria-label="{m['header.minimize']()}">
 				<Minus class="w-0 h-0 text-secondary-content opacity-0 transition-all duration-300 ease-out group-hover:w-3.5 group-hover:h-3.5 group-hover:opacity-80 group-active:w-3.5 group-active:h-3.5 group-active:opacity-80 pointer-events-none" strokeWidth={2.5} />
 			</button>
 			<!-- pin - morphs from bar segment -->
-			<button on:click={togglePin} class="flex items-center justify-center w-0 h-0 rounded-full bg-accent ring-1 ring-black/10 shadow-sm transition-all duration-300 ease-out delay-100 group-hover:w-5 group-hover:h-5 group-hover:delay-0 group-active:w-5 group-active:h-5 group-active:delay-0 overflow-hidden pointer-events-auto cursor-pointer" title="Pin">
+			<button on:click={togglePin} class="flex items-center justify-center w-0 h-0 rounded-full bg-accent ring-1 ring-black/10 shadow-sm transition-all duration-300 ease-out delay-100 group-hover:w-5 group-hover:h-5 group-hover:delay-0 group-active:w-5 group-active:h-5 group-active:delay-0 overflow-hidden pointer-events-auto cursor-pointer" title="{m['header.pin']()}" aria-label="{m['header.pin']()}">
 				<Pin class="w-0 h-0 text-accent-content opacity-0 transition-all duration-300 ease-out group-hover:w-3.5 group-hover:h-3.5 group-hover:opacity-80 group-active:w-3.5 group-active:h-3.5 group-active:opacity-80 pointer-events-none" strokeWidth={2.5} fill={isPinned ? 'currentColor' : 'none'} />
 			</button>
 		</div>
@@ -64,13 +66,13 @@
   </div>
 
 	<!-- buttons that show up when FAB is open -->
-	<a class="btn btn-lg btn-circle" href="/about">
+	<a class="btn btn-lg btn-circle" href="/about" title="{m["header.about"]()}" aria-label="{m["header.about"]()}">
 		<Info />
 	</a>
-	<a class="btn btn-lg btn-circle" href="/settings">
+	<a class="btn btn-lg btn-circle" href="/settings" title="{m["header.settings"]()}" aria-label="{m["header.settings"]()}">
 		<Settings />
 	</a>
-	<a class="btn btn-lg btn-circle" href="/">
+	<a class="btn btn-lg btn-circle" href="/" title="{m["header.home"]()}" aria-label="{m["header.home"]()}">
 		<House />
 	</a>
 </div>

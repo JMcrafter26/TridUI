@@ -83,13 +83,13 @@
 			<div class="flex-1 min-w-0">
 				<h1 class="text-2xl md:text-3xl font-semibold leading-tight">TrID UI</h1>
 				<div class="text-sm text-muted mt-1">
-					{m['about.version']()} <span class="font-medium select-text">{version}</span>
+					{m['about.version']()} <span class="font-medium select-all">{version}</span>
 				</div>
 
-				<p class="mt-4 text-sm text-base-content/80 select-text">{m['about.description']()}</p>
+				<p class="mt-4 text-sm text-base-content/80">{m['about.description']()}</p>
 
 				<div class="mt-6 flex flex-wrap gap-3 items-center">
-					<button class="btn btn-primary btn-sm" on:click={checkForUpdates} disabled={isChecking}>
+					<button class="btn btn-primary btn-sm" on:click={checkForUpdates} disabled={isChecking} aria-label={m['about.check_for_updates']()}>
 						{#if isChecking}
 							<RefreshCw class="h-4 w-4 animate-spin" />
 							{m['about.checking_for_updates']()}
@@ -103,7 +103,7 @@
 						class="inline-flex items-center gap-2 btn btn-sm"
 						href="https://github.com/JMcrafter26/TridUI"
 						target="_blank"
-						rel="noopener noreferrer"
+						rel="noopener noreferrer" aria-label={m['about.view_on_github']()}
 					>
 						<span class="w-4 h-4 opacity-80">
 							<Github />
@@ -153,7 +153,7 @@
 							</div>
 							{#if updateInfo.releaseNotes}
 								<details class="mt-2">
-									<summary class="cursor-pointer font-semibold text-sm"
+									<summary class="cursor-pointer font-semibold text-sm" 
 										>{m['about.release_notes']()}</summary
 									>
 									<div
@@ -164,16 +164,16 @@
 								</details>
 							{/if}
 						</div>
-						<button class="btn btn-sm btn-primary" on:click={openReleaseURL}>
+						<button class="btn btn-sm btn-primary" on:click={openReleaseURL} aria-label={m['about.download']()}>
 							<Download class="h-4 w-4" />
 							{m['about.download']()}
 						</button>
 					</div>
 				{:else}
-					<div class="alert alert-soft alert-success mt-4">
+					<div class="alert alert-soft alert-success mt-4 fixed bottom-3 md:bottom-6 max-w-md ">
 						<CircleCheck class="h-5 w-5 my-auto" />
 						<span>{m['about.up_to_date']()}</span>
-						<button class="btn btn-ghost btn-sm rounded-full p-1 my-auto" on:click={() => (updateInfo = null)}>
+						<button class="btn btn-ghost btn-sm rounded-full p-1 my-auto hover:bg-success/10" on:click={() => (updateInfo = null)}>
 							<X />
 						</button>
 					</div>
@@ -184,11 +184,15 @@
 
 			<div class="w-full md:w-56">
 				<h3 class="text-sm font-medium">{m['about.about_and_credits']()}</h3>
-				<p class="text-xs text-base-content/70 mt-2 select-text">{@html m['about.made_by']()}</p>
+				<p class="text-xs text-base-content/70 mt-2">{@html m['about.made_by']()}</p>
 
-				<div class="mt-4 text-xs text-base-content/70">
+				<div class="mt-4 text-xs text-base-content/70 mb-3">
 					<div>{m['about.license']()}: GNU AGPL v3.0</div>
 					<div class="mt-2">{m['about.built_with']()}</div>
+				</div>
+
+				<div class="mt-4 text-xs text-base-content/50 italic text-center mb-0">
+					<p>{m['about.made_with_hearts_by']()}</p>
 				</div>
 			</div>
 		</div>

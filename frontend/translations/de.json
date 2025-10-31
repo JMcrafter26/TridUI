@@ -1,5 +1,13 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"header": {
+		"home": "Startseite",
+		"settings": "Einstellungen",
+		"about": "Über",
+		"close": "Schließen",
+		"minimize": "Minimieren",
+		"pin": "Anheften"
+	},
 	"about": {
 		"about": "Über",
 		"description": "Trid UI ist eine leichte Desktop-Anwendung, die eine benutzerfreundliche Oberfläche für TrID bietet, ein leistungsstarkes Tool zum Scannen und Analysieren von Dateien.",
@@ -17,7 +25,8 @@
 		"release_notes": "Versionshinweise",
 		"download": "Herunterladen",
 		"up_to_date": "Sie verwenden die neueste Version!",
-		"checking_for_updates": "Suche nach Updates"
+		"checking_for_updates": "Suche nach Updates",
+		"made_with_hearts_by": "Mit ❤️ von Cufiy erstellt"
 	},
 	"home": {
 		"click_to_browse": "Klicken Sie zum Durchsuchen oder ziehen Sie eine Datei hierher",
@@ -38,13 +47,17 @@
 		"definitions_not_found": "Definitionen nicht gefunden",
 		"definitions_not_found_explanation": "TrID-Definitionen sind erforderlich, um Dateien zu scannen. Bitte laden Sie sie herunter, um fortzufahren.",
 		"download": "Herunterladen",
-		"copied": "Kopiert!"
+		"copied": "Kopiert!",
+		"copy": "Kopieren",
+		"search_online": "Online suchen"
 	},
 	"settings": {
 		"settings": "Einstellungen",
 		"description": "Verwalten Sie Ihre Anwendungseinstellungen",
 		"language": "Sprache",
 		"language_description": "Wählen Sie Ihre bevorzugte Sprache",
+		"language_disclaimer": "Diese Übersetzung ist möglicherweise nicht perfekt. Wenn Sie Probleme feststellen, melden Sie diese bitte auf GitHub.",
+		"language_help_translation": "Wenn Sie zur Verbesserung der Übersetzungen beitragen möchten, besuchen Sie bitte unsere <a href='https://github.com/JMcrafter26/TridUI/issues' target='_blank' class='link'>GitHub Issues</a>-Seite.",
 		"trid_definitions": "TrID-Definitionen",
 		"definitions_installed": "Definitionen installiert",
 		"definitions": "Definitionen",
@@ -62,6 +75,10 @@
 		"definitions_info": "TrID-Definitionen werden regelmäßig von Marco Pontello aktualisiert, um neue Dateitypen zu unterstützen.",
 		"downloaded_from": "Definitionen werden heruntergeladen von",
 		"debug_tools": "Debug-Tools",
+		"checking_for_updates": "Suche nach Updates",
+		"check_for_updates": "Nach Updates suchen",
+		"download_definitions": "Definitionen herunterladen",
+		"update_definitions": "Definitionen aktualisieren",
 		"theme": "Design",
 		"theme_description": "Wählen Sie Ihr bevorzugtes Design",
 		"theme_light": "Hell",

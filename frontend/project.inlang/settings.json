@@ -9,19 +9,29 @@
   },
   "baseLocale": "en",
   "locales": [
-    "en",
     "de",
+    "en",
+    "es",
     "fr",
     "it",
-    "ru"
+    "ja",
+    "pl",
+    "pt",
+    "ru",
+    "zh"
   ],
   "sourceLanguageTag": "en",
   "languageTags": [
-    "en",
     "de",
+    "en",
+    "es",
     "fr",
     "it",
-    "ru"
+    "ja",
+    "pl",
+    "pt",
+    "ru",
+    "zh"
   ],
   "telemetry": "off"
 }

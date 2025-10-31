@@ -11,7 +11,6 @@
 		OpenAppDir
 	} from '../../../wailsjs/go/main/App';
 	import { Download, RefreshCw, FolderOpen, CircleCheck, CircleAlert, Info, Languages, Moon, Sun, Monitor } from '@lucide/svelte';
-	import { goto } from '$app/navigation';
 
 	let definitionsExist = false;
 	let definitionsPath = '';
@@ -193,12 +192,12 @@
 							<div class="text-sm">
 								{#if updateInfo}
 									<div class="mt-1 space-y-1">
-										<div>{m['settings.definitions']()}: {updateInfo.defsCount.toLocaleString()} file types</div>
+										<div>{m['settings.definitions']()}: <span class="select-text">{updateInfo.defsCount.toLocaleString()}</span> file types</div>
 										{#if updateInfo.lastUpdated}
-											<div>{m['settings.last_updated']()}: {updateInfo.lastUpdated}</div>
+											<div>{m['settings.last_updated']()}: <span class="select-text">{updateInfo.lastUpdated}</span></div>
 										{/if}
 										{#if updateInfo.currentMD5 && updateInfo.currentMD5 !== 'none'}
-											<div class="text-xs opacity-70">MD5: {updateInfo.currentMD5}</div>
+											<div class="text-xs opacity-70">MD5: <span class="select-all">{updateInfo.currentMD5}</span></div>
 										{/if}
 									</div>
 								{:else}
@@ -274,6 +273,7 @@
 						class="btn btn-primary"
 						on:click={checkForUpdates}
 						disabled={isCheckingUpdates || isUpdating}
+						aria-label={m["about.check_for_updates"]()}
 					>
 						{#if isCheckingUpdates}
 							<RefreshCw class="h-4 w-4 animate-spin" />
@@ -285,18 +285,18 @@
 					</button>
 
 					{#if !definitionsExist || (updateInfo && !updateInfo.isUpToDate)}
-						<button class="btn btn-success" on:click={downloadUpdates} disabled={isUpdating}>
+						<button class="btn btn-success" on:click={downloadUpdates} disabled={isUpdating} aria-label="{isUpdating ? m["settings.updating"]() : definitionsExist ? m["settings.update_definitions"]() : m["settings.download_definitions"]()}">
 							{#if isUpdating}
 								<Download class="h-4 w-4 animate-bounce" />
 								{m["settings.updating"]()}
 							{:else}
 								<Download class="h-4 w-4" />
-								{definitionsExist ? 'Update Definitions' : 'Download Definitions'}
+								{definitionsExist ? m["settings.update_definitions"]() : m["settings.download_definitions"]()}
 							{/if}
 						</button>
 					{/if}
 
-					<button class="btn btn-ghost" on:click={openAppDirectory}>
+					<button class="btn btn-ghost" on:click={openAppDirectory} aria-label={m["settings.open_app_directory"]()}>
 						<FolderOpen class="h-4 w-4" />
 						{m['settings.open_app_directory']()}
 					</button>
@@ -313,7 +313,9 @@
 							href="http://mark0.net/soft-trid-e.html"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="link">mark0.net</a
+							class="link"
+							aria-label="mark0.net"
+							>mark0.net</a
 						>
 					</p>
 				</div>
@@ -335,11 +337,28 @@
 						class="select select-bordered w-full max-w-xs"
 						value={currentLocale}
 						on:change={handleLanguageChange}
+						aria-label={m['settings.language']()}
 					>
 						{#each availableLanguages as { code, name }}
-							<option value={code}>{name}</option>
+						<!-- capitalize the first letter of the language name -->
+							<option value={code}>{name.charAt(0).toUpperCase() + name.slice(1)}</option>
 						{/each}
 					</select>
+					<!-- if language is not english, show disclaimer -->
+					{#if currentLocale !== 'en'}
+						<div class="mt-1">
+							<span class="label-text-alt text-xs opacity-70 italic">
+								{m['settings.language_disclaimer']()}
+							</span>
+						</div>
+					{/if}
+
+					<!-- help translate -->
+					<div class="mt-1">
+						<span class="label-text-alt text-xs opacity-70">
+							{@html m['settings.language_help_translation']()} 
+						</span>
+					</div>
 				</div>
 			</div>
 
@@ -388,7 +407,7 @@
 					{#if definitionsPath}
 						<div class="text-xs opacity-70 break-all">
 							<strong>{m['settings.located_at']()}:</strong>
-							{definitionsPath}
+							<span class="select-text">{definitionsPath}</span>
 						</div>
 					{/if}
 				</div>

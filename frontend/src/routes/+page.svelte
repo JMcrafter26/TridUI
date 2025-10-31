@@ -40,19 +40,29 @@
 
 	async function processSelectedFile(filePath: string) {
 		console.log('File selected:', filePath);
-		fileSelected = true;
-		isScanning = true;
-		selectedFileName = filePath.split(/[\\/]/).pop() || filePath;
+		
+		// Reset state first
 		scanResult = null;
+		fileSelected = true;
+		selectedFileName = filePath.split(/[\\/]/).pop() || filePath;
+		
+		// Force UI update before starting scan
+		await new Promise(resolve => setTimeout(resolve, 0));
+		isScanning = true;
 
 		try {
 			// Call your Wails backend function with the file path
 			const result = await ProcessFile(filePath);
-			console.log('Scan result:', result);
+			console.log('Scan result received, matches:', result.totalMatches);
+			
+			// Update state
+			isScanning = false;
 			scanResult = result;
+			console.log('State updated, isScanning:', isScanning, 'scanResult set:', !!scanResult);
 		} catch (err) {
 			console.error('Backend processing error:', err);
 			// Create an error result
+			isScanning = false;
 			scanResult = new main.TridScanResult({
 				fileName: selectedFileName,
 				fileSize: 0,
@@ -61,8 +71,6 @@
 				totalMatches: 0,
 				error: String(err)
 			});
-		} finally {
-			isScanning = false;
 		}
 	}
 
@@ -186,11 +194,31 @@
 		<div class="flex-1 flex flex-col p-4 md:p-6 overflow-auto">
 			{#if isScanning}
 				<div class="flex justify-center items-center flex-1">
-					<div class="alert alert-info max-w-2xl w-full">
-						<FileSearch class="h-6 w-6 animate-pulse" />
-						<div>
-							<h3 class="font-bold">{m['home.scanning']()}: {selectedFileName}</h3>
-							<div class="text-sm">{m['home.analyzing_file']()}</div>
+					<div class="card bg-base-200 shadow-xl max-w-2xl w-full">
+						<div class="card-body items-center text-center gap-6">
+							<!-- Animated Scanner Icon -->
+							<div class="relative">
+								<div class="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
+								<div class="relative bg-primary/10 p-8 rounded-full">
+									<FileSearch class="h-16 w-16 text-primary animate-pulse" />
+								</div>
+							</div>
+							
+							<!-- Status Text -->
+							<div class="space-y-2">
+								<h3 class="text-2xl font-bold">{m['home.scanning']()}</h3>
+								<p class="text-sm opacity-70 max-w-md break-all">{selectedFileName}</p>
+							</div>
+							
+							<!-- Loading Animation -->
+							<div class="flex gap-2">
+								<span class="loading loading-dots loading-lg text-primary"></span>
+							</div>
+							
+							<!-- Progress Message -->
+							<div class="text-xs opacity-60">
+								{m['home.analyzing_file']()}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -289,12 +317,12 @@
 												<p class="text-xs opacity-60 mt-1">{match.description}</p>
 											{/if}
 										</div>
-									{/each}
-									{#if scanResult.totalMatches > 6}
-										<p class="text-xs opacity-60 text-center pt-2">
-											{m['home.more_possible_matches'](scanResult.totalMatches - 6)}.
-										</p>
-									{/if}
+								{/each}
+								{#if scanResult.totalMatches > 6}
+									<p class="text-xs opacity-60 text-center pt-2">
+										{m['home.more_possible_matches']({ count: scanResult.totalMatches - 6 })}.
+									</p>
+								{/if}
 								</div>
 							</div>
 						</div>

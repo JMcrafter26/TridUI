@@ -4,3 +4,5 @@ frontend/dist/
 test/
 tmp/
 temp/
+*.tmp.*
+*.temp.*

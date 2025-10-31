@@ -30,7 +30,7 @@
 		"scan_another": "Weitere scannen",
 		"error": "Fehler",
 		"best_match": "Beste Übereinstimmung",
-		"confidence": "Sicherheit",
+		"confidence": "Übereinstimmung",
 		"other_possible_matches": "Andere mögliche Übereinstimmungen",
 		"more_possible_matches": "...und {count} weitere Übereinstimmungen",
 		"no_matches_found": "Keine Übereinstimmungen gefunden",

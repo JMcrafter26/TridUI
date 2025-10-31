@@ -225,9 +225,9 @@
 			{:else if scanResult}
 				<div class="max-w-4xl w-full mx-auto space-y-4">
 					<!-- Header with file info and reset button -->
-					<div class="flex items-center justify-between mt-1">
+					<div class="flex items-center justify-between mt-1 text-wrap">
 						<div>
-							<h2 class="text-2xl font-bold">{scanResult.fileName}</h2>
+							<h2 class="text-2xl font-bold text-pretty max-w-full wrap-anywhere">{scanResult.fileName}</h2>
 							<p class="text-sm opacity-70">{formatFileSize(scanResult.fileSize)}</p>
 						</div>
 						<button on:click={resetState} class="btn btn-sm btn-ghost">{m['home.scan_another']()}</button>
@@ -254,9 +254,9 @@
 										<h3 class="card-title text-success">{m['home.best_match']()}</h3>
 										<div class="mt-2 space-y-2">
 											<div>
-												<span class="font-semibold">{scanResult.bestMatch.name}</span>
+												<span class="font-semibold select-text cursor-pointer">{scanResult.bestMatch.name}</span>
 												{#if scanResult.bestMatch.extension}
-													<span class="badge badge-sm ml-2"
+													<span class="badge badge-sm ml-2 select-text cursor-pointer"
 														>.{scanResult.bestMatch.extension}</span
 													>
 												{/if}
@@ -274,7 +274,7 @@
 												{#if scanResult.bestMatch.mimeType}
 													<div>
 														<span class="opacity-70">MIME:</span>
-														<span class="font-mono text-xs ml-1"
+														<span class="font-mono text-xs ml-1 select-text cursor-pointer"
 															>{scanResult.bestMatch.mimeType}</span
 														>
 													</div>

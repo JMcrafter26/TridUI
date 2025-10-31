@@ -8,13 +8,13 @@
     !define INFO_PROJECTNAME "TridUI"
 !endif
 !ifndef INFO_COMPANYNAME
-    !define INFO_COMPANYNAME "TridUI"
+    !define INFO_COMPANYNAME "Cufiy"
 !endif
 !ifndef INFO_PRODUCTNAME
     !define INFO_PRODUCTNAME "TridUI"
 !endif
 !ifndef INFO_PRODUCTVERSION
-    !define INFO_PRODUCTVERSION "1.0.0"
+    !define INFO_PRODUCTVERSION "1.0.2"
 !endif
 !ifndef INFO_COPYRIGHT
     !define INFO_COPYRIGHT "Copyright........."

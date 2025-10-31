@@ -1,13 +1,23 @@
 # TrID UI
 
-<img src="./icon.png" alt="TrID UI Icon" style="width: 128px; height: 128px;" />
+<!-- <img src="./icon.png" alt="TrID UI Icon" style="width: 128px; height: 128px;" /> -->
+
+<div style="text-align: center; margin-bottom: 16px;">
+<div style="position: relative; display: inline-block; width: 100%; max-width: 600px;">
+<img src="./.github/screenshots/demonstration.gif" alt="TrID UI Demonstration" style="width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 16px;" />
+<img src="./icon.png" alt="TrID UI Icon" style="position: absolute; bottom: -5px; right: -35px; width: auto; height: 30%; border-radius: 12px;" />
+</div>
+</div>
 
 TrID UI is a lightweight desktop application that provides a user-friendly interface for TrID, a powerful tool for scanning and analyzing files. With TrID UI, users can easily select or drop files on the Home screen to initiate local scans, making it convenient to detect unrecognized filetypes.
 
 The application uses a native Go implementation of the TrID file identification algorithm, providing fast and accurate file type detection without external dependencies.
 
 > [!WARNING]  
-> TrID UI is currently in early development. Features may be incomplete or unstable. Use at your own risk.
+> :warning: TrID UI is currently in early development. Features may be incomplete or unstable. Use at your own risk.
+
+> [!TIP]
+> Download TridUI from the [Releases Page](https://github.com/JMcrafter26/TridUI/releases)
 
 ## Features
 
@@ -21,9 +31,54 @@ The application uses a native Go implementation of the TrID file identification 
 - 🔁 Automatic definitions updates with one click
 - 📅 Track last update date and definition count
 
-## Screenshots
+## Table of Contents
 
-<div style="display: flex; gap: 16px; overflow-x: auto;">
+<details>
+<summary>Click to expand</summary>
+
+- [TrID UI](#trid-ui)
+  - [Features](#features)
+  - [Table of Contents](#table-of-contents)
+  - [Demonstration and Screenshots](#demonstration-and-screenshots)
+    - [Demonstration Videos](#demonstration-videos)
+    - [Screenshots](#screenshots)
+  - [Setup](#setup)
+    - [Prerequisites](#prerequisites)
+      - [Option 1: Automatic Download (Recommended)](#option-1-automatic-download-recommended)
+      - [Option 2: Manual Installation](#option-2-manual-installation)
+    - [Building from Source](#building-from-source)
+  - [Usage](#usage)
+  - [Technical Details](#technical-details)
+    - [Architecture](#architecture)
+    - [TrID Scanner Implementation](#trid-scanner-implementation)
+  - [License and Attribution](#license-and-attribution)
+  - [Contributing](#contributing)
+    - [Translations](#translations)
+
+</details>
+
+## Demonstration and Screenshots
+
+### Demonstration Videos
+
+<div style="overflow-x: scroll; display: flex; gap: 16px; padding-bottom: 16px; max-height: 400px; width: 100%;">
+  <video controls style="width: 300px; border: 1px solid #ccc; border-radius: 8px;">
+    <source src="./.github/videos/demo1.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <video controls style="width: 300px; border: 1px solid #ccc; border-radius: 8px;">
+    <source src="./.github/videos/demo2.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <video controls style="width: 300px; border: 1px solid #ccc; border-radius: 8px;">
+    <source src="./.github/videos/demo3.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+### Screenshots
+
+<div style="overflow-x: scroll; display: flex; gap: 16px; padding-bottom: 16px; max-height: 400px; width: 100%;">
   <img src="./.github/screenshots/1.png" alt="TrID UI Screenshot 1" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
   <img src="./.github/screenshots/2.png" alt="TrID UI Screenshot 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
   <img src="./.github/screenshots/3.png" alt="TrID UI Screenshot 3" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />

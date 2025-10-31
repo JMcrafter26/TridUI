@@ -1,12 +1,11 @@
-# TrID UI
 
-<!-- <img src="./icon.png" alt="TrID UI Icon" style="width: 128px; height: 128px;" /> -->
+<div style="display: flex; align-items: center; margin-bottom: 16px;">
+  <img src="./icon.png" alt="TrID UI Icon" style="width: 64px; height: 64px; border-radius: 12px;" />
+  <h1 style="margin-left: 16px;">TrID UI</h1>
+</div>
 
 <div style="text-align: center; margin-bottom: 16px;">
-<div style="position: relative; display: inline-block; width: 100%; max-width: 600px;">
-<img src="./.github/screenshots/demonstration.gif" alt="TrID UI Demonstration" style="width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 16px;" />
-<img src="./icon.png" alt="TrID UI Icon" style="position: absolute; bottom: -5px; right: -35px; width: auto; height: 30%; border-radius: 12px;" />
-</div>
+<img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/screenshots/demonstration.gif?raw=true" alt="TrID UI Demonstration" style="width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 16px;" />
 </div>
 
 TrID UI is a lightweight desktop application that provides a user-friendly interface for TrID, a powerful tool for scanning and analyzing files. With TrID UI, users can easily select or drop files on the Home screen to initiate local scans, making it convenient to detect unrecognized filetypes.
@@ -36,24 +35,23 @@ The application uses a native Go implementation of the TrID file identification 
 <details>
 <summary>Click to expand</summary>
 
-- [TrID UI](#trid-ui)
-  - [Features](#features)
-  - [Table of Contents](#table-of-contents)
-  - [Demonstration and Screenshots](#demonstration-and-screenshots)
-    - [Demonstration Videos](#demonstration-videos)
-    - [Screenshots](#screenshots)
-  - [Setup](#setup)
-    - [Prerequisites](#prerequisites)
-      - [Option 1: Automatic Download (Recommended)](#option-1-automatic-download-recommended)
-      - [Option 2: Manual Installation](#option-2-manual-installation)
-    - [Building from Source](#building-from-source)
-  - [Usage](#usage)
-  - [Technical Details](#technical-details)
-    - [Architecture](#architecture)
-    - [TrID Scanner Implementation](#trid-scanner-implementation)
-  - [License and Attribution](#license-and-attribution)
-  - [Contributing](#contributing)
-    - [Translations](#translations)
+- [Features](#features)
+- [Table of Contents](#table-of-contents)
+- [Demonstration and Screenshots](#demonstration-and-screenshots)
+  - [Demonstration Videos](#demonstration-videos)
+  - [Screenshots](#screenshots)
+- [Setup](#setup)
+  - [Prerequisites](#prerequisites)
+    - [Option 1: Automatic Download (Recommended)](#option-1-automatic-download-recommended)
+    - [Option 2: Manual Installation](#option-2-manual-installation)
+  - [Building from Source](#building-from-source)
+- [Usage](#usage)
+- [Technical Details](#technical-details)
+  - [Architecture](#architecture)
+  - [TrID Scanner Implementation](#trid-scanner-implementation)
+- [License and Attribution](#license-and-attribution)
+- [Contributing](#contributing)
+  - [Translations](#translations)
 
 </details>
 
@@ -62,16 +60,16 @@ The application uses a native Go implementation of the TrID file identification 
 ### Demonstration Videos
 
 <div style="overflow-x: scroll; display: flex; gap: 16px; padding-bottom: 16px; max-height: 400px; width: 100%;">
-  <video controls style="width: 300px; border: 1px solid #ccc; border-radius: 8px;">
-    <source src="./.github/videos/demo1.mp4" type="video/mp4">
+  <video controls style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" loop>
+    <source src="https://github.com/JMcrafter26/TridUI/raw/refs/heads/main/.github/videos/demo1.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
-  <video controls style="width: 300px; border: 1px solid #ccc; border-radius: 8px;">
-    <source src="./.github/videos/demo2.mp4" type="video/mp4">
+  <video controls style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" loop>
+    <source src="https://github.com/JMcrafter26/TridUI/raw/refs/heads/main/.github/videos/demo2.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
-  <video controls style="width: 300px; border: 1px solid #ccc; border-radius: 8px;">
-    <source src="./.github/videos/demo3.mp4" type="video/mp4">
+  <video controls style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" loop>
+    <source src="https://github.com/JMcrafter26/TridUI/raw/refs/heads/main/.github/videos/demo3.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 </div>
@@ -88,7 +86,8 @@ The application uses a native Go implementation of the TrID file identification 
 
 ## Setup
 
-You can find the latest releases on the [Releases Page](https://github.com/JMcrafter26/TridUI/releases).
+> [!TIP]
+> You can find the pre-built binaries on the [Releases Page](https://github.com/JMcrafter26/TridUI/releases).
 
 ### Prerequisites
 
@@ -136,18 +135,20 @@ wails build
 ### Architecture
 
 - **Backend**: Go (Wails framework)
-- **Frontend**: SvelteKit + TypeScript
+- **Frontend**: SvelteKit + TypeScript + DaisyUI (& Tailwind CSS)
 - **TrID Engine**: Pure Go implementation (`/trid` package)
 
 ### TrID Scanner Implementation
 
-The TrID scanner (`/trid/trid.go`) is a clean-room Go implementation that:
+The TrID scanner ([`/trid/trid.go`](https://github.com/JMcrafter26/TridUI/blob/main/trid/trid.go)) is a clean-room Go implementation that:
 
 - Parses TRD (TrID Definition) files using the binary format specification
 - Performs pattern matching at specified file offsets
 - Supports string matching for enhanced accuracy
 - Calculates confidence scores based on pattern weights
 - Returns ranked results with detailed file type information
+
+> You can find the TRD format specification on [Mark0.net](https://mark0.net/soft-trid-format.html).
 
 ## License and Attribution
 

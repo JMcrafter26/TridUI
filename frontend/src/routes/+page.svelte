@@ -17,6 +17,7 @@
 	import { OnFileDrop, OnFileDropOff } from '../../wailsjs/runtime/runtime';
 	import { main } from '../../wailsjs/go/models';
 	import { goto } from '$app/navigation';
+	import { searchEngines } from '$lib/config/searchEngines';
 
 	let fileSelected = false;
 	let selectedFileName = '';
@@ -119,9 +120,16 @@
 		});
 	}
 
-	function searchOnline(query: string) {
-		if (!query) return;
-		const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+	function searchOnline(name: string, extension?: string) {
+		if (!name) return;
+		const savedEngine = localStorage.getItem('searchEngine') || 'Google';
+		const engine = searchEngines.find(e => e.name === savedEngine) || searchEngines[0];
+		let url;
+		if ((engine.name === 'FileInfo' || engine.name === 'FileExt') && extension) {
+			url = `${engine.url}${encodeURIComponent(extension)}`;
+		} else {
+			url = `${engine.url}${encodeURIComponent(name)}${extension ? `+${encodeURIComponent('(' + extension + ')')}` : ''}`;
+		}
 		window.open(url, '_blank');
 	}
 
@@ -300,7 +308,7 @@
 												<!-- search online button -->
 												<button
 													class="badge badge-sm ml-1 cursor-pointer hover:badge-primary"
-													on:click={() => searchOnline(scanResult?.bestMatch?.name  + ' (' + scanResult?.bestMatch?.extension + ')' )}
+													on:click={() => searchOnline(scanResult?.bestMatch?.name || '', scanResult?.bestMatch?.extension || '')}
 													aria-label={m['home.search_online']()}
 												>
 													<Search class="h-4 w-4" />
@@ -384,7 +392,7 @@
 													<!-- search online button -->
 													<button
 														class="badge badge-xs ml-1 cursor-pointer hover:badge-primary"
-														on:click={() => searchOnline(match.name + ' (' + match.extension + ')')}
+														on:click={() => searchOnline(match.name || '', match.extension || '')}
 														aria-label={m['home.search_online']()}
 													>
 														<Search class="h-3 w-3" />

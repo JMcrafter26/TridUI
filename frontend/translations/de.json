@@ -84,6 +84,8 @@
 		"theme_light": "Hell",
 		"theme_dark": "Dunkel",
 		"theme_auto": "Automatisch (System)",
-		"theme_auto_description": "Passt sich automatisch Ihren Systemeinstellungen an"
+		"theme_auto_description": "Passt sich automatisch Ihren Systemeinstellungen an",
+		"search_engine": "Suchmaschine",
+		"search_engine_description": "Wählen Sie Ihre bevorzugte Suchmaschine"
 	}
 }

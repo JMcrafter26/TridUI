@@ -84,6 +84,8 @@
 		"theme_light": "Jasny",
 		"theme_dark": "Ciemny",
 		"theme_auto": "Automatyczny (Systemowy)",
-		"theme_auto_description": "Automatycznie dopasowuje się do preferencji systemowych"
+		"theme_auto_description": "Automatycznie dopasowuje się do preferencji systemowych",
+		"search_engine": "Wyszukiwarka",
+		"search_engine_description": "Wybierz preferowaną wyszukiwarkę"
 	}
 }

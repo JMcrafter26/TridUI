@@ -82,6 +82,8 @@
 		"theme_light": "浅色",
 		"theme_dark": "深色",
 		"theme_auto": "自动（系统）",
-		"theme_auto_description": "自动匹配您的系统偏好"
+		"theme_auto_description": "自动匹配您的系统偏好",
+		"search_engine": "搜索引擎",
+		"search_engine_description": "选择您喜欢的搜索引擎"
 	}
 }

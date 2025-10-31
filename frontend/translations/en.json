@@ -84,6 +84,8 @@
 		"theme_light": "Light",
 		"theme_dark": "Dark",
 		"theme_auto": "Auto (System)",
-		"theme_auto_description": "Automatically matches your system preferences"
+		"theme_auto_description": "Automatically matches your system preferences",
+		"search_engine": "Search Engine",
+		"search_engine_description": "Choose your preferred search engine"
 	}
 }

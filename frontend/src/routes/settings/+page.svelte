@@ -10,7 +10,8 @@
 		GetDefinitionsPath,
 		OpenAppDir
 	} from '../../../wailsjs/go/main/App';
-	import { Download, RefreshCw, FolderOpen, CircleCheck, CircleAlert, Info, Languages, Moon, Sun, Monitor } from '@lucide/svelte';
+	import { Download, RefreshCw, FolderOpen, CircleCheck, CircleAlert, Info, Languages, Moon, Sun, Monitor, Search } from '@lucide/svelte';
+	import { searchEngines } from '$lib/config/searchEngines';
 
 	let definitionsExist = false;
 	let definitionsPath = '';
@@ -22,6 +23,7 @@
 	let updateError = '';
 	let currentLocale = getLocale();
 	let currentTheme: 'light' | 'dark' | 'auto' = 'auto';
+	let currentSearchEngine = 'Google';
 
 	// Dynamically get language display names based on available locales
 	const availableLanguages = locales.map((locale) => {
@@ -74,6 +76,13 @@
 		applyTheme(newTheme);
 	}
 
+	function handleSearchEngineChange(event: Event) {
+		const target = event.target as HTMLSelectElement;
+		const newEngine = target.value;
+		currentSearchEngine = newEngine;
+		localStorage.setItem('searchEngine', newEngine);
+	}
+
 	async function checkForUpdates() {
 		isCheckingUpdates = true;
 		updateError = '';
@@ -122,6 +131,12 @@
 			applyTheme(savedTheme);
 		} else {
 			applyTheme('auto');
+		}
+
+		// Load saved search engine
+		const savedEngine = localStorage.getItem('searchEngine');
+		if (savedEngine) {
+			currentSearchEngine = savedEngine;
 		}
 
 		// Listen for system theme changes when in auto mode
@@ -394,6 +409,31 @@
 							{m['settings.theme_auto_description']()}
 						</span>
 					</div>
+				</div>
+			</div>
+
+			<!-- Search Engine Section -->
+			<div class="space-y-4">
+				<div class="divider">{m['settings.search_engine']()}</div>
+
+				<div class="form-control w-full max-w-xs">
+					<label class="label" for="search-engine-select">
+						<span class="label-text flex items-center gap-2">
+							<Search class="h-4 w-4" />
+							{m['settings.search_engine_description']()}
+						</span>
+					</label>
+					<select
+						id="search-engine-select"
+						class="select select-bordered w-full max-w-xs"
+						value={currentSearchEngine}
+						on:change={handleSearchEngineChange}
+						aria-label={m['settings.search_engine']()}
+					>
+						{#each searchEngines as engine}
+							<option value={engine.name}>{engine.name}</option>
+						{/each}
+					</select>
 				</div>
 			</div>
 

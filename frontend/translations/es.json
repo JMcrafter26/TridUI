@@ -84,6 +84,8 @@
 		"theme_light": "Claro",
 		"theme_dark": "Oscuro",
 		"theme_auto": "Automático (Sistema)",
-		"theme_auto_description": "Se ajusta automáticamente a las preferencias de tu sistema"
+		"theme_auto_description": "Se ajusta automáticamente a las preferencias de tu sistema",
+		"search_engine": "Motor de búsqueda",
+		"search_engine_description": "Elige tu motor de búsqueda preferido"
 	}
 }

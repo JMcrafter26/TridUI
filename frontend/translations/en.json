@@ -23,10 +23,41 @@
 		"click_to_browse": "Click to browse or drag a file here",
 		"any_file_type": "Any file type, any size",
 		"files_processed_locally": "Files are processed locally, nothing is uploaded",
-		"home": "Home"
+		"home": "Home",
+		"contribute": "by Cufiy",
+		"scanning": "Scanning",
+		"analyzing_file": "Analyzing file with TrID...",
+		"scan_another": "Scan Another",
+		"error": "Error",
+		"best_match": "Best Match",
+		"confidence": "Confidence",
+		"other_possible_matches": "Other Possible Matches",
+		"more_possible_matches": "...and {scanResult.totalMatches} more matches",
+		"no_matches_found": "No Matches Found",
+		"no_matches_explanation": "TrID could not identify this file type. It may be a rare or custom format.",
+		"definitions_not_found": "Definitions Not Found",
+		"definitions_not_found_explanation": "TrID definitions are required to scan files. Please download them to continue.",
+		"download": "Download"
 	},
 	"settings": {
 		"settings": "Settings",
-		"description": "Manage your application settings"
+		"description": "Manage your application settings",
+		"trid_definitions": "TrID Definitions",
+		"definitions_installed": "Definitions Installed",
+		"definitions": "Definitions",
+		"last_updated": "Last updated",
+		"located_at": "Located at",
+		"definitions_not_found": "Definitions Not Found",
+		"definitions_not_found_explanation": "Download the definitions file to enable file identification.",
+		"up_to_date": "Up to date",
+		"update_available": "Update available",
+		"new_version": "New version",
+		"error": "Error",
+		"updating": "Updating...",
+		"open_app_directory": "Open App Directory",
+		"note": "Note",
+		"definitions_info": "TrID definitions are updated regularly by Marco Pontello to support \t\t\t\t\t\tnew file types.",
+		"downloaded_from": "Definitions are downloaded from",
+		"debug_tools": "Debug Tools"
 	}
 }

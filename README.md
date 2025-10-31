@@ -38,9 +38,9 @@ The application can automatically download and update the TrID definitions file 
 
 1. Download the TrID definitions file (`triddefs.trd`) from [Mark0.net](https://mark0.net/soft-trid-deflist.html)
 2. Place the `triddefs.trd` file in your application data directory:
-   - **Windows**: `%APPDATA%\Soru\triddefs.trd`
-   - **macOS**: `~/Library/Application Support/Soru/triddefs.trd`
-   - **Linux**: `~/.local/share/Soru/triddefs.trd`
+   - **Windows**: `%APPDATA%\TridUI\triddefs.trd`
+   - **macOS**: `~/Library/Application Support/TridUI/triddefs.trd`
+   - **Linux**: `~/.local/share/TridUI/triddefs.trd`
 
 You can use the "Open App Dir" button in Settings to navigate to the correct location.
 
@@ -50,6 +50,7 @@ You can use the "Open App Dir" button in Settings to navigate to the correct loc
 # Install dependencies
 go mod download
 cd frontend && pnpm install
+cd ..
 
 # Build the application
 wails build

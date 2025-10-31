@@ -95,10 +95,18 @@
 		"scan_results": "Scanergebnis-Anzeige",
 		"max_visible_matches": "Maximal sichtbare Übereinstimmungen",
 		"max_visible_matches_description": "Anzahl der Übereinstimmungen, die zunächst angezeigt werden (1-50)",
-		"confidence_threshold": "Konfidenz-Schwellenwert",
-		"confidence_threshold_description": "Übereinstimmungen unter diesem Konfidenz-Prozentsatz ausblenden",
+		"confidence_threshold": "Übereinstimmungs-Schwellenwert",
+		"confidence_threshold_description": "Übereinstimmungen unter diesem Übereinstimmungs-Prozentsatz ausblenden",
 		"max_total_results": "Maximale Gesamtergebnisse",
 		"max_total_results_description": "Maximale Anzahl der Ergebnisse aus dem Scan (0 = unbegrenzt)",
-		"max_total_results_warning": "Hohe Werte können die Leistung beeinträchtigen"
+		"max_total_results_warning": "Hohe Werte können die Leistung beeinträchtigen",
+		"reset_settings": "Einstellungen zurücksetzen",
+		"reset_settings_description": "Alle Einstellungen auf ihre Standardwerte zurücksetzen. Dies stellt Sprache, Theme, Suchmaschine und Scan-Anzeigeeinstellungen wieder her.",
+		"reset_to_defaults": "Auf Standardwerte zurücksetzen",
+		"auto_update_definitions": "Definitionen beim Start automatisch aktualisieren",
+		"auto_update_definitions_description": "Definitions-Updates beim App-Start automatisch herunterladen und installieren",
+		"check_app_updates": "Beim Start nach App-Updates suchen",
+		"check_app_updates_description": "Beim App-Start automatisch nach neuen App-Versionen suchen",
+		"app_updates": "App-Updates"
 	}
 }

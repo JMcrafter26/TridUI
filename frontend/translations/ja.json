@@ -99,6 +99,14 @@
 		"confidence_threshold_description": "この信頼度パーセント未満の一致を非表示",
 		"max_total_results": "最大総結果数",
 		"max_total_results_description": "スキャンからの最大結果数 (0 = 無制限)",
-		"max_total_results_warning": "高い値はパフォーマンスに影響する可能性があります"
+		"max_total_results_warning": "高い値はパフォーマンスに影響する可能性があります",
+		"reset_settings": "設定をリセット",
+		"reset_settings_description": "すべての設定をデフォルト値にリセットします。これにより、言語、テーマ、検索エンジン、スキャン表示の設定が復元されます。",
+		"reset_to_defaults": "デフォルトにリセット",
+		"auto_update_definitions": "起動時に定義を自動更新",
+		"auto_update_definitions_description": "アプリ起動時に定義の更新を自動的にダウンロードおよびインストールします",
+		"check_app_updates": "起動時にアプリの更新を確認",
+		"check_app_updates_description": "アプリ起動時に新しいバージョンを自動的に確認します",
+		"app_updates": "アプリの更新"
 	}
 }

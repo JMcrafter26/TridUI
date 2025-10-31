@@ -99,6 +99,14 @@
 		"confidence_threshold_description": "Masquer les correspondances en dessous de ce pourcentage de confiance",
 		"max_total_results": "Résultats totaux maximaux",
 		"max_total_results_description": "Nombre maximal de résultats du scan (0 = illimité)",
-		"max_total_results_warning": "Des valeurs élevées peuvent impacter les performances"
+		"max_total_results_warning": "Des valeurs élevées peuvent impacter les performances",
+		"reset_settings": "Réinitialiser les paramètres",
+		"reset_settings_description": "Réinitialiser tous les paramètres à leurs valeurs par défaut. Cela restaurera la langue, le thème, le moteur de recherche et les préférences d'affichage du scan.",
+		"reset_to_defaults": "Réinitialiser aux valeurs par défaut",
+		"auto_update_definitions": "Mettre à jour automatiquement les définitions au démarrage",
+		"auto_update_definitions_description": "Télécharger et installer automatiquement les mises à jour des définitions au démarrage de l'application",
+		"check_app_updates": "Vérifier les mises à jour de l'application au démarrage",
+		"check_app_updates_description": "Vérifier automatiquement les nouvelles versions de l'application au démarrage",
+		"app_updates": "Mises à jour de l'application"
 	}
 }

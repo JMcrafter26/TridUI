@@ -99,6 +99,14 @@
 		"confidence_threshold_description": "Ukryj dopasowania poniżej tego procentu pewności",
 		"max_total_results": "Maksymalna Liczba Wszystkich Wyników",
 		"max_total_results_description": "Maksymalna liczba wyników ze skanowania (0 = nielimitowane)",
-		"max_total_results_warning": "Wysokie wartości mogą wpłynąć na wydajność"
+		"max_total_results_warning": "Wysokie wartości mogą wpłynąć na wydajność",
+		"reset_settings": "Resetuj Ustawienia",
+		"reset_settings_description": "Zresetuj wszystkie ustawienia do ich domyślnych wartości. To przywróci język, motyw, wyszukiwarkę i preferencje wyświetlania skanowania.",
+		"reset_to_defaults": "Zresetuj do domyślnych",
+		"auto_update_definitions": "Automatycznie aktualizuj definicje przy uruchomieniu",
+		"auto_update_definitions_description": "Automatycznie pobieraj i instaluj aktualizacje definicji podczas uruchamiania aplikacji",
+		"check_app_updates": "Sprawdź aktualizacje aplikacji przy uruchomieniu",
+		"check_app_updates_description": "Automatycznie sprawdź nowe wersje aplikacji podczas uruchamiania",
+		"app_updates": "Aktualizacje Aplikacji"
 	}
 }

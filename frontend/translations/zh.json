@@ -99,6 +99,14 @@
 		"confidence_threshold_description": "隐藏低于此置信度百分比的匹配",
 		"max_total_results": "最大总结果数",
 		"max_total_results_description": "扫描的最大结果数 (0 = 无限制)",
-		"max_total_results_warning": "过高的值可能影响性能"
+		"max_total_results_warning": "过高的值可能影响性能",
+		"reset_settings": "重置设置",
+		"reset_settings_description": "将所有设置重置为默认值。这将恢复语言、主题、搜索引擎和扫描显示首选项。",
+		"reset_to_defaults": "重置为默认值",
+		"auto_update_definitions": "启动时自动更新定义",
+		"auto_update_definitions_description": "应用启动时自动下载和安装定义更新",
+		"check_app_updates": "启动时检查应用更新",
+		"check_app_updates_description": "应用启动时自动检查新版本",
+		"app_updates": "应用更新"
 	}
 }

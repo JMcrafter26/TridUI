@@ -21,7 +21,19 @@ The application uses a native Go implementation of the TrID file identification 
 - 🔁 Automatic definitions updates with one click
 - 📅 Track last update date and definition count
 
+## Screenshots
+
+<div style="display: flex; gap: 16px; overflow-x: auto;">
+  <img src="./.github/screenshots/1.png" alt="TrID UI Screenshot 1" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+  <img src="./.github/screenshots/2.png" alt="TrID UI Screenshot 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+  <img src="./.github/screenshots/3.png" alt="TrID UI Screenshot 3" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+  <img src="./.github/screenshots/4.png" alt="TrID UI Screenshot 4" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+  <img src="./.github/screenshots/5.png" alt="TrID UI Screenshot 5" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+</div>
+
 ## Setup
+
+You can find the latest releases on the [Releases Page](https://github.com/Cufiy/TridUI/releases).
 
 ### Prerequisites
 

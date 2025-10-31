@@ -32,7 +32,7 @@
 		"best_match": "Beste Übereinstimmung",
 		"confidence": "Sicherheit",
 		"other_possible_matches": "Andere mögliche Übereinstimmungen",
-		"more_possible_matches": "...und {scanResult.totalMatches} weitere Übereinstimmungen",
+		"more_possible_matches": "...und {count} weitere Übereinstimmungen",
 		"no_matches_found": "Keine Übereinstimmungen gefunden",
 		"no_matches_explanation": "TrID konnte diesen Dateityp nicht identifizieren. Es kann ein seltenes oder benutzerdefiniertes Format sein.",
 		"definitions_not_found": "Definitionen nicht gefunden",

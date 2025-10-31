@@ -32,7 +32,7 @@
 		"best_match": "Meilleure correspondance",
 		"confidence": "Confiance",
 		"other_possible_matches": "Autres correspondances possibles",
-		"more_possible_matches": "...et {scanResult.totalMatches} autres correspondances",
+		"more_possible_matches": "...et {count} autres correspondances",
 		"no_matches_found": "Aucune correspondance trouvée",
 		"no_matches_explanation": "TrID n'a pas pu identifier ce type de fichier. Il peut s'agir d'un format rare ou personnalisé.",
 		"definitions_not_found": "Définitions introuvables",

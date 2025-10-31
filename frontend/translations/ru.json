@@ -32,7 +32,7 @@
 		"best_match": "Лучшее совпадение",
 		"confidence": "Уверенность",
 		"other_possible_matches": "Другие возможные совпадения",
-		"more_possible_matches": "...и еще {scanResult.totalMatches} совпадений",
+		"more_possible_matches": "...и еще {count} совпадений",
 		"no_matches_found": "Совпадений не найдено",
 		"no_matches_explanation": "TrID не смог определить этот тип файла. Это может быть редкий или пользовательский формат.",
 		"definitions_not_found": "Определения не найдены",

@@ -122,8 +122,25 @@ func (a *App) ProcessFile(filePath string) (*TridScanResult, error) {
 		return result, nil
 	}
 
-	// Convert results to our format
+	// Configuration for filtering
+	const (
+		minConfidence = 0.05 // Only include results with at least 5% confidence
+		maxResults    = 50   // Limit to top 50 results
+	)
+
+	// Convert results to our format, filtering by confidence
+	matchCount := 0
 	for i, r := range results {
+		// Skip results with very low confidence
+		if r.Confidence < minConfidence {
+			continue
+		}
+
+		// Limit total number of results
+		if matchCount >= maxResults {
+			break
+		}
+
 		match := TridFileTypeResult{
 			Name:        r.Definition.FileType.Name,
 			Extension:   r.Definition.FileType.Extension,
@@ -136,13 +153,18 @@ func (a *App) ProcessFile(filePath string) (*TridScanResult, error) {
 
 		result.Matches = append(result.Matches, match)
 
-		// Set best match
+		// Set best match (first result)
 		if i == 0 {
 			result.BestMatch = &match
 		}
+
+		matchCount++
 	}
 
 	result.TotalMatches = len(result.Matches)
+
+	runtime.LogDebugf(a.ctx, "Filtered to %d matches (from %d total, min confidence: %.1f%%)",
+		result.TotalMatches, len(results), minConfidence*100)
 
 	runtime.LogDebugf(a.ctx, "Analysis complete: %d matches found", result.TotalMatches)
 

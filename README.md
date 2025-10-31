@@ -33,7 +33,7 @@ The application uses a native Go implementation of the TrID file identification 
 
 ## Setup
 
-You can find the latest releases on the [Releases Page](https://github.com/Cufiy/TridUI/releases).
+You can find the latest releases on the [Releases Page](https://github.com/JMcrafter26/TridUI/releases).
 
 ### Prerequisites
 

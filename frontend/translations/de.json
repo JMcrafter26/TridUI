@@ -49,7 +49,9 @@
 		"download": "Herunterladen",
 		"copied": "Kopiert!",
 		"copy": "Kopieren",
-		"search_online": "Online suchen"
+		"search_online": "Online suchen",
+		"show_more_matches": "Zeige {count} weitere Übereinstimmungen",
+		"show_less": "Weniger anzeigen"
 	},
 	"settings": {
 		"settings": "Einstellungen",
@@ -89,6 +91,14 @@
 		"theme_auto": "Automatisch (System)",
 		"theme_auto_description": "Passt sich automatisch Ihren Systemeinstellungen an",
 		"search_engine": "Suchmaschine",
-		"search_engine_description": "Wählen Sie Ihre bevorzugte Suchmaschine"
+		"search_engine_description": "Wählen Sie Ihre bevorzugte Suchmaschine",
+		"scan_results": "Scanergebnis-Anzeige",
+		"max_visible_matches": "Maximal sichtbare Übereinstimmungen",
+		"max_visible_matches_description": "Anzahl der Übereinstimmungen, die zunächst angezeigt werden (1-50)",
+		"confidence_threshold": "Konfidenz-Schwellenwert",
+		"confidence_threshold_description": "Übereinstimmungen unter diesem Konfidenz-Prozentsatz ausblenden",
+		"max_total_results": "Maximale Gesamtergebnisse",
+		"max_total_results_description": "Maximale Anzahl der Ergebnisse aus dem Scan (0 = unbegrenzt)",
+		"max_total_results_warning": "Hohe Werte können die Leistung beeinträchtigen"
 	}
 }

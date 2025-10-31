@@ -20,6 +20,6 @@ export function OpenAppDir():Promise<void>;
 
 export function OpenFileDialog():Promise<string>;
 
-export function ProcessFile(arg1:string):Promise<main.TridScanResult>;
+export function ProcessFile(arg1:string,arg2:number):Promise<main.TridScanResult>;
 
 export function UpdateDefinitions():Promise<void>;

@@ -10,7 +10,7 @@
 		GetDefinitionsPath,
 		OpenAppDir
 	} from '../../../wailsjs/go/main/App';
-	import { Download, RefreshCw, FolderOpen, CircleCheck, CircleAlert, Info, Languages, Moon, Sun, Monitor, Search } from '@lucide/svelte';
+	import { Download, RefreshCw, FolderOpen, CircleCheck, CircleAlert, Info, Languages, Moon, Sun, Monitor, Search, List, Filter } from '@lucide/svelte';
 	import { searchEngines } from '$lib/config/searchEngines';
 
 	let definitionsExist = false;
@@ -24,6 +24,9 @@
 	let currentLocale = getLocale();
 	let currentTheme: 'light' | 'dark' | 'auto' = 'auto';
 	let currentSearchEngine = 'Google';
+	let maxVisibleMatches = 5;
+	let confidenceThreshold = 10.0;
+	let maxTotalResults = 50;
 
 	// Dynamically get language display names based on available locales
 	const availableLanguages = locales.map((locale) => {
@@ -83,6 +86,33 @@
 		localStorage.setItem('searchEngine', newEngine);
 	}
 
+	function handleMaxResultsChange(event: Event) {
+		const target = event.target as HTMLInputElement;
+		const value = parseInt(target.value, 10);
+		if (value >= 1 && value <= 50) {
+			maxVisibleMatches = value;
+			localStorage.setItem('maxVisibleMatches', value.toString());
+		}
+	}
+
+	function handleThresholdChange(event: Event) {
+		const target = event.target as HTMLInputElement;
+		const value = parseFloat(target.value);
+		if (value >= 0 && value <= 100) {
+			confidenceThreshold = value;
+			localStorage.setItem('confidenceThreshold', value.toString());
+		}
+	}
+
+	function handleMaxTotalResultsChange(event: Event) {
+		const target = event.target as HTMLInputElement;
+		const value = parseInt(target.value, 10);
+		if (value >= 0 && value <= 10000) {
+			maxTotalResults = value;
+			localStorage.setItem('maxTotalResults', value.toString());
+		}
+	}
+
 	async function checkForUpdates() {
 		isCheckingUpdates = true;
 		updateError = '';
@@ -137,6 +167,24 @@
 		const savedEngine = localStorage.getItem('searchEngine');
 		if (savedEngine) {
 			currentSearchEngine = savedEngine;
+		}
+
+		// Load max visible matches setting
+		const savedMaxResults = localStorage.getItem('maxVisibleMatches');
+		if (savedMaxResults) {
+			maxVisibleMatches = parseInt(savedMaxResults, 10);
+		}
+
+		// Load confidence threshold setting
+		const savedThreshold = localStorage.getItem('confidenceThreshold');
+		if (savedThreshold) {
+			confidenceThreshold = parseFloat(savedThreshold);
+		}
+
+		// Load max total results setting
+		const savedMaxTotal = localStorage.getItem('maxTotalResults');
+		if (savedMaxTotal) {
+			maxTotalResults = parseInt(savedMaxTotal, 10);
 		}
 
 		// Listen for system theme changes when in auto mode
@@ -440,6 +488,92 @@
 							<option value={engine.name}>{engine.name}</option>
 						{/each}
 					</select>
+				</div>
+			</div>
+
+			<!-- Scan Results Display Section -->
+			<div class="space-y-4">
+				<div class="divider">{m['settings.scan_results']()}</div>
+
+				<div class="form-control w-full max-w-xs">
+					<label class="label" for="max-results-input">
+						<span class="label-text flex items-center gap-2">
+							<List class="h-4 w-4" />
+							{m['settings.max_visible_matches']()}
+						</span>
+					</label>
+					<input
+						id="max-results-input"
+						type="number"
+						min="1"
+						max="50"
+						class="input input-bordered w-full max-w-xs"
+						bind:value={maxVisibleMatches}
+						on:change={handleMaxResultsChange}
+						aria-label={m['settings.max_visible_matches']()}
+					/>
+					<div class="mt-1">
+						<span class="label-text-alt text-xs opacity-70">
+							{m['settings.max_visible_matches_description']()}
+						</span>
+					</div>
+				</div>
+
+				<div class="form-control w-full max-w-xs">
+					<label class="label" for="threshold-input">
+						<span class="label-text flex items-center gap-2">
+							<Filter class="h-4 w-4" />
+							{m['settings.confidence_threshold']()}
+						</span>
+					</label>
+					<div class="flex items-center gap-2">
+						<input
+							id="threshold-input"
+							type="range"
+							min="0"
+							max="100"
+							step="0.5"
+							class="range range-primary flex-1"
+							bind:value={confidenceThreshold}
+							on:change={handleThresholdChange}
+							aria-label={m['settings.confidence_threshold']()}
+						/>
+						<span class="text-sm font-mono w-12 text-right">{confidenceThreshold.toFixed(1)}%</span>
+					</div>
+					<div class="mt-1">
+						<span class="label-text-alt text-xs opacity-70">
+							{m['settings.confidence_threshold_description']()}
+						</span>
+					</div>
+				</div>
+
+				<div class="form-control w-full max-w-xs">
+					<label class="label" for="max-total-results-input">
+						<span class="label-text flex items-center gap-2">
+							<List class="h-4 w-4" />
+							{m['settings.max_total_results']()}
+						</span>
+					</label>
+					<input
+						id="max-total-results-input"
+						type="number"
+						min="0"
+						max="10000"
+						class="input input-bordered w-full max-w-xs"
+						bind:value={maxTotalResults}
+						on:change={handleMaxTotalResultsChange}
+						aria-label={m['settings.max_total_results']()}
+					/>
+					<div class="mt-1">
+						<span class="label-text-alt text-xs opacity-70">
+							{m['settings.max_total_results_description']()}
+						</span>
+					</div>
+					<div class="mt-1">
+						<span class="label-text-alt text-xs opacity-70 text-warning">
+							⚠️ {m['settings.max_total_results_warning']()}
+						</span>
+					</div>
 				</div>
 			</div>
 

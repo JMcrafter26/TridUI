@@ -47,7 +47,11 @@
 		"definitions_not_found": "定義が見つかりません",
 		"definitions_not_found_explanation": "ファイルをスキャンするにはTrID定義が必要です。続行するにはダウンロードしてください。",
 		"download": "ダウンロード",
-		"copied": "コピーしました！"
+		"copied": "コピーしました！",
+		"copy": "コピー",
+		"search_online": "オンライン検索",
+		"show_more_matches": "さらに{count}件の一致を表示",
+		"show_less": "少なく表示"
 	},
 	"settings": {
 		"settings": "設定",
@@ -85,8 +89,16 @@
 		"theme_light": "ライト",
 		"theme_dark": "ダーク",
 		"theme_auto": "自動（システム）",
-		"theme_auto_description": "システム設定に自動的に合わせます",
+		"theme_auto_description": "システムの設定に自動で合わせます",
 		"search_engine": "検索エンジン",
-		"search_engine_description": "お好みの検索エンジンを選択"
+		"search_engine_description": "お好みの検索エンジンを選択",
+		"scan_results": "スキャン結果の表示",
+		"max_visible_matches": "最大表示一致数",
+		"max_visible_matches_description": "初期表示する一致数 (1-50)",
+		"confidence_threshold": "信頼度しきい値",
+		"confidence_threshold_description": "この信頼度パーセント未満の一致を非表示",
+		"max_total_results": "最大総結果数",
+		"max_total_results_description": "スキャンからの最大結果数 (0 = 無制限)",
+		"max_total_results_warning": "高い値はパフォーマンスに影響する可能性があります"
 	}
 }

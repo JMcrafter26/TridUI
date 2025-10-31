@@ -93,8 +93,9 @@ func initializeAnalyzer() (*trid.Analyzer, error) {
 }
 
 // ProcessFile analyzes a file using TrID and returns the results
-func (a *App) ProcessFile(filePath string) (*TridScanResult, error) {
-	runtime.LogDebugf(a.ctx, "ProcessFile called with: %s", filePath)
+// maxResults: maximum number of results to return (0 = unlimited)
+func (a *App) ProcessFile(filePath string, maxResults int) (*TridScanResult, error) {
+	runtime.LogDebugf(a.ctx, "ProcessFile called with: %s, maxResults: %d", filePath, maxResults)
 
 	// Get file info
 	fileInfo, err := os.Stat(filePath)
@@ -125,8 +126,12 @@ func (a *App) ProcessFile(filePath string) (*TridScanResult, error) {
 	// Configuration for filtering
 	const (
 		minConfidence = 0.05 // Only include results with at least 5% confidence
-		maxResults    = 50   // Limit to top 50 results
 	)
+
+	// If maxResults is 0, set to unlimited (use a very high number)
+	if maxResults == 0 {
+		maxResults = 999999
+	}
 
 	// Convert results to our format, filtering by confidence
 	matchCount := 0

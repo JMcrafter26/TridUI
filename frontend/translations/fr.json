@@ -47,6 +47,10 @@
 		"definitions_not_found_explanation": "Les définitions TrID sont nécessaires pour scanner les fichiers. Veuillez les télécharger pour continuer.",
 		"download": "Télécharger",
 		"copied": "Copié !",
+		"copy": "Copier",
+		"search_online": "Rechercher en ligne",
+		"show_more_matches": "Afficher {count} correspondances supplémentaires",
+		"show_less": "Afficher moins",
 		"made_with_hearts_by": "Fait avec ❤️ par Cufiy"
 	},
 	"settings": {
@@ -87,6 +91,14 @@
 		"theme_auto": "Auto (Système)",
 		"theme_auto_description": "Correspond automatiquement aux préférences de votre système",
 		"search_engine": "Moteur de recherche",
-		"search_engine_description": "Choisissez votre moteur de recherche préféré"
+		"search_engine_description": "Choisissez votre moteur de recherche préféré",
+		"scan_results": "Affichage des résultats de scan",
+		"max_visible_matches": "Correspondances visibles maximales",
+		"max_visible_matches_description": "Nombre de correspondances à afficher initialement (1-50)",
+		"confidence_threshold": "Seuil de confiance",
+		"confidence_threshold_description": "Masquer les correspondances en dessous de ce pourcentage de confiance",
+		"max_total_results": "Résultats totaux maximaux",
+		"max_total_results_description": "Nombre maximal de résultats du scan (0 = illimité)",
+		"max_total_results_warning": "Des valeurs élevées peuvent impacter les performances"
 	}
 }

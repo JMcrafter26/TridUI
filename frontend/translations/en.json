@@ -49,7 +49,9 @@
 		"download": "Download",
 		"copied": "Copied!",
 		"copy": "Copy",
-		"search_online": "Search Online"
+		"search_online": "Search Online",
+		"show_more_matches": "Show {count} more matches",
+		"show_less": "Show less"
 	},
 	"settings": {
 		"settings": "Settings",
@@ -89,6 +91,14 @@
 		"theme_auto": "Auto (System)",
 		"theme_auto_description": "Automatically matches your system preferences",
 		"search_engine": "Search Engine",
-		"search_engine_description": "Choose your preferred search engine"
+		"search_engine_description": "Choose your preferred search engine",
+		"scan_results": "Scan Results Display",
+		"max_visible_matches": "Maximum Visible Matches",
+		"max_visible_matches_description": "Number of matches to show initially (1-50)",
+		"confidence_threshold": "Confidence Threshold",
+		"confidence_threshold_description": "Hide matches below this confidence percentage",
+		"max_total_results": "Maximum Total Results",
+		"max_total_results_description": "Maximum number of results from scan (0 = unlimited)",
+		"max_total_results_warning": "High values may impact performance"
 	}
 }

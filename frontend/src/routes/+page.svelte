@@ -27,6 +27,10 @@
 	let definitionsExist = false;
 	let showDefinitionsAlert = false;
 	let copiedItem: string | null = null;
+	let showAllMatches = false;
+	let maxVisibleMatches = 5;
+	let confidenceThreshold = 10.0;
+	let maxTotalResults = 50;
 
 	async function handleSelectFile() {
 		try {
@@ -54,8 +58,8 @@
 		isScanning = true;
 
 		try {
-			// Call your Wails backend function with the file path
-			const result = await ProcessFile(filePath);
+			// Call your Wails backend function with the file path and max results
+			const result = await ProcessFile(filePath, maxTotalResults);
 			console.log('Scan result received, matches:', result.totalMatches);
 			
 			// Update state
@@ -98,6 +102,7 @@
 		selectedFileName = '';
 		scanResult = null;
 		isScanning = false;
+		showAllMatches = false;
 	}
 
 	function formatFileSize(bytes: number): string {
@@ -134,6 +139,20 @@
 	}
 
 	onMount(() => {
+		// Load settings from localStorage
+		const savedMaxResults = localStorage.getItem('maxVisibleMatches');
+		if (savedMaxResults) {
+			maxVisibleMatches = parseInt(savedMaxResults, 10);
+		}
+		const savedThreshold = localStorage.getItem('confidenceThreshold');
+		if (savedThreshold) {
+			confidenceThreshold = parseFloat(savedThreshold);
+		}
+		const savedMaxTotal = localStorage.getItem('maxTotalResults');
+		if (savedMaxTotal) {
+			maxTotalResults = parseInt(savedMaxTotal, 10);
+		}
+		
 		// Check if definitions exist
 		CheckDefinitionsExist()
 			.then((exists) => {
@@ -365,7 +384,7 @@
 									{m['home.other_possible_matches']()} ({scanResult.totalMatches - 1})
 								</h3>
 								<div class="space-y-2 mt-2">
-									{#each scanResult.matches.slice(1, 6) as match, index}
+									{#each scanResult.matches.slice(1, showAllMatches ? undefined : maxVisibleMatches + 1) as match, index}
 										<div class="border-l-2 border-base-300 pl-3 py-1">
 											<div class="flex items-center justify-between">
 												<div>
@@ -412,10 +431,23 @@
 												</button>											{/if}
 										</div>
 								{/each}
-								{#if scanResult.totalMatches > 6}
-									<p class="text-xs opacity-60 text-center pt-2">
-										{m['home.more_possible_matches']({ count: scanResult.totalMatches - 6 })}.
-									</p>
+								{#if scanResult.totalMatches > maxVisibleMatches + 1 && !showAllMatches}
+									<button 
+										class="text-xs opacity-60 text-center pt-2 cursor-pointer hover:text-primary hover:underline w-full"
+										on:click={() => showAllMatches = true}
+										aria-label={m['home.show_more_matches']({ count: scanResult.totalMatches - maxVisibleMatches - 1 })}
+									>
+										{m['home.more_possible_matches']({ count: scanResult.totalMatches - maxVisibleMatches - 1 })}.
+									</button>
+								{/if}
+								{#if showAllMatches && scanResult.totalMatches > maxVisibleMatches + 1}
+									<button 
+										class="text-xs opacity-60 text-center pt-2 cursor-pointer hover:text-primary hover:underline w-full"
+										on:click={() => showAllMatches = false}
+										aria-label={m['home.show_less']()}
+									>
+										{m['home.show_less']()}
+									</button>
 								{/if}
 								</div>
 							</div>

@@ -57,7 +57,18 @@ func getAppDataDir() (string, error) {
 		appDataDir = filepath.Join(homeDir, ".config")
 	}
 
-	return filepath.Join(appDataDir, "Soru"), nil
+	appDataDir = filepath.Clean(appDataDir)
+	appDataDir = filepath.Join(appDataDir, "TridUI")
+
+	// if the directory doesn't exist, create it
+	if _, err := os.Stat(appDataDir); os.IsNotExist(err) {
+		err := os.MkdirAll(appDataDir, 0755)
+		if err != nil {
+			return "", err
+		}
+	}
+
+	return appDataDir, nil
 }
 
 // OpenAppDir opens the application data directory in the system's file explorer

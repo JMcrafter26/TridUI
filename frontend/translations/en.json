@@ -1,6 +1,5 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from en!",
 	"about": {
 		"about": "About",
 		"description": "Trid UI is a lightweight desktop application that provides a user-friendly interface for TrID, a powerful tool for scanning and analyzing files.",

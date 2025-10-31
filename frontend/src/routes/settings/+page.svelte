@@ -9,7 +9,7 @@
 		GetDefinitionsPath,
 		OpenAppDir
 	} from '../../../wailsjs/go/main/App';
-	import { Download, RefreshCw, FolderOpen, CheckCircle, AlertCircle, Info } from '@lucide/svelte';
+	import { Download, RefreshCw, FolderOpen, CircleCheck, CircleAlert, Info } from '@lucide/svelte';
 
 	let definitionsExist = false;
 	let definitionsPath = '';
@@ -107,36 +107,36 @@
 
 			<!-- TrID Definitions Section -->
 			<div class="space-y-4">
-				<div class="divider">TrID Definitions</div>
+				<div class="divider">{m['settings.trid_definitions']()}</div>
 
 				<!-- Definitions Status -->
 				<div class="alert {definitionsExist ? 'alert-success' : 'alert-warning'}">
 					{#if definitionsExist}
-						<CheckCircle class="h-5 w-5" />
+						<CircleCheck class="h-5 w-5" />
 						<div class="flex-1">
-							<h3 class="font-bold">Definitions Installed</h3>
+							<h3 class="font-bold">{m['settings.definitions_installed']()}</h3>
 							<div class="text-sm">
 								{#if updateInfo}
 									<div class="mt-1 space-y-1">
-										<div>Definitions: {updateInfo.defsCount.toLocaleString()} file types</div>
+										<div>{m['settings.definitions']()}: {updateInfo.defsCount.toLocaleString()} file types</div>
 										{#if updateInfo.lastUpdated}
-											<div>Last updated: {updateInfo.lastUpdated}</div>
+											<div>{m['settings.last_updated']()}: {updateInfo.lastUpdated}</div>
 										{/if}
 										{#if updateInfo.currentMD5 && updateInfo.currentMD5 !== 'none'}
 											<div class="text-xs opacity-70">MD5: {updateInfo.currentMD5}</div>
 										{/if}
 									</div>
 								{:else}
-									Located at: {definitionsPath}
+									{m['settings.located_at']()}: {definitionsPath}
 								{/if}
 							</div>
 						</div>
 					{:else}
-						<AlertCircle class="h-5 w-5" />
+						<CircleAlert class="h-5 w-5" />
 						<div class="flex-1">
-							<h3 class="font-bold">Definitions Not Found</h3>
+							<h3 class="font-bold">{m['settings.definitions_not_found']()}</h3>
 							<div class="text-sm">
-								Download the definitions file to enable file identification.
+								{m['settings.definitions_not_found_explanation']()}
 							</div>
 						</div>
 					{/if}
@@ -150,11 +150,11 @@
 								<div class="flex items-center gap-2">
 									<Info class="h-5 w-5" />
 									<span class="font-semibold">
-										{updateInfo.isUpToDate ? 'Up to date' : 'Update available'}
+										{updateInfo.isUpToDate ? m["settings.up_to_date"]() : m["settings.update_available"]()}
 									</span>
 								</div>
 								{#if !updateInfo.isUpToDate}
-									<span class="badge badge-primary">New version</span>
+									<span class="badge badge-primary">{m['settings.new_version']()}</span>
 								{/if}
 							</div>
 							{#if updateInfo.error}
@@ -167,9 +167,9 @@
 				<!-- Error Display -->
 				{#if updateError}
 					<div class="alert alert-error">
-						<AlertCircle class="h-5 w-5" />
+						<CircleAlert class="h-5 w-5" />
 						<div>
-							<h3 class="font-bold">Error</h3>
+							<h3 class="font-bold">{m['settings.error']()}</h3>
 							<div class="text-sm">{updateError}</div>
 						</div>
 					</div>
@@ -202,10 +202,10 @@
 					>
 						{#if isCheckingUpdates}
 							<RefreshCw class="h-4 w-4 animate-spin" />
-							Checking...
+							{m["about.checking_for_updates"]}
 						{:else}
 							<RefreshCw class="h-4 w-4" />
-							Check for Updates
+							{m["about.check_for_updates"]}
 						{/if}
 					</button>
 
@@ -213,7 +213,7 @@
 						<button class="btn btn-success" on:click={downloadUpdates} disabled={isUpdating}>
 							{#if isUpdating}
 								<Download class="h-4 w-4 animate-bounce" />
-								Updating...
+								{m["settings.updating"]()}
 							{:else}
 								<Download class="h-4 w-4" />
 								{definitionsExist ? 'Update Definitions' : 'Download Definitions'}
@@ -223,18 +223,17 @@
 
 					<button class="btn btn-ghost" on:click={openAppDirectory}>
 						<FolderOpen class="h-4 w-4" />
-						Open App Directory
+						{m['settings.open_app_directory']()}
 					</button>
 				</div>
 
 				<!-- Info Box -->
 				<div class="text-xs opacity-70 mt-4 p-3 bg-base-300 rounded">
 					<p class="mb-1">
-						<strong>Note:</strong> TrID definitions are updated regularly by Marco Pontello to support
-						new file types.
+						<strong>{m['settings.note']()}</strong> {m['settings.definitions_info']()}
 					</p>
 					<p>
-						Definitions are downloaded from:
+						{m['settings.downloaded_from']()}:
 						<a
 							href="http://mark0.net/soft-trid-e.html"
 							target="_blank"
@@ -247,14 +246,14 @@
 
 			<!-- Debug Section -->
 			<details class="collapse border-base-300 border mt-6">
-				<summary class="collapse-title text-sm opacity-70">Debug Tools</summary>
+				<summary class="collapse-title text-sm opacity-70">{m['settings.debug_tools']()}</summary>
 				<div class="collapse-content text-sm space-y-2">
 					<button class="btn btn-sm btn-primary" on:click={() => WindowSetSize(500, 400)}>
 						Reset window size
 					</button>
 					{#if definitionsPath}
 						<div class="text-xs opacity-70 break-all">
-							<strong>Definitions path:</strong>
+							<strong>{m['settings.located_at']()}:</strong>
 							{definitionsPath}
 						</div>
 					{/if}

@@ -170,7 +170,7 @@
 								target="_blank"
 								class="hover:underline"
 								rel="noopener noreferrer"
-								on:click|stopPropagation>by Cufiy</a
+								on:click|stopPropagation>{m['home.contribute']()}</a
 							>
 						</p>
 					</div>
@@ -189,20 +189,20 @@
 					<div class="alert alert-info max-w-2xl w-full">
 						<FileSearch class="h-6 w-6 animate-pulse" />
 						<div>
-							<h3 class="font-bold">Scanning: {selectedFileName}</h3>
-							<div class="text-sm">Analyzing file with TrID...</div>
+							<h3 class="font-bold">{m['home.scanning']()}: {selectedFileName}</h3>
+							<div class="text-sm">{m['home.analyzing_file']()}</div>
 						</div>
 					</div>
 				</div>
 			{:else if scanResult}
 				<div class="max-w-4xl w-full mx-auto space-y-4">
 					<!-- Header with file info and reset button -->
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between mt-1">
 						<div>
 							<h2 class="text-2xl font-bold">{scanResult.fileName}</h2>
 							<p class="text-sm opacity-70">{formatFileSize(scanResult.fileSize)}</p>
 						</div>
-						<button on:click={resetState} class="btn btn-sm btn-ghost">Scan Another</button>
+						<button on:click={resetState} class="btn btn-sm btn-ghost">{m['home.scan_another']()}</button>
 					</div>
 
 					<!-- Error Alert -->
@@ -210,7 +210,7 @@
 						<div class="alert alert-error">
 							<AlertCircle class="h-6 w-6" />
 							<div>
-								<h3 class="font-bold">Error</h3>
+								<h3 class="font-bold">{m['home.error']()}</h3>
 								<div class="text-sm">{scanResult.error}</div>
 							</div>
 						</div>
@@ -223,7 +223,7 @@
 								<div class="flex items-start gap-3">
 									<CheckCircle2 class="h-6 w-6 text-success shrink-0 mt-1" />
 									<div class="flex-1">
-										<h3 class="card-title text-success">Best Match</h3>
+										<h3 class="card-title text-success">{m['home.best_match']()}</h3>
 										<div class="mt-2 space-y-2">
 											<div>
 												<span class="font-semibold">{scanResult.bestMatch.name}</span>
@@ -238,7 +238,7 @@
 											{/if}
 											<div class="flex items-center gap-4 text-sm">
 												<div>
-													<span class="opacity-70">Confidence:</span>
+													<span class="opacity-70">{m['home.confidence']()}:</span>
 													<span class="font-semibold ml-1"
 														>{scanResult.bestMatch.confidence.toFixed(1)}%</span
 													>
@@ -269,7 +269,7 @@
 						<div class="card bg-base-200">
 							<div class="card-body">
 								<h3 class="card-title text-base">
-									Other Possible Matches ({scanResult.totalMatches - 1})
+									{m['home.other_possible_matches']()} ({scanResult.totalMatches - 1})
 								</h3>
 								<div class="space-y-2 mt-2">
 									{#each scanResult.matches.slice(1, 6) as match}
@@ -292,7 +292,7 @@
 									{/each}
 									{#if scanResult.totalMatches > 6}
 										<p class="text-xs opacity-60 text-center pt-2">
-											...and {scanResult.totalMatches - 6} more matches
+											{m['home.more_possible_matches'](scanResult.totalMatches - 6)}.
 										</p>
 									{/if}
 								</div>
@@ -302,9 +302,9 @@
 						<div class="alert alert-warning">
 							<AlertCircle class="h-6 w-6" />
 							<div>
-								<h3 class="font-bold">No Matches Found</h3>
+								<h3 class="font-bold">{m['home.no_matches_found']()}</h3>
 								<div class="text-sm">
-									TrID could not identify this file type. It may be a rare or custom format.
+									{m['home.no_matches_explanation']()}
 								</div>
 							</div>
 						</div>
@@ -319,13 +319,13 @@
 	<div class="alert alert-soft alert-warning mt-4 z-50 shadow-lg fixed bottom-3 md:bottom-6 max-w-md flex items-start gap-4 mr-20 ml-4">
 		<AlertCircle class="h-6 w-6 text-warning my-auto" />
 		<div class="flex-1">
-			<h3 class="font-bold">Definitions Not Found</h3>
-			<div class="text-sm">TrID definitions are required to scan files. Please download them to continue.</div>
+			<h3 class="font-bold">{m['home.definitions_not_found']()}</h3>
+			<div class="text-sm">{m['home.definitions_not_found_explanation']()}</div>
 		</div>
 		<div class="flex gap-2 my-auto">
 			<button class="btn btn-sm btn-warning" on:click={goToSettings}>
 				<Download class="h-4 w-4" />
-				Download
+				{m['home.download']()}
 			</button>
 		</div>
 	</div>

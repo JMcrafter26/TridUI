@@ -58,6 +58,16 @@
 		"note": "Note",
 		"definitions_info": "TrID definitions are updated regularly by Marco Pontello to support \t\t\t\t\t\tnew file types.",
 		"downloaded_from": "Definitions are downloaded from",
-		"debug_tools": "Debug Tools"
+		"debug_tools": "Debug Tools",
+		"checking_for_updates": "Checking for updates",
+		"check_for_updates": "Check for updates",
+		"language": "Language",
+		"language_description": "Select the application language",
+		"theme": "Theme",
+		"theme_description": "Choose your preferred theme",
+		"theme_light": "Light",
+		"theme_dark": "Dark",
+		"theme_auto": "Auto (System)",
+		"theme_auto_description": "Automatically matches your system preferences"
 	}
 }

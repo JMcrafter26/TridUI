@@ -17,7 +17,16 @@
 		"release_notes": "Release Notes",
 		"download": "Download",
 		"up_to_date": "You're running the latest version!",
-		"checking_for_updates": "Checking for updates"
+		"checking_for_updates": "Checking for updates",
+		"made_with_hearts_by": "Made with ❤️ by Cufiy"
+	},
+	"header": {
+		"home": "Home",
+		"settings": "Settings",
+		"about": "About",
+		"close": "Close",
+		"minimize": "Minimize",
+		"pin": "Pin"
 	},
 	"home": {
 		"click_to_browse": "Click to browse or drag a file here",
@@ -38,7 +47,9 @@
 		"definitions_not_found": "Definitions Not Found",
 		"definitions_not_found_explanation": "TrID definitions are required to scan files. Please download them to continue.",
 		"download": "Download",
-		"copied": "Copied!"
+		"copied": "Copied!",
+		"copy": "Copy",
+		"search_online": "Search Online"
 	},
 	"settings": {
 		"settings": "Settings",
@@ -62,8 +73,12 @@
 		"debug_tools": "Debug Tools",
 		"checking_for_updates": "Checking for updates",
 		"check_for_updates": "Check for updates",
+		"download_definitions": "Download Definitions",
+		"update_definitions": "Update Definitions",
 		"language": "Language",
 		"language_description": "Select the application language",
+		"language_disclaimer": "This translation may not be perfect. If you find any issues, please report them on GitHub.",
+		"language_help_translation": "If you want to help improve translations, please visit our <a href='https://github.com/JMcrafter26/TridUI/issues' target='_blank' class='link'>GitHub Issues</a> page.",
 		"theme": "Theme",
 		"theme_description": "Choose your preferred theme",
 		"theme_light": "Light",

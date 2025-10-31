@@ -1,5 +1,13 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"header": {
+		"home": "Home",
+		"settings": "Impostazioni",
+		"about": "Informazioni",
+		"close": "Chiudi",
+		"minimize": "Riduci a icona",
+		"pin": "Fissa"
+	},
 	"about": {
 		"about": "Informazioni",
 		"description": "Trid UI è un'applicazione desktop leggera che fornisce un'interfaccia user-friendly per TrID, uno strumento potente per scansionare e analizzare file.",
@@ -17,7 +25,8 @@
 		"release_notes": "Note di rilascio",
 		"download": "Scarica",
 		"up_to_date": "Stai usando l'ultima versione!",
-		"checking_for_updates": "Verifica aggiornamenti"
+		"checking_for_updates": "Verifica aggiornamenti",
+		"made_with_hearts_by": "Creato con ❤️ da Cufiy"
 	},
 	"home": {
 		"click_to_browse": "Fai clic per sfogliare o trascina un file qui",
@@ -38,13 +47,17 @@
 		"definitions_not_found": "Definizioni non trovate",
 		"definitions_not_found_explanation": "Le definizioni TrID sono necessarie per scansionare i file. Scaricale per continuare.",
 		"download": "Scarica",
-		"copied": "Copiato!"
+		"copied": "Copiato!",
+		"copy": "Copia",
+		"search_online": "Cerca online"
 	},
 	"settings": {
 		"settings": "Impostazioni",
 		"description": "Gestisci le impostazioni dell'applicazione",
 		"language": "Lingua",
 		"language_description": "Seleziona la tua lingua preferita",
+		"language_disclaimer": "Questa traduzione potrebbe non essere perfetta. Se trovi problemi, segnalali su GitHub.",
+		"language_help_translation": "Se desideri contribuire a migliorare le traduzioni, visita la nostra <a href='https://github.com/JMcrafter26/TridUI/issues' target='_blank' class='link'>pagina GitHub Issues</a>.",
 		"trid_definitions": "Definizioni TrID",
 		"definitions_installed": "Definizioni installate",
 		"definitions": "Definizioni",
@@ -62,6 +75,10 @@
 		"definitions_info": "Le definizioni TrID vengono aggiornate regolarmente da Marco Pontello per supportare nuovi tipi di file.",
 		"downloaded_from": "Le definizioni vengono scaricate da",
 		"debug_tools": "Strumenti di debug",
+		"checking_for_updates": "Verifica aggiornamenti",
+		"check_for_updates": "Verifica aggiornamenti",
+		"download_definitions": "Scarica definizioni",
+		"update_definitions": "Aggiorna definizioni",
 		"theme": "Tema",
 		"theme_description": "Scegli il tuo tema preferito",
 		"theme_light": "Chiaro",

@@ -174,6 +174,7 @@
 				on:dragenter={handleDragEnter}
 				on:dragleave={handleDragLeave}
 				on:dragover={handleDragOver}
+				aria-label={m['home.click_to_browse']()}
 				class="w-full h-full rounded-box border-2 border-dashed transition-all duration-200 flex items-center justify-center shadow-lg cursor-pointer
 					{isDragging
 					? 'border-primary bg-primary/10 scale-[1.02] shadow-[0_0_0_4px_hsl(var(--p)/0.2)]'
@@ -191,6 +192,7 @@
 					<div class="max-w-4xl mx-auto">
 						<p class="text-xs opacity-60 mt-4 sm:justify-center">
 							<a href="/about" on:click|stopPropagation class="hover:underline"
+								aria-label={m['about.about']()}
 								>&copy; 2025 TridUI</a
 							>
 							<a
@@ -198,6 +200,7 @@
 								target="_blank"
 								class="hover:underline"
 								rel="noopener noreferrer"
+								aria-label={m['home.contribute']()}
 								on:click|stopPropagation>{m['home.contribute']()}</a
 							>
 						</p>
@@ -250,7 +253,7 @@
 							<h2 class="text-2xl font-bold text-pretty max-w-full wrap-anywhere">{scanResult.fileName}</h2>
 							<p class="text-sm opacity-70">{formatFileSize(scanResult.fileSize)}</p>
 						</div>
-						<button on:click={resetState} class="btn btn-sm btn-ghost">{m['home.scan_another']()}</button>
+						<button on:click={resetState} class="btn btn-sm btn-ghost" aria-label={m['home.scan_another']()}>{m['home.scan_another']()}</button>
 					</div>
 
 					<!-- Error Alert -->
@@ -279,6 +282,7 @@
 													class:tooltip-open={copiedItem === 'best-name'}
 													data-tip={copiedItem === 'best-name' ? m['home.copied']() : ''}
 													on:click={() => copyToClipboard(scanResult?.bestMatch?.name || '', 'best-name')}
+													aria-label={m['home.copy']()}
 												>
 													<span class="hover:opacity-80">{scanResult.bestMatch.name}</span>
 												</button>
@@ -288,6 +292,7 @@
 														class:tooltip-open={copiedItem === 'best-extension'}
 														data-tip={copiedItem === 'best-extension' ? m['home.copied']() : ''}
 														on:click={() => copyToClipboard(scanResult?.bestMatch?.extension || '', 'best-extension')}
+														aria-label={m['home.copy']()}
 													>
 														.{scanResult.bestMatch.extension}
 													</button>
@@ -296,6 +301,7 @@
 												<button
 													class="badge badge-sm ml-1 cursor-pointer hover:badge-primary"
 													on:click={() => searchOnline(scanResult?.bestMatch?.name  + ' (' + scanResult?.bestMatch?.extension + ')' )}
+													aria-label={m['home.search_online']()}
 												>
 													<Search class="h-4 w-4" />
 												</button>
@@ -304,6 +310,7 @@
 												<button class="text-sm cursor-pointer tooltip" class:tooltip-open={copiedItem === 'best-description'}
 													data-tip={copiedItem === 'best-description' ? m['home.copied']() : ''}
 													on:click={() => copyToClipboard(scanResult?.bestMatch?.description || '', 'best-description')}
+													aria-label={m['home.copy']()}
 												>
 													<span class="hover:opacity-60 opacity-80 inline">{scanResult.bestMatch.description}</span>
 												</button>
@@ -323,6 +330,7 @@
 															class:tooltip-open={copiedItem === 'best-mime'}
 															data-tip={copiedItem === 'best-mime' ? m['home.copied']() : ''}
 															on:click={() => copyToClipboard(scanResult?.bestMatch?.mimeType || '', 'best-mime')}
+															aria-label={m['home.copy']()}
 														>
 															<span class="hover:opacity-80 inline">{scanResult.bestMatch.mimeType}</span>
 														</button>
@@ -358,6 +366,7 @@
 														class:tooltip-open={copiedItem === `match-${index}-name`}
 														data-tip={copiedItem === `match-${index}-name` ? m['home.copied']() : ''}
 														on:click={() => copyToClipboard(match.name, `match-${index}-name`)}
+														aria-label={m['home.copy']()}
 													>
 														<span class="hover:opacity-80">{match.name}</span>
 													</button>
@@ -367,6 +376,7 @@
 															class:tooltip-open={copiedItem === `match-${index}-ext`}
 															data-tip={copiedItem === `match-${index}-ext` ? m['home.copied']() : ''}
 															on:click={() => copyToClipboard(match.extension || '', `match-${index}-ext`)}
+															aria-label={m['home.copy']()}
 														>
 															.{match.extension}
 														</button>
@@ -375,6 +385,7 @@
 													<button
 														class="badge badge-xs ml-1 cursor-pointer hover:badge-primary"
 														on:click={() => searchOnline(match.name + ' (' + match.extension + ')')}
+														aria-label={m['home.search_online']()}
 													>
 														<Search class="h-3 w-3" />
 													</button>
@@ -387,6 +398,7 @@
 												<button class="text-sm cursor-pointer tooltip" class:tooltip-open={copiedItem === 'match-description'}
 													data-tip={copiedItem === 'match-description' ? m['home.copied']() : ''}
 													on:click={() => copyToClipboard(match?.description || '', 'match-description')}
+													aria-label={m['home.copy']()}
 												>
 													<span class="hover:opacity-60 opacity-80 inline">{match.description}</span>
 												</button>											{/if}
@@ -401,12 +413,24 @@
 							</div>
 						</div>
 					{:else if scanResult.totalMatches === 0}
-						<div class="alert alert-warning">
-							<CircleAlert class="h-6 w-6" />
-							<div>
-								<h3 class="font-bold">{m['home.no_matches_found']()}</h3>
-								<div class="text-sm">
-									{m['home.no_matches_explanation']()}
+						<div class="card bg-base-200">
+							<div class="card-body">
+								<div class="flex flex-col items-center text-center gap-4 py-8">
+									<div class="relative">
+										<div class="absolute inset-0 bg-warning/20 rounded-full blur-xl"></div>
+										<div class="relative bg-warning/10 p-6 rounded-full">
+											<CircleAlert class="h-12 w-12 text-warning" />
+										</div>
+									</div>
+									<div class="space-y-2">
+										<h3 class="text-xl font-bold">{m['home.no_matches_found']()}</h3>
+										<p class="text-sm opacity-70 max-w-md">
+											{m['home.no_matches_explanation']()}
+										</p>
+									</div>
+									<button on:click={resetState} class="btn btn-sm btn-ghost mt-2" aria-label={m['home.scan_another']()}>
+										{m['home.scan_another']()}
+									</button>
 								</div>
 							</div>
 						</div>
@@ -425,7 +449,7 @@
 			<div class="text-sm">{m['home.definitions_not_found_explanation']()}</div>
 		</div>
 		<div class="flex gap-2 my-auto">
-			<button class="btn btn-sm btn-warning" on:click={goToSettings}>
+			<button class="btn btn-sm btn-warning" on:click={goToSettings} aria-label={m['home.download']()}>
 				<Download class="h-4 w-4" />
 				{m['home.download']()}
 			</button>

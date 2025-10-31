@@ -59,20 +59,14 @@ The application uses a native Go implementation of the TrID file identification 
 
 ### Demonstration Videos
 
-<div style="overflow-x: scroll; display: flex; gap: 16px; padding-bottom: 16px; max-height: 400px; width: 100%;">
-  <video controls style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" loop>
-    <source src="https://github.com/JMcrafter26/TridUI/raw/refs/heads/main/.github/videos/demo1.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-  <video controls style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" loop>
-    <source src="https://github.com/JMcrafter26/TridUI/raw/refs/heads/main/.github/videos/demo2.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-  <video controls style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" loop>
-    <source src="https://github.com/JMcrafter26/TridUI/raw/refs/heads/main/.github/videos/demo3.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-</div>
+<details>
+<summary>Click to expand</summary>
+
+https://github.com/user-attachments/assets/3a9b397c-e459-49c5-b4f6-ce81d550aeb9
+
+https://github.com/user-attachments/assets/77765177-005c-4336-b691-aa7862b6efcd
+
+</details>
 
 ### Screenshots
 

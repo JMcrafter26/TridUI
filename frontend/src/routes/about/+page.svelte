@@ -15,6 +15,15 @@
 	onMount(async () => {
 		try {
 			version = await GetVersion();
+			
+			// Check for app updates on startup if enabled
+			const checkOnStartup = localStorage.getItem('checkAppUpdatesOnStartup');
+			if (checkOnStartup === 'true') {
+				// Non-blocking check
+				checkForUpdates().catch(err => {
+					console.error('Background update check failed:', err);
+				});
+			}
 		} catch (err) {
 			console.error('Failed to get version:', err);
 		}

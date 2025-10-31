@@ -99,6 +99,14 @@
 		"confidence_threshold_description": "Hide matches below this confidence percentage",
 		"max_total_results": "Maximum Total Results",
 		"max_total_results_description": "Maximum number of results from scan (0 = unlimited)",
-		"max_total_results_warning": "High values may impact performance"
+		"max_total_results_warning": "High values may impact performance",
+		"reset_settings": "Reset Settings",
+		"reset_settings_description": "Reset all settings to their default values. This will restore language, theme, search engine, and scan display preferences.",
+		"reset_to_defaults": "Reset to Defaults",
+		"auto_update_definitions": "Auto-update definitions on startup",
+		"auto_update_definitions_description": "Automatically download and install definition updates when the app starts",
+		"check_app_updates": "Check for app updates on startup",
+		"check_app_updates_description": "Automatically check for new app versions when the app starts",
+		"app_updates": "App Updates"
 	}
 }

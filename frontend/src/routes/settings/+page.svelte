@@ -10,7 +10,7 @@
 		GetDefinitionsPath,
 		OpenAppDir
 	} from '../../../wailsjs/go/main/App';
-	import { Download, RefreshCw, FolderOpen, CircleCheck, CircleAlert, Info, Languages, Moon, Sun, Monitor, Search, List, Filter } from '@lucide/svelte';
+	import { Download, RefreshCw, FolderOpen, CircleCheck, CircleAlert, Info, Languages, Moon, Sun, Monitor, Search, List, Funnel, RotateCcw, TriangleAlert } from '@lucide/svelte';
 	import { searchEngines } from '$lib/config/searchEngines';
 
 	let definitionsExist = false;
@@ -27,6 +27,8 @@
 	let maxVisibleMatches = 5;
 	let confidenceThreshold = 10.0;
 	let maxTotalResults = 50;
+	let autoUpdateDefinitions = true;
+	let checkAppUpdatesOnStartup = true;
 
 	// Dynamically get language display names based on available locales
 	const availableLanguages = locales.map((locale) => {
@@ -113,6 +115,18 @@
 		}
 	}
 
+	function handleAutoUpdateDefinitionsChange(event: Event) {
+		const target = event.target as HTMLInputElement;
+		autoUpdateDefinitions = target.checked;
+		localStorage.setItem('autoUpdateDefinitions', autoUpdateDefinitions.toString());
+	}
+
+	function handleCheckAppUpdatesChange(event: Event) {
+		const target = event.target as HTMLInputElement;
+		checkAppUpdatesOnStartup = target.checked;
+		localStorage.setItem('checkAppUpdatesOnStartup', checkAppUpdatesOnStartup.toString());
+	}
+
 	async function checkForUpdates() {
 		isCheckingUpdates = true;
 		updateError = '';
@@ -153,6 +167,32 @@
 		}
 	}
 
+	function resetSettings() {
+		// Reset to defaults
+		currentTheme = 'auto';
+		currentSearchEngine = 'Google';
+		maxVisibleMatches = 5;
+		confidenceThreshold = 10.0;
+		maxTotalResults = 50;
+		autoUpdateDefinitions = true;
+		checkAppUpdatesOnStartup = true;
+
+		// Clear localStorage
+		localStorage.removeItem('theme');
+		localStorage.removeItem('searchEngine');
+		localStorage.removeItem('maxVisibleMatches');
+		localStorage.removeItem('confidenceThreshold');
+		localStorage.removeItem('maxTotalResults');
+		localStorage.removeItem('autoUpdateDefinitions');
+		localStorage.removeItem('checkAppUpdatesOnStartup');
+
+		// Apply theme
+		applyTheme('auto');
+
+		// Reload to reset language to browser default
+		window.location.reload();
+	}
+
 	onMount(() => {
 		// Load saved theme
 		const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'auto' | null;
@@ -187,6 +227,22 @@
 			maxTotalResults = parseInt(savedMaxTotal, 10);
 		}
 
+		// Load auto update definitions setting
+		const savedAutoUpdate = localStorage.getItem('autoUpdateDefinitions');
+		if (savedAutoUpdate) {
+			autoUpdateDefinitions = savedAutoUpdate === 'true';
+		} else {
+			autoUpdateDefinitions = true; // Default to true
+		}
+
+		// Load check app updates on startup setting
+		const savedCheckAppUpdates = localStorage.getItem('checkAppUpdatesOnStartup');
+		if (savedCheckAppUpdates) {
+			checkAppUpdatesOnStartup = savedCheckAppUpdates === 'true';
+		} else {
+			checkAppUpdatesOnStartup = true; // Default to true
+		}
+
 		// Listen for system theme changes when in auto mode
 		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 		const handleSystemThemeChange = () => {
@@ -207,6 +263,12 @@
 				// Auto-check for updates if definitions exist
 				if (definitionsExist) {
 					return checkForUpdates();
+				}
+			})
+			.then(() => {
+				// Auto-update definitions if enabled and update is available
+				if (autoUpdateDefinitions && updateInfo && !updateInfo.isUpToDate) {
+					return downloadUpdates();
 				}
 			})
 			.catch((err) => {
@@ -248,7 +310,7 @@
 
 			<!-- TrID Definitions Section -->
 			<div class="space-y-4">
-				<div class="divider">{m['settings.trid_definitions']()}</div>
+				<div class="divider mt-0">{m['settings.trid_definitions']()}</div>
 
 				<!-- Definitions Status -->
 				<div class="alert {definitionsExist ? 'alert-info' : 'alert-warning'} alert-soft">
@@ -291,7 +353,7 @@
 						{:else}
 							<CircleAlert class="h-5 w-5" />
 						{/if}
-						<div class="flex-1 ml-2">
+						<div class="flex-1">
 							<div class="flex items-center justify-between">
 								<span class="font-semibold">
 									{updateInfo.isUpToDate ? m["settings.up_to_date"]() : m["settings.update_available"]()}
@@ -309,7 +371,7 @@
 
 				<!-- Error Display -->
 				{#if updateError}
-					<div class="alert alert-error">
+					<div class="alert alert-error alert-soft">
 						<CircleAlert class="h-5 w-5" />
 						<div>
 							<h3 class="font-bold">{m['settings.error']()}</h3>
@@ -353,6 +415,11 @@
 						{/if}
 					</button>
 
+					<button class="btn" on:click={openAppDirectory} aria-label={m["settings.open_app_directory"]()}>
+						<FolderOpen class="h-4 w-4" />
+						{m['settings.open_app_directory']()}
+					</button>
+
 					{#if !definitionsExist || (updateInfo && !updateInfo.isUpToDate)}
 						<button class="btn btn-success" on:click={downloadUpdates} disabled={isUpdating} aria-label="{isUpdating ? m["settings.updating"]() : definitionsExist ? m["settings.update_definitions"]() : m["settings.download_definitions"]()}">
 							{#if isUpdating}
@@ -364,15 +431,30 @@
 							{/if}
 						</button>
 					{/if}
+				</div>
 
-					<button class="btn" on:click={openAppDirectory} aria-label={m["settings.open_app_directory"]()}>
-						<FolderOpen class="h-4 w-4" />
-						{m['settings.open_app_directory']()}
-					</button>
+				<!-- Auto-Update Definitions -->
+				<div class="mt-4">
+					<div class="form-control">
+						<label class="label cursor-pointer justify-start gap-3">
+							<input 
+								type="checkbox" 
+								class="checkbox checkbox-primary" 
+								bind:checked={autoUpdateDefinitions}
+								on:change={handleAutoUpdateDefinitionsChange}
+							/>
+							<div>
+								<span class="label-text font-medium">{m['settings.auto_update_definitions']()}</span>
+								<p class="label-text-alt text-xs opacity-70 mt-1 text-wrap max-w-md">
+									{m['settings.auto_update_definitions_description']()}
+								</p>
+							</div>
+						</label>
+					</div>
 				</div>
 
 				<!-- Info Box -->
-				<div class="text-xs opacity-70 mt-4 p-3 bg-base-300 rounded">
+				<div class="text-xs opacity-70 mt-2 p-3 bg-base-300 rounded-lg">
 					<p class="mb-1">
 						<strong>{m['settings.note']()}</strong> {m['settings.definitions_info']()}
 					</p>
@@ -390,189 +472,235 @@
 				</div>
 			</div>
 
-			<!-- Language Section -->
-			<div class="space-y-4">
-				<div class="divider">{m['settings.language']()}</div>
-
-				<div class="form-control w-full max-w-xs">
-					<label class="label" for="language-select">
-						<span class="label-text flex items-center gap-2">
-							<Languages class="h-4 w-4" />
-							{m['settings.language_description']()}
-						</span>
-					</label>
-					<select
-						id="language-select"
-						class="select select-bordered w-full max-w-xs"
-						value={currentLocale}
-						on:change={handleLanguageChange}
-						aria-label={m['settings.language']()}
-					>
-						{#each availableLanguages as { code, name }}
-						<!-- capitalize the first letter of the language name -->
-							<option value={code}>{name.charAt(0).toUpperCase() + name.slice(1)}</option>
-						{/each}
-					</select>
-					<!-- if language is not english, show disclaimer -->
-					{#if currentLocale !== 'en'}
-						<div class="mt-1">
-							<span class="label-text-alt text-xs opacity-70 italic">
-								{m['settings.language_disclaimer']()}
-							</span>
+			<!-- Appearance Section -->
+			<div class="divider mt-8">{m['settings.language']()} & {m['settings.theme']()}</div>
+			<div class="grid md:grid-cols-2 gap-6">
+				<!-- Language Card -->
+				<div class="card bg-base-100 shadow-sm">
+					<div class="card-body p-5">
+						<h3 class="card-title text-base flex items-center gap-2 mb-3">
+							<Languages class="h-5 w-5" />
+							{m['settings.language']()}
+						</h3>
+						<div class="form-control">
+							<label class="label" for="language-select">
+								<span class="label-text text-sm">
+									{m['settings.language_description']()}
+								</span>
+							</label>
+							<select
+								id="language-select"
+								class="select select-bordered w-full"
+								value={currentLocale}
+								on:change={handleLanguageChange}
+								aria-label={m['settings.language']()}
+							>
+								{#each availableLanguages as { code, name }}
+									<option value={code}>{name.charAt(0).toUpperCase() + name.slice(1)}</option>
+								{/each}
+							</select>
+							{#if currentLocale !== 'en'}
+								<div class="mt-2">
+									<span class="label-text-alt text-xs opacity-70 italic">
+										{m['settings.language_disclaimer']()}
+									</span>
+								</div>
+							{/if}
+							<div class="mt-2">
+								<span class="label-text-alt text-xs opacity-70">
+									{@html m['settings.language_help_translation']()} 
+								</span>
+							</div>
 						</div>
-					{/if}
+					</div>
+				</div>
 
-					<!-- help translate -->
-					<div class="mt-1">
-						<span class="label-text-alt text-xs opacity-70">
-							{@html m['settings.language_help_translation']()} 
-						</span>
+				<!-- Theme Card -->
+				<div class="card bg-base-100 shadow-sm">
+					<div class="card-body p-5">
+						<h3 class="card-title text-base flex items-center gap-2 mb-3">
+							<Monitor class="h-5 w-5" />
+							{m['settings.theme']()}
+						</h3>
+						<div class="form-control">
+							<label class="label" for="theme-select">
+								<span class="label-text text-sm text-wrap max-w-md">
+									{m['settings.theme_description']()}
+								</span>
+							</label>
+							<select
+								id="theme-select"
+								class="select select-bordered w-full"
+								value={currentTheme}
+								on:change={handleThemeChange}
+							>
+								<option value="light">
+									{m['settings.theme_light']()}
+								</option>
+								<option value="dark">
+									{m['settings.theme_dark']()}
+								</option>
+								<option value="auto">
+									{m['settings.theme_auto']()}
+								</option>
+							</select>
+							<div class="mt-2">
+								<span class="label-text-alt text-xs opacity-70 text-wrap max-w-md">
+									{m['settings.theme_auto_description']()}
+								</span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 
-			<!-- Theme Section -->
-			<div class="space-y-4">
-				<div class="divider">{m['settings.theme']()}</div>
+			<!-- Search & Display Section -->
+			<div class="divider mt-8">{m['settings.search_engine']()} & {m['settings.scan_results']()}</div>
+			<div class="card bg-base-100 shadow-sm">
+				<div class="card-body p-5">
+					<!-- Search Engine -->
+					<div>
+						<h3 class="card-title text-base flex items-center gap-2 mb-3">
+							<Search class="h-5 w-5" />
+							{m['settings.search_engine']()}
+						</h3>
+						<div class="form-control">
+							<label class="label" for="search-engine-select">
+								<span class="label-text text-sm text-wrap max-w-md">
+									{m['settings.search_engine_description']()}
+								</span>
+							</label>
+							<select
+								id="search-engine-select"
+								class="select select-bordered w-full"
+								value={currentSearchEngine}
+								on:change={handleSearchEngineChange}
+								aria-label={m['settings.search_engine']()}
+							>
+								{#each searchEngines as engine}
+									<option value={engine.name}>{engine.name}</option>
+								{/each}
+							</select>
+						</div>
+					</div>
 
-				<div class="form-control w-full max-w-xs">
-					<label class="label" for="theme-select">
-						<span class="label-text flex items-center gap-2">
-							<Monitor class="h-4 w-4" />
-							{m['settings.theme_description']()}
-						</span>
-					</label>
-					<select
-						id="theme-select"
-						class="select select-bordered w-full max-w-xs"
-						value={currentTheme}
-						on:change={handleThemeChange}
-					>
-						<option value="light">
-							{m['settings.theme_light']()}
-						</option>
-						<option value="dark">
-							{m['settings.theme_dark']()}
-						</option>
-						<option value="auto">
-							{m['settings.theme_auto']()}
-						</option>
-					</select>
-					<div class="mt-1">
-						<span class="label-text-alt text-xs opacity-70">
-							{m['settings.theme_auto_description']()}
-						</span>
+					<div class="divider my-4"></div>
+
+					<!-- Scan Results Display -->
+					<div>
+						<h3 class="card-title text-base flex items-center gap-2 mb-4">
+							<List class="h-5 w-5" />
+							{m['settings.scan_results']()}
+						</h3>
+						
+						<div class="space-y-5">
+							<!-- Max Visible Matches -->
+							<div class="form-control">
+								<label class="label" for="max-results-input">
+									<span class="label-text text-sm font-medium text-wrap max-w-md">
+										{m['settings.max_visible_matches']()}
+									</span>
+								</label>
+							<input
+								id="max-results-input"
+								type="number"
+								min="1"
+								max="50"
+								class="input input-bordered w-full"
+								bind:value={maxVisibleMatches}
+									on:change={handleMaxResultsChange}
+									aria-label={m['settings.max_visible_matches']()}
+								/>
+								<label class="label">
+									<span class="label-text-alt text-xs opacity-70 text-wrap max-w-md">
+										{m['settings.max_visible_matches_description']()}
+									</span>
+								</label>
+							</div>
+
+							<!-- Confidence Threshold -->
+							<div class="form-control">
+								<label class="label" for="threshold-input">
+									<span class="label-text text-sm font-medium flex items-center gap-2 text-wrap max-w-md">
+										<Funnel class="h-4 w-4" />
+										{m['settings.confidence_threshold']()}
+									</span>
+								</label>
+							<div class="flex items-center gap-3">
+								<input
+									id="threshold-input"
+									type="range"
+									min="0"
+									max="100"
+									step="0.5"
+									class="range range-primary flex-1"
+									bind:value={confidenceThreshold}
+									on:change={handleThresholdChange}
+									aria-label={m['settings.confidence_threshold']()}
+								/>
+									<span class="badge badge-neutral font-mono min-w-14 justify-center">
+										{confidenceThreshold.toFixed(1)}%
+									</span>
+								</div>
+								<label class="label">
+									<span class="label-text-alt text-xs opacity-70 text-wrap max-w-md">
+										{m['settings.confidence_threshold_description']()}
+									</span>
+								</label>
+							</div>
+
+							<!-- Max Total Results -->
+							<div class="form-control">
+								<label class="label" for="max-total-results-input">
+									<span class="label-text text-sm font-medium text-wrap max-w-md">
+										{m['settings.max_total_results']()}
+									</span>
+								</label>
+							<input
+								id="max-total-results-input"
+								type="number"
+								min="0"
+								max="10000"
+								class="input input-bordered w-full"
+								bind:value={maxTotalResults}
+									on:change={handleMaxTotalResultsChange}
+									aria-label={m['settings.max_total_results']()}
+									aria-describedby="max-total-results-desc"
+								/>
+								<div class="label">
+									<span id="max-total-results-desc" class="label-text-alt text-xs opacity-70 text-wrap max-w-md">
+										{m['settings.max_total_results_description']()}
+									</span>
+								</div>
+							<div class="alert alert-warning alert-soft py-2 px-3 mt-2 text-wrap max-w-md">
+								<TriangleAlert class="h-4 w-4" />
+								<span class="text-xs">{m['settings.max_total_results_warning']()}</span>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 
-			<!-- Search Engine Section -->
-			<div class="space-y-4">
-				<div class="divider">{m['settings.search_engine']()}</div>
-
-				<div class="form-control w-full max-w-xs">
-					<label class="label" for="search-engine-select">
-						<span class="label-text flex items-center gap-2">
-							<Search class="h-4 w-4" />
-							{m['settings.search_engine_description']()}
-						</span>
-					</label>
-					<select
-						id="search-engine-select"
-						class="select select-bordered w-full max-w-xs"
-						value={currentSearchEngine}
-						on:change={handleSearchEngineChange}
-						aria-label={m['settings.search_engine']()}
-					>
-						{#each searchEngines as engine}
-							<option value={engine.name}>{engine.name}</option>
-						{/each}
-					</select>
-				</div>
-			</div>
-
-			<!-- Scan Results Display Section -->
-			<div class="space-y-4">
-				<div class="divider">{m['settings.scan_results']()}</div>
-
-				<div class="form-control w-full max-w-xs">
-					<label class="label" for="max-results-input">
-						<span class="label-text flex items-center gap-2">
-							<List class="h-4 w-4" />
-							{m['settings.max_visible_matches']()}
-						</span>
-					</label>
-					<input
-						id="max-results-input"
-						type="number"
-						min="1"
-						max="50"
-						class="input input-bordered w-full max-w-xs"
-						bind:value={maxVisibleMatches}
-						on:change={handleMaxResultsChange}
-						aria-label={m['settings.max_visible_matches']()}
-					/>
-					<div class="mt-1">
-						<span class="label-text-alt text-xs opacity-70">
-							{m['settings.max_visible_matches_description']()}
-						</span>
-					</div>
-				</div>
-
-				<div class="form-control w-full max-w-xs">
-					<label class="label" for="threshold-input">
-						<span class="label-text flex items-center gap-2">
-							<Filter class="h-4 w-4" />
-							{m['settings.confidence_threshold']()}
-						</span>
-					</label>
-					<div class="flex items-center gap-2">
-						<input
-							id="threshold-input"
-							type="range"
-							min="0"
-							max="100"
-							step="0.5"
-							class="range range-primary flex-1"
-							bind:value={confidenceThreshold}
-							on:change={handleThresholdChange}
-							aria-label={m['settings.confidence_threshold']()}
-						/>
-						<span class="text-sm font-mono w-12 text-right">{confidenceThreshold.toFixed(1)}%</span>
-					</div>
-					<div class="mt-1">
-						<span class="label-text-alt text-xs opacity-70">
-							{m['settings.confidence_threshold_description']()}
-						</span>
-					</div>
-				</div>
-
-				<div class="form-control w-full max-w-xs">
-					<label class="label" for="max-total-results-input">
-						<span class="label-text flex items-center gap-2">
-							<List class="h-4 w-4" />
-							{m['settings.max_total_results']()}
-						</span>
-					</label>
-					<input
-						id="max-total-results-input"
-						type="number"
-						min="0"
-						max="10000"
-						class="input input-bordered w-full max-w-xs"
-						bind:value={maxTotalResults}
-						on:change={handleMaxTotalResultsChange}
-						aria-label={m['settings.max_total_results']()}
-					/>
-					<div class="mt-1">
-						<span class="label-text-alt text-xs opacity-70">
-							{m['settings.max_total_results_description']()}
-						</span>
-					</div>
-					<div class="mt-1">
-						<span class="label-text-alt text-xs opacity-70 text-warning">
-							⚠️ {m['settings.max_total_results_warning']()}
-						</span>
+					<!-- App Updates Section -->
+		<div class="divider mt-8">{m['settings.app_updates']()}</div>
+			<div class="card bg-base-100 shadow-sm">
+				<div class="card-body p-5">
+					<div class="form-control">
+						<label class="label cursor-pointer justify-start gap-3">
+							<input 
+								type="checkbox" 
+								class="checkbox checkbox-primary" 
+								bind:checked={checkAppUpdatesOnStartup}
+								on:change={handleCheckAppUpdatesChange}
+							/>
+							<div>
+								<span class="label-text font-medium text-wrap max-w-md">{m['settings.check_app_updates']()}</span>
+								<p class="label-text-alt text-xs opacity-70 mt-1 text-wrap max-w-md">
+									{m['settings.check_app_updates_description']()}
+								</p>
+							</div>
+						</label>
 					</div>
 				</div>
 			</div>
@@ -587,11 +715,29 @@
 					{#if definitionsPath}
 						<div class="text-xs opacity-70 break-all">
 							<strong>{m['settings.located_at']()}:</strong>
-							<span class="select-text">{definitionsPath}</span>
+							<span class="select-text text-wrap max-w-md wrap-anywhere">{definitionsPath}</span>
 						</div>
 					{/if}
 				</div>
 			</details>
+
+			<!-- Reset Settings Section -->
+			<div class="divider mt-2"></div>
+			<div class="card bg-base-100 shadow-sm border-warning border">
+				<div class="card-body p-5">
+					<h3 class="card-title text-base flex items-center gap-2 mb-3">
+						<RotateCcw class="h-5 w-5" />
+						{m['settings.reset_settings']()}
+					</h3>
+					<p class="text-sm opacity-70 mb-4">
+						{m['settings.reset_settings_description']()}
+					</p>
+					<button class="btn btn-warning" on:click={resetSettings}>
+						<RotateCcw class="h-4 w-4" />
+						{m['settings.reset_to_defaults']()}
+					</button>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

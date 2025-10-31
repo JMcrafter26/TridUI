@@ -99,6 +99,14 @@
 		"confidence_threshold_description": "Ocultar coincidencias por debajo de este porcentaje de confianza",
 		"max_total_results": "Resultados Totales Máximos",
 		"max_total_results_description": "Número máximo de resultados del escaneo (0 = ilimitado)",
-		"max_total_results_warning": "Valores altos pueden afectar el rendimiento"
+		"max_total_results_warning": "Valores altos pueden afectar el rendimiento",
+		"reset_settings": "Restablecer Configuración",
+		"reset_settings_description": "Restablecer toda la configuración a sus valores predeterminados. Esto restaurará el idioma, el tema, el motor de búsqueda y las preferencias de visualización del escaneo.",
+		"reset_to_defaults": "Restablecer a valores predeterminados",
+		"auto_update_definitions": "Actualizar definiciones automáticamente al iniciar",
+		"auto_update_definitions_description": "Descargar e instalar automáticamente las actualizaciones de definiciones al iniciar la aplicación",
+		"check_app_updates": "Buscar actualizaciones de la aplicación al iniciar",
+		"check_app_updates_description": "Buscar automáticamente nuevas versiones de la aplicación al iniciar",
+		"app_updates": "Actualizaciones de la Aplicación"
 	}
 }

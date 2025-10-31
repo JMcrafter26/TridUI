@@ -73,8 +73,8 @@
 	<meta name="description" content={m['about.description']()} />
 </svelte:head>
 
-<div class="max-w-4xl mx-auto px-4 py-4">
-	<div class="card bg-base-200 shadow-lg">
+<div class="max-w-4xl mx-auto px-4 py-4 h-full">
+	<div class="card bg-base-200 shadow-lg h-full overflow-auto">
 		<div class="card-body p-6 md:p-10 flex flex-col md:flex-row items-center gap-6 mb-4">
 			<div class="shrink-0">
 				<img src={logo} alt="App icon" class="w-32 h-32 object-cover" />

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { m } from '$lib/paraglide/messages.js';
+	import { setLocale, getLocale, locales } from '$lib/paraglide/runtime.js';
 	import { WindowSetSize, EventsOn, EventsOff } from '../../../wailsjs/runtime/runtime';
 	import {
 		CheckDefinitionsExist,
@@ -9,7 +10,8 @@
 		GetDefinitionsPath,
 		OpenAppDir
 	} from '../../../wailsjs/go/main/App';
-	import { Download, RefreshCw, FolderOpen, CircleCheck, CircleAlert, Info } from '@lucide/svelte';
+	import { Download, RefreshCw, FolderOpen, CircleCheck, CircleAlert, Info, Languages, Moon, Sun, Monitor } from '@lucide/svelte';
+	import { goto } from '$app/navigation';
 
 	let definitionsExist = false;
 	let definitionsPath = '';
@@ -19,6 +21,59 @@
 	let updateProgress = 0;
 	let updateMessage = '';
 	let updateError = '';
+	let currentLocale = getLocale();
+	let currentTheme: 'light' | 'dark' | 'auto' = 'auto';
+
+	// Dynamically get language display names based on available locales
+	const availableLanguages = locales.map((locale) => {
+		try {
+			// Use Intl.DisplayNames to get native language names
+			const displayNames = new Intl.DisplayNames([locale], { type: 'language' });
+			return {
+				code: locale,
+				name: displayNames.of(locale) || locale
+			};
+		} catch {
+			// Fallback if Intl.DisplayNames fails
+			return {
+				code: locale,
+				name: locale.toUpperCase()
+			};
+		}
+	});
+
+	function handleLanguageChange(event: Event) {
+		const target = event.target as HTMLSelectElement;
+		const newLocale = target.value;
+		if (locales.includes(newLocale as any)) {
+			// Mark that user has manually selected a language
+			localStorage.setItem('language-manually-set', 'true');
+			setLocale(newLocale as any);
+			currentLocale = newLocale as any;
+			// goto /
+			window.location.href = '/';
+		}
+	}
+
+	function applyTheme(theme: 'light' | 'dark' | 'auto') {
+		if (typeof window === 'undefined') return;
+		
+		if (theme === 'auto') {
+			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+			document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+		} else {
+			document.documentElement.setAttribute('data-theme', theme);
+		}
+		
+		localStorage.setItem('theme', theme);
+	}
+
+	function handleThemeChange(event: Event) {
+		const target = event.target as HTMLSelectElement;
+		const newTheme = target.value as 'light' | 'dark' | 'auto';
+		currentTheme = newTheme;
+		applyTheme(newTheme);
+	}
 
 	async function checkForUpdates() {
 		isCheckingUpdates = true;
@@ -61,6 +116,24 @@
 	}
 
 	onMount(() => {
+		// Load saved theme
+		const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'auto' | null;
+		if (savedTheme) {
+			currentTheme = savedTheme;
+			applyTheme(savedTheme);
+		} else {
+			applyTheme('auto');
+		}
+
+		// Listen for system theme changes when in auto mode
+		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+		const handleSystemThemeChange = () => {
+			if (currentTheme === 'auto') {
+				applyTheme('auto');
+			}
+		};
+		mediaQuery.addEventListener('change', handleSystemThemeChange);
+
 		// Check if definitions exist
 		CheckDefinitionsExist()
 			.then((exists) => {
@@ -91,9 +164,11 @@
 		return () => {
 			EventsOff('trid:update:progress');
 			EventsOff('trid:update:complete');
+			const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+			mediaQuery.removeEventListener('change', handleSystemThemeChange);
 		};
 	});
-</script>
+	</script>
 
 <svelte:head>
 	<title>{m['settings.settings']()}</title>
@@ -202,10 +277,10 @@
 					>
 						{#if isCheckingUpdates}
 							<RefreshCw class="h-4 w-4 animate-spin" />
-							{m["about.checking_for_updates"]}
+							<span>{m["about.checking_for_updates"]()}</span>
 						{:else}
 							<RefreshCw class="h-4 w-4" />
-							{m["about.check_for_updates"]}
+							<span>{m["about.check_for_updates"]()}</span>
 						{/if}
 					</button>
 
@@ -241,6 +316,65 @@
 							class="link">mark0.net</a
 						>
 					</p>
+				</div>
+			</div>
+
+			<!-- Language Section -->
+			<div class="space-y-4">
+				<div class="divider">{m['settings.language']()}</div>
+
+				<div class="form-control w-full max-w-xs">
+					<label class="label" for="language-select">
+						<span class="label-text flex items-center gap-2">
+							<Languages class="h-4 w-4" />
+							{m['settings.language_description']()}
+						</span>
+					</label>
+					<select
+						id="language-select"
+						class="select select-bordered w-full max-w-xs"
+						value={currentLocale}
+						on:change={handleLanguageChange}
+					>
+						{#each availableLanguages as { code, name }}
+							<option value={code}>{name}</option>
+						{/each}
+					</select>
+				</div>
+			</div>
+
+			<!-- Theme Section -->
+			<div class="space-y-4">
+				<div class="divider">{m['settings.theme']()}</div>
+
+				<div class="form-control w-full max-w-xs">
+					<label class="label" for="theme-select">
+						<span class="label-text flex items-center gap-2">
+							<Monitor class="h-4 w-4" />
+							{m['settings.theme_description']()}
+						</span>
+					</label>
+					<select
+						id="theme-select"
+						class="select select-bordered w-full max-w-xs"
+						value={currentTheme}
+						on:change={handleThemeChange}
+					>
+						<option value="light">
+							{m['settings.theme_light']()}
+						</option>
+						<option value="dark">
+							{m['settings.theme_dark']()}
+						</option>
+						<option value="auto">
+							{m['settings.theme_auto']()}
+						</option>
+					</select>
+					<div class="mt-1">
+						<span class="label-text-alt text-xs opacity-70">
+							{m['settings.theme_auto_description']()}
+						</span>
+					</div>
 				</div>
 			</div>
 

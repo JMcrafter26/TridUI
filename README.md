@@ -90,3 +90,20 @@ Please refer to the LICENSE file for more details.
 The trid.go scanner is a clean-room Go implementation by JMcrafter26 and is licensed under the GNU AGPLv3 license.
 
 The app icon is based on eye icon by icons8.com
+
+## Contributing
+
+Contributions are welcome! If you'd like to contribute to TrID UI, please fork the repository and submit a pull request with your changes. For major changes, please open an issue first to discuss what you would like to change.
+
+### Translations
+
+TrID UI needs your help to reach a wider audience! The current translations are machine-generated and may contain inaccuracies.
+
+If you'd like to contribute translations, please follow these steps:
+
+1. Fork the repository
+2. Create a new branch for your translation
+3. Add your translation files to the `translations` directory
+4. Submit a pull request with your changes
+
+Thank you for helping us make TrID UI accessible to more users!

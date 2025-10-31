@@ -59,6 +59,10 @@ ManifestDPIAware true
 !define MUI_FINISHPAGE_NOAUTOCLOSE # Wait on the INSTFILES page so the user can take a look into the details of the installation steps
 !define MUI_FINISHPAGE_RUN "$INSTDIR\${PRODUCT_EXECUTABLE}" # Run the application after installation
 !define MUI_FINISHPAGE_RUN_TEXT "Launch ${INFO_PRODUCTNAME}"
+!define MUI_FINISHPAGE_SHOWREADME ""
+!define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
+!define MUI_FINISHPAGE_SHOWREADME_TEXT "Create Desktop Shortcut"
+!define MUI_FINISHPAGE_SHOWREADME_FUNCTION CreateDesktopShortcut
 !define MUI_ABORTWARNING # This will warn the user if they exit from the installer.
 
 !insertmacro MUI_PAGE_WELCOME # Welcome to the installer page.
@@ -71,7 +75,6 @@ ManifestDPIAware true
 !define MUI_UNPAGE_WELCOME
 !insertmacro MUI_UNPAGE_WELCOME
 UninstPage custom un.SorryPageCreate un.SorryPageLeave
-UninstPage custom un.ComponentsPageCreate un.ComponentsPageLeave
 !insertmacro MUI_UNPAGE_INSTFILES # Uninstalling page
 
 !insertmacro MUI_LANGUAGE "English" # Set the Language of the installer
@@ -89,6 +92,10 @@ Function .onInit
    !insertmacro wails.checkArchitecture
 FunctionEnd
 
+Function CreateDesktopShortcut
+    CreateShortCut "$DESKTOP\${INFO_PRODUCTNAME}.lnk" "$INSTDIR\${PRODUCT_EXECUTABLE}"
+FunctionEnd
+
 Section
     !insertmacro wails.setShellContext
 
@@ -99,7 +106,6 @@ Section
     !insertmacro wails.files
 
     CreateShortcut "$SMPROGRAMS\${INFO_PRODUCTNAME}.lnk" "$INSTDIR\${PRODUCT_EXECUTABLE}"
-    CreateShortCut "$DESKTOP\${INFO_PRODUCTNAME}.lnk" "$INSTDIR\${PRODUCT_EXECUTABLE}"
 
     !insertmacro wails.associateFiles
     !insertmacro wails.associateCustomProtocols
@@ -124,10 +130,6 @@ FunctionEnd
 !define MUI_UNWELCOMEPAGE_TEXT "Welcome to the TridUI uninstaller."
 
 ; Variables for uninstaller
-Var RemoveAllData
-Var Dialog
-Var RadioButton1
-Var RadioButton2
 Var SorryDialog
 Var GitHubButton
 
@@ -168,70 +170,17 @@ Function un.OpenGitHub
     ExecShell "open" "https://github.com/JMcrafter26/TridUI"
 FunctionEnd
 
-; Uninstaller sections with different options
-Section /o "un.Remove all data (including downloaded content)" un.RemoveAllData
-SectionEnd
-
-Section "un.Remove program only (keep downloaded content)" un.RemoveProgram
-SectionEnd
-
-Function un.ComponentsPageCreate
-    !insertmacro MUI_HEADER_TEXT "Choose Uninstall Type" "Select what you want to remove"
-    
-    nsDialogs::Create 1018
-    Pop $Dialog
-    
-    ${If} $Dialog == error
-        Abort
-    ${EndIf}
-    
-    ${NSD_CreateLabel} 0 10u 100% 20u "How would you like to uninstall TridUI?"
-    Pop $0
-    
-    ${NSD_CreateRadioButton} 10u 40u 90% 15u "Remove program only (keep downloaded content)"
-    Pop $RadioButton1
-    ${NSD_Check} $RadioButton1
-    
-    ${NSD_CreateRadioButton} 10u 60u 90% 15u "Complete removal (remove all data including downloads)"
-    Pop $RadioButton2
-    
-    ${NSD_CreateLabel} 0 85u 100% 40u "Note: If you choose complete removal, all your downloaded content and settings will be permanently deleted. If you only want to remove the program, your downloaded content will be preserved."
-    Pop $0
-    
-    nsDialogs::Show
-FunctionEnd
-
-Function un.ComponentsPageLeave
-    ${NSD_GetState} $RadioButton2 $RemoveAllData
-FunctionEnd
-
 Section "uninstall"
     !insertmacro wails.setShellContext
 
-    ; Always remove the main executable and core files
-    Delete "$INSTDIR\${PRODUCT_EXECUTABLE}"
-    
-    ; Remove sandbox files if they exist
-    IfFileExists "$INSTDIR\sandbox_host.exe" 0 +2
-        Delete "$INSTDIR\sandbox_host.exe"
-    IfFileExists "$INSTDIR\sandbox_host.zip" 0 +2
-        Delete "$INSTDIR\sandbox_host.zip"
+    ; Remove entire installation directory and all contents
+    RMDir /r $INSTDIR
     
     ; Remove WebView2 DataPath
     RMDir /r "$AppData\${PRODUCT_EXECUTABLE}"
     
-    ; Check if user wants complete removal
-    ${If} $RemoveAllData == 1
-        ; Complete removal - remove entire directory
-        RMDir /r $INSTDIR
-    ${Else}
-        ; Partial removal - only remove specific files, keep user data
-        ; Remove other application files but preserve user content
-        Delete "$INSTDIR\*.dll"
-        Delete "$INSTDIR\*.json"
-        Delete "$INSTDIR\*.log"
-        ; Keep the directory structure and any user content
-    ${EndIf}
+    ; Remove application data folder in AppData\Roaming
+    RMDir /r "$AppData\TridUI"
 
     ; Always remove shortcuts and registry entries
     Delete "$SMPROGRAMS\${INFO_PRODUCTNAME}.lnk"

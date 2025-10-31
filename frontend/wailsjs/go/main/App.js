@@ -38,8 +38,8 @@ export function OpenFileDialog() {
   return window['go']['main']['App']['OpenFileDialog']();
 }
 
-export function ProcessFile(arg1) {
-  return window['go']['main']['App']['ProcessFile'](arg1);
+export function ProcessFile(arg1, arg2) {
+  return window['go']['main']['App']['ProcessFile'](arg1, arg2);
 }
 
 export function UpdateDefinitions() {

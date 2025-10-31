@@ -47,7 +47,11 @@
 		"definitions_not_found": "未找到定义",
 		"definitions_not_found_explanation": "扫描文件需要TrID定义。请下载它们以继续。",
 		"download": "下载",
-		"copied": "已复制！"
+		"copied": "已复制！",
+		"copy": "复制",
+		"search_online": "在线搜索",
+		"show_more_matches": "显示更多{count}个匹配",
+		"show_less": "显示更少"
 	},
 	"settings": {
 		"settings": "设置",
@@ -85,8 +89,16 @@
 		"theme_light": "浅色",
 		"theme_dark": "深色",
 		"theme_auto": "自动（系统）",
-		"theme_auto_description": "自动匹配您的系统偏好",
+		"theme_auto_description": "自动匹配系统首选项",
 		"search_engine": "搜索引擎",
-		"search_engine_description": "选择您喜欢的搜索引擎"
+		"search_engine_description": "选择您喜欢的搜索引擎",
+		"scan_results": "扫描结果显示",
+		"max_visible_matches": "最大可见匹配数",
+		"max_visible_matches_description": "初始显示的匹配数量 (1-50)",
+		"confidence_threshold": "置信度阈值",
+		"confidence_threshold_description": "隐藏低于此置信度百分比的匹配",
+		"max_total_results": "最大总结果数",
+		"max_total_results_description": "扫描的最大结果数 (0 = 无限制)",
+		"max_total_results_warning": "过高的值可能影响性能"
 	}
 }

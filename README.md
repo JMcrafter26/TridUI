@@ -12,9 +12,6 @@ TrID UI is a lightweight desktop application that provides a user-friendly inter
 
 The application uses a native Go implementation of the TrID file identification algorithm, providing fast and accurate file type detection without external dependencies.
 
-> [!WARNING]  
-> :warning: TrID UI is currently in early development. Features may be incomplete or unstable. Use at your own risk.
-
 > [!TIP]
 > Download TridUI from the [Releases Page](https://github.com/JMcrafter26/TridUI/releases)
 

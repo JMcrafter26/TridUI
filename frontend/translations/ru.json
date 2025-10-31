@@ -49,7 +49,9 @@
 		"download": "Скачать",
 		"copied": "Скопировано!",
 		"copy": "Копировать",
-		"search_online": "Искать в интернете"
+		"search_online": "Поиск в Интернете",
+		"show_more_matches": "Показать еще {count} совпадений",
+		"show_less": "Показать меньше"
 	},
 	"settings": {
 		"settings": "Настройки",
@@ -87,8 +89,16 @@
 		"theme_light": "Светлая",
 		"theme_dark": "Темная",
 		"theme_auto": "Авто (Система)",
-		"theme_auto_description": "Автоматически соответствует настройкам вашей системы",
+		"theme_auto_description": "Автоматически соответствует настройкам системы",
 		"search_engine": "Поисковая система",
-		"search_engine_description": "Выберите предпочитаемую поисковую систему"
+		"search_engine_description": "Выберите предпочитаемую поисковую систему",
+		"scan_results": "Отображение результатов сканирования",
+		"max_visible_matches": "Максимум видимых совпадений",
+		"max_visible_matches_description": "Количество совпадений для первоначального отображения (1-50)",
+		"confidence_threshold": "Порог уверенности",
+		"confidence_threshold_description": "Скрыть совпадения ниже этого процента уверенности",
+		"max_total_results": "Максимум общих результатов",
+		"max_total_results_description": "Максимальное количество результатов сканирования (0 = без ограничений)",
+		"max_total_results_warning": "Высокие значения могут снизить производительность"
 	}
 }

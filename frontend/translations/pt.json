@@ -49,7 +49,9 @@
 		"download": "Baixar",
 		"copied": "Copiado!",
 		"copy": "Copiar",
-		"search_online": "Pesquisar online"
+		"search_online": "Pesquisar online",
+		"show_more_matches": "Mostrar mais {count} correspondências",
+		"show_less": "Mostrar menos"
 	},
 	"settings": {
 		"settings": "Configurações",
@@ -87,8 +89,16 @@
 		"theme_light": "Claro",
 		"theme_dark": "Escuro",
 		"theme_auto": "Automático (Sistema)",
-		"theme_auto_description": "Combina automaticamente com as preferências do seu sistema",
-		"search_engine": "Motor de busca",
-		"search_engine_description": "Escolha seu motor de busca preferido"
+		"theme_auto_description": "Corresponde automaticamente às suas preferências do sistema",
+		"search_engine": "Motor de Busca",
+		"search_engine_description": "Escolha seu motor de busca preferido",
+		"scan_results": "Exibição de Resultados de Scan",
+		"max_visible_matches": "Correspondências Visíveis Máximas",
+		"max_visible_matches_description": "Número de correspondências a mostrar inicialmente (1-50)",
+		"confidence_threshold": "Limiar de Confiança",
+		"confidence_threshold_description": "Ocultar correspondências abaixo desta percentagem de confiança",
+		"max_total_results": "Resultados Totais Máximos",
+		"max_total_results_description": "Número máximo de resultados do scan (0 = ilimitado)",
+		"max_total_results_warning": "Valores altos podem impactar o desempenho"
 	}
 }

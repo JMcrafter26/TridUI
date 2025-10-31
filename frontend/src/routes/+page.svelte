@@ -61,7 +61,7 @@
 				fileSelected = true;
 				selectedFileName = p.split(/[\\/]/).pop() || p;
 				// Fire backend processing
-				ProcessFile(p).catch(err => {
+				ProcessFile(p).catch((err) => {
 					console.error('Backend processing error (drop):', err);
 					fileSelected = false;
 					selectedFileName = '';
@@ -77,39 +77,55 @@
 </script>
 
 <svelte:head>
-	<title>{m["home.home"]()}</title>
+	<title>{m['home.home']()}</title>
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<section class="p-6">
+<section class="h-full w-full flex flex-col">
 	{#if !fileSelected}
-		<div class="flex justify-center items-center mt-4">
+		<div class="flex-1 flex items-center justify-center p-4 md:p-6">
 			<button
 				on:click={handleSelectFile}
 				on:dragenter={handleDragEnter}
 				on:dragleave={handleDragLeave}
 				on:dragover={handleDragOver}
-				class="w-full max-w-4xl h-80 rounded-box border-2 border-dashed transition-all duration-200 flex items-center justify-center shadow-lg cursor-pointer
-					{isDragging 
-						? 'border-primary bg-primary/10 scale-[1.02] shadow-[0_0_0_4px_hsl(var(--p)/0.2)]' 
-						: 'border-base-content/30 bg-base-200 hover:border-primary hover:bg-base-300'}"
+				class="w-full h-full rounded-box border-2 border-dashed transition-all duration-200 flex items-center justify-center shadow-lg cursor-pointer
+					{isDragging
+					? 'border-primary bg-primary/10 scale-[1.02] shadow-[0_0_0_4px_hsl(var(--p)/0.2)]'
+					: 'border-base-content/30 bg-base-200 hover:border-primary hover:bg-base-300'}"
 			>
-				<div class="text-base-content text-lg text-center px-8 py-4 flex flex-col items-center justify-center h-full">
+				<div
+					class="text-base-content text-lg text-center px-4 sm:px-8 py-4 flex flex-col items-center justify-center h-full"
+				>
 					<div class="flex-1 flex flex-col items-center justify-center">
-						<FileUp class="h-16 w-16 mx-auto mb-4 opacity-50"/>
-						<p class="font-semibold">{m["home.click_to_browse"]()}</p>
-						<p class="text-sm opacity-70 mt-2">{m["home.any_file_type"]()}</p>
+						<FileUp class="h-16 w-16 mx-auto mb-4 opacity-50" />
+						<p class="font-semibold text-xl">{m['home.click_to_browse']()}</p>
+						<p class="text-sm sm:text-sm opacity-75 mt-2">{m['home.any_file_type']()}</p>
 					</div>
+
+										<div class="max-w-4xl mx-auto">
+						<p class="text-xs opacity-60 mt-4 sm:justify-center">
+							<a href="/about" on:click|stopPropagation class="hover:underline">&copy; 2025 TridUI</a> <a
+								href="https://go.jm26.net/github"
+								target="_blank"
+								class="hover:underline"
+								rel="noopener noreferrer" on:click|stopPropagation>by Cufiy</a
+							>
+						</p>
+					</div>
+
 					<div class="flex items-center justify-center gap-1.5 text-xs opacity-60 pb-2">
-						<CloudOff class="h-4 w-4"/>
-						<span>{m["home.files_processed_locally"]()}</span>
+						<CloudOff class="h-4 w-4" />
+						<span>{m['home.files_processed_locally']()}</span>
 					</div>
+
+
 				</div>
 			</button>
 		</div>
 	{:else}
-		<div class="flex justify-center items-center mt-4">
-			<div class="alert alert-success max-w-2xl">
+		<div class="flex-1 flex justify-center items-center p-4 md:p-6">
+			<div class="alert alert-success max-w-2xl w-full">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					class="stroke-current shrink-0 h-6 w-6"

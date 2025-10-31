@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
+	gort "runtime"
 
 	wailsruntime "github.com/wailsapp/wails/v2/pkg/runtime"
 )
@@ -28,7 +28,7 @@ func (a *App) OpenFileDialog() (string, error) {
 func getAppDataDir() (string, error) {
 	var appDataDir string
 
-	switch runtime.GOOS {
+	switch gort.GOOS {
 	case "windows":
 		appDataDir = os.Getenv("APPDATA")
 		if appDataDir == "" {
@@ -69,7 +69,7 @@ func (a *App) OpenAppDir() error {
 
 	// based on OS, open the app data directory in the file explorer
 	var cmd *exec.Cmd
-	if runtime.GOOS == "windows" {
+	if gort.GOOS == "windows" {
 		cmd = exec.Command("explorer", appDataDir)
 	} else {
 		cmd = exec.Command("open", appDataDir)

@@ -10,12 +10,24 @@
 		"about_and_credits": "About & Credits",
 		"license": "License",
 		"built_with": "Built with Wails + Svelte + DaisyUI",
-		"version": "Version"
+		"version": "Version",
+		"update_check_failed": "Failed to check for updates",
+		"update_available": "Update Available!",
+		"new_version_available": "Version {updateInfo.latestVersion} is now available",
+		"released": "Released",
+		"release_notes": "Release Notes",
+		"download": "Download",
+		"up_to_date": "You're running the latest version!",
+		"checking_for_updates": "Checking for updates"
 	},
 	"home": {
 		"click_to_browse": "Click to browse or drag a file here",
 		"any_file_type": "Any file type, any size",
 		"files_processed_locally": "Files are processed locally, nothing is uploaded",
 		"home": "Home"
+	},
+	"settings": {
+		"settings": "Settings",
+		"description": "Manage your application settings"
 	}
 }

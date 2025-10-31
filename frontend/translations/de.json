@@ -37,7 +37,8 @@
 		"no_matches_explanation": "TrID konnte diesen Dateityp nicht identifizieren. Es kann ein seltenes oder benutzerdefiniertes Format sein.",
 		"definitions_not_found": "Definitionen nicht gefunden",
 		"definitions_not_found_explanation": "TrID-Definitionen sind erforderlich, um Dateien zu scannen. Bitte laden Sie sie herunter, um fortzufahren.",
-		"download": "Herunterladen"
+		"download": "Herunterladen",
+		"copied": "Kopiert!"
 	},
 	"settings": {
 		"settings": "Einstellungen",

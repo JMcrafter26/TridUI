@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
+	gort "runtime"
 
 	wailsruntime "github.com/wailsapp/wails/v2/pkg/runtime"
 )
@@ -28,7 +28,7 @@ func (a *App) OpenFileDialog() (string, error) {
 func getAppDataDir() (string, error) {
 	var appDataDir string
 
-	switch runtime.GOOS {
+	switch gort.GOOS {
 	case "windows":
 		appDataDir = os.Getenv("APPDATA")
 		if appDataDir == "" {
@@ -57,7 +57,18 @@ func getAppDataDir() (string, error) {
 		appDataDir = filepath.Join(homeDir, ".config")
 	}
 
-	return filepath.Join(appDataDir, "Soru"), nil
+	appDataDir = filepath.Clean(appDataDir)
+	appDataDir = filepath.Join(appDataDir, "TridUI")
+
+	// if the directory doesn't exist, create it
+	if _, err := os.Stat(appDataDir); os.IsNotExist(err) {
+		err := os.MkdirAll(appDataDir, 0755)
+		if err != nil {
+			return "", err
+		}
+	}
+
+	return appDataDir, nil
 }
 
 // OpenAppDir opens the application data directory in the system's file explorer
@@ -69,7 +80,7 @@ func (a *App) OpenAppDir() error {
 
 	// based on OS, open the app data directory in the file explorer
 	var cmd *exec.Cmd
-	if runtime.GOOS == "windows" {
+	if gort.GOOS == "windows" {
 		cmd = exec.Command("explorer", appDataDir)
 	} else {
 		cmd = exec.Command("open", appDataDir)

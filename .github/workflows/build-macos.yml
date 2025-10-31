@@ -1,0 +1,84 @@
+name: "Build macOS App"
+on:
+  workflow_dispatch:
+    # This allows manual triggering from the GitHub Actions tab
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+          check-latest: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install Wails
+        run: |
+          go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: |
+          pnpm install --no-frozen-lockfile
+
+      - name: Clean build directory
+        run: |
+          rm -rf build/bin/darwin
+          mkdir -p build/bin/darwin
+
+      - name: Build Wails application (arm64)
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+        run: |
+          wails build -platform darwin/arm64 -clean
+          if [ -d "build/bin/TridUI.app" ]; then
+            cp -R build/bin/TridUI.app build/bin/darwin/TridUI-arm64.app
+          fi
+
+      - name: Build Wails application (amd64)
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+        run: |
+          wails build -platform darwin/amd64 -clean
+          if [ -d "build/bin/TridUI.app" ]; then
+            cp -R build/bin/TridUI.app build/bin/darwin/TridUI-amd64.app
+          fi
+
+      # Optional: Code signing steps - uncomment when you have certificates
+      # - name: Install gon for macOS code signing and notarization
+      #   run: |
+      #     brew install mitchellh/gon/gon
+      # 
+      # - name: Import Code-Signing Certificates
+      #   uses: Apple-Actions/import-codesign-certs@v1
+      #   with:
+      #     p12-file-base64: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_P12_BASE64 }}
+      #     p12-password: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_PASSWORD }}
+      # 
+      # - name: Sign macOS binary
+      #   run: |
+      #     echo "Signing Package"
+      #     gon -log-level=info ./build/darwin/gon-sign.json
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TridUI-macos
+          path: build/bin/darwin/*
+          retention-days: 7

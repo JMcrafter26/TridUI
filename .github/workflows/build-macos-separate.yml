@@ -1,4 +1,4 @@
-name: "Build macOS App"
+name: "Build macOS App (Separate Architectures)"
 on:
   workflow_dispatch:
     # This allows manual triggering from the GitHub Actions tab

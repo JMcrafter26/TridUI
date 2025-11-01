@@ -18,6 +18,7 @@
 	import { main } from '../../wailsjs/go/models';
 	import { goto } from '$app/navigation';
 	import { searchEngines } from '$lib/config/searchEngines';
+	import { stopPropagation } from 'svelte/legacy';
 
 	let fileSelected = false;
 	let selectedFileName = '';
@@ -218,7 +219,7 @@
 
 					<div class="max-w-4xl mx-auto">
 						<p class="text-xs opacity-60 mt-4 sm:justify-center">
-							<a href="/about" on:click|stopPropagation class="hover:underline"
+							<a on:click|stopPropagation={() => goto('/about')} class="hover:underline"
 								aria-label={m['about.about']()}
 								>&copy; 2025 TridUI</a
 							>

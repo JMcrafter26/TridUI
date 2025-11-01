@@ -20,7 +20,7 @@
 		"version": "Version",
 		"update_check_failed": "Fehler beim Suchen nach Updates",
 		"update_available": "Update verfügbar!",
-		"new_version_available": "Version {updateInfo.latestVersion} ist jetzt verfügbar",
+		"new_version_available": "Version {latestVersion} ist jetzt verfügbar",
 		"released": "Veröffentlicht",
 		"release_notes": "Versionshinweise",
 		"download": "Herunterladen",
@@ -107,6 +107,8 @@
 		"auto_update_definitions_description": "Definitions-Updates beim App-Start automatisch herunterladen und installieren",
 		"check_app_updates": "Beim Start nach App-Updates suchen",
 		"check_app_updates_description": "Beim App-Start automatisch nach neuen App-Versionen suchen",
-		"app_updates": "App-Updates"
+		"updates": "Updates",
+		"start_pinned": "App im Vordergrund-Modus starten",
+		"start_pinned_description": "Fenster beim App-Start automatisch im Vordergrund fixieren"
 	}
 }

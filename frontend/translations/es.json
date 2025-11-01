@@ -20,7 +20,7 @@
 		"version": "Versión",
 		"update_check_failed": "Error al buscar actualizaciones",
 		"update_available": "¡Actualización Disponible!",
-		"new_version_available": "La versión {updateInfo.latestVersion} ya está disponible",
+		"new_version_available": "La versión {latestVersion} está ahora disponible",
 		"released": "Publicado",
 		"release_notes": "Notas de la versión",
 		"download": "Descargar",
@@ -107,6 +107,8 @@
 		"auto_update_definitions_description": "Descargar e instalar automáticamente las actualizaciones de definiciones al iniciar la aplicación",
 		"check_app_updates": "Buscar actualizaciones de la aplicación al iniciar",
 		"check_app_updates_description": "Buscar automáticamente nuevas versiones de la aplicación al iniciar",
-		"app_updates": "Actualizaciones de la Aplicación"
+		"updates": "Actualizaciones",
+		"start_pinned": "Iniciar app en modo siempre visible",
+		"start_pinned_description": "Fijar automáticamente la ventana al frente al iniciar la aplicación"
 	}
 }

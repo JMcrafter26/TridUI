@@ -12,7 +12,7 @@
 		"version": "Version",
 		"update_check_failed": "Failed to check for updates",
 		"update_available": "Update Available!",
-		"new_version_available": "Version {updateInfo.latestVersion} is now available",
+		"new_version_available": "Version {latestVersion} is now available",
 		"released": "Released",
 		"release_notes": "Release Notes",
 		"download": "Download",
@@ -107,6 +107,8 @@
 		"auto_update_definitions_description": "Automatically download and install definition updates when the app starts",
 		"check_app_updates": "Check for app updates on startup",
 		"check_app_updates_description": "Automatically check for new app versions when the app starts",
-		"app_updates": "App Updates"
+		"updates": "Updates",
+		"start_pinned": "Start app in always-on-top mode",
+		"start_pinned_description": "Automatically pin the window to stay on top when the app starts"
 	}
 }

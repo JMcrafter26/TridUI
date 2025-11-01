@@ -20,7 +20,7 @@
 		"version": "Version",
 		"update_check_failed": "Échec de la vérification des mises à jour",
 		"update_available": "Mise à jour disponible !",
-		"new_version_available": "La version {updateInfo.latestVersion} est maintenant disponible",
+		"new_version_available": "La version {latestVersion} est maintenant disponible",
 		"released": "Publié",
 		"release_notes": "Notes de version",
 		"download": "Télécharger",
@@ -107,6 +107,8 @@
 		"auto_update_definitions_description": "Télécharger et installer automatiquement les mises à jour des définitions au démarrage de l'application",
 		"check_app_updates": "Vérifier les mises à jour de l'application au démarrage",
 		"check_app_updates_description": "Vérifier automatiquement les nouvelles versions de l'application au démarrage",
-		"app_updates": "Mises à jour de l'application"
+		"updates": "Mises à jour",
+		"start_pinned": "Démarrer l'application en mode toujours visible",
+		"start_pinned_description": "Épingler automatiquement la fenêtre au premier plan au démarrage"
 	}
 }

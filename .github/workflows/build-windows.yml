@@ -74,6 +74,7 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: |
           wails build -platform windows/amd64 -upx -nsis -clean -o "windows\TridUI-amd64.exe"
+          New-Item -ItemType Directory -Force -Path "build\bin\windows"
           if (Test-Path "build\bin\TridUI-amd64.exe") {
             Move-Item -Force "build\bin\TridUI-amd64.exe" "build\bin\windows\TridUI-amd64.exe"
           }
@@ -85,7 +86,8 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: |
-          wails build -platform windows/arm64 -nsis -clean -o "windows\TridUI-arm64.exe"
+          wails build -platform windows/arm64 -nsis -o "windows\TridUI-arm64.exe"
+          New-Item -ItemType Directory -Force -Path "build\bin\windows"
           if (Test-Path "build\bin\TridUI-arm64.exe") {
             Move-Item -Force "build\bin\TridUI-arm64.exe" "build\bin\windows\TridUI-arm64.exe"
           }

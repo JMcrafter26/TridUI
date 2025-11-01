@@ -83,6 +83,12 @@ jobs:
 
       - name: Create DMG
         run: |
+          # Use icon from build dir or fall back to repo root
+          ICON_PATH="build/appicon.png"
+          if [ ! -f "$ICON_PATH" ]; then
+            ICON_PATH="icon.png"
+          fi
+          
           create-dmg \
             --volname "TrID UI" \
             --window-pos 200 120 \
@@ -91,11 +97,11 @@ jobs:
             --icon "TridUI.app" 175 190 \
             --hide-extension "TridUI.app" \
             --app-drop-link 425 190 \
-            "build/bin/darwin/TridUI.dmg" \
+            "build/bin/darwin/TridUI-macOS.dmg" \
             "build/bin/darwin/TridUI.app" || true
           # Fallback to zip if DMG creation fails
-          if [ ! -f "build/bin/darwin/TridUI.dmg" ]; then
-            cd build/bin/darwin && zip -r TridUI.zip TridUI.app && cd ../../..
+          if [ ! -f "build/bin/darwin/TridUI-macOS.dmg" ]; then
+            cd build/bin/darwin && zip -r TridUI-macOS.zip TridUI.app && cd ../../..
           fi
 
       - name: Upload macOS artifact

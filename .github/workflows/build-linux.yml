@@ -94,9 +94,112 @@ jobs:
           wails build -platform linux/amd64 -upx
           mkdir -p build/bin/linux
           if [ -f "build/bin/TridUI" ]; then
-            cp "build/bin/TridUI" "build/bin/linux/TridUI-amd64"
-            chmod +x "build/bin/linux/TridUI-amd64"
+            cp "build/bin/TridUI" "build/bin/linux/TridUI-linux-amd64"
+            chmod +x "build/bin/linux/TridUI-linux-amd64"
           fi
+
+      - name: Install AppImage dependencies
+        run: |
+          wget -O appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool
+          sudo mv appimagetool /usr/local/bin/
+
+      - name: Create AppImage
+        run: |
+          mkdir -p TridUI.AppDir/usr/bin
+          mkdir -p TridUI.AppDir/usr/share/applications
+          mkdir -p TridUI.AppDir/usr/share/icons/hicolor/256x256/apps
+          
+          # Copy binary
+          cp build/bin/linux/TridUI-linux-amd64 TridUI.AppDir/usr/bin/TridUI
+          
+          # Create desktop file
+          cat > TridUI.AppDir/usr/share/applications/TridUI.desktop << 'EOF'
+          [Desktop Entry]
+          Name=TrID UI
+          Exec=TridUI
+          Icon=TridUI
+          Type=Application
+          Categories=Utility;
+          Comment=File type identification tool
+          Terminal=false
+          EOF
+          
+          # Copy icon (use icon from repo root)
+          if [ -f "icon.png" ]; then
+            cp icon.png TridUI.AppDir/usr/share/icons/hicolor/256x256/apps/TridUI.png
+            cp icon.png TridUI.AppDir/TridUI.png
+          elif [ -f "build/appicon.png" ]; then
+            cp build/appicon.png TridUI.AppDir/usr/share/icons/hicolor/256x256/apps/TridUI.png
+            cp build/appicon.png TridUI.AppDir/TridUI.png
+          fi
+          
+          # Create AppRun
+          cat > TridUI.AppDir/AppRun << 'EOF'
+          #!/bin/bash
+          SELF=$(readlink -f "$0")
+          HERE=${SELF%/*}
+          export PATH="${HERE}/usr/bin/:${PATH}"
+          export LD_LIBRARY_PATH="${HERE}/usr/lib/:${LD_LIBRARY_PATH}"
+          exec "${HERE}/usr/bin/TridUI" "$@"
+          EOF
+          chmod +x TridUI.AppDir/AppRun
+          
+          # Copy desktop file to root
+          cp TridUI.AppDir/usr/share/applications/TridUI.desktop TridUI.AppDir/
+          
+          # Build AppImage
+          ARCH=x86_64 appimagetool TridUI.AppDir build/bin/linux/TridUI-linux-amd64.AppImage
+
+      - name: Install .deb packaging tools
+        run: |
+          sudo apt-get install -y dpkg-dev fakeroot
+
+      - name: Create .deb package
+        run: |
+          mkdir -p tridui-deb/DEBIAN
+          mkdir -p tridui-deb/usr/bin
+          mkdir -p tridui-deb/usr/share/applications
+          mkdir -p tridui-deb/usr/share/icons/hicolor/256x256/apps
+          
+          # Copy binary
+          cp build/bin/linux/TridUI-linux-amd64 tridui-deb/usr/bin/tridui
+          chmod +x tridui-deb/usr/bin/tridui
+          
+          # Create desktop file
+          cat > tridui-deb/usr/share/applications/tridui.desktop << 'EOF'
+          [Desktop Entry]
+          Name=TrID UI
+          Exec=/usr/bin/tridui
+          Icon=tridui
+          Type=Application
+          Categories=Utility;
+          Comment=File type identification tool
+          Terminal=false
+          EOF
+          
+          # Copy icon
+          if [ -f "icon.png" ]; then
+            cp icon.png tridui-deb/usr/share/icons/hicolor/256x256/apps/tridui.png
+          elif [ -f "build/appicon.png" ]; then
+            cp build/appicon.png tridui-deb/usr/share/icons/hicolor/256x256/apps/tridui.png
+          fi
+          
+          # Create control file
+          cat > tridui-deb/DEBIAN/control << 'EOF'
+          Package: tridui
+          Version: 1.1.0
+          Section: utils
+          Priority: optional
+          Architecture: amd64
+          Maintainer: JMcrafter26 <your-email@example.com>
+          Description: TrID UI - File Type Identification Tool
+           A desktop application for identifying file types based on binary signatures.
+           Features drag-and-drop interface, multi-language support, and automatic updates.
+          EOF
+          
+          # Build .deb
+          fakeroot dpkg-deb --build tridui-deb build/bin/linux/TridUI-linux-amd64.deb
 
       # ARM64 build disabled - requires cross-compilation toolchain
       # To build for ARM64, use a native ARM64 runner or set up cross-compilation

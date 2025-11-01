@@ -98,16 +98,8 @@ jobs:
             chmod +x "build/bin/linux/TridUI-amd64"
           fi
 
-      - name: Build Wails application (arm64)
-        env:
-          NODE_OPTIONS: "--max-old-space-size=4096"
-        run: |
-          wails build -platform linux/arm64 -upx
-          mkdir -p build/bin/linux
-          if [ -f "build/bin/TridUI" ]; then
-            cp "build/bin/TridUI" "build/bin/linux/TridUI-arm64"
-            chmod +x "build/bin/linux/TridUI-arm64"
-          fi
+      # ARM64 build disabled - requires cross-compilation toolchain
+      # To build for ARM64, use a native ARM64 runner or set up cross-compilation
 
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4

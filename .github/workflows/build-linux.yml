@@ -100,12 +100,12 @@ jobs:
 
       - name: Install AppImage dependencies
         run: |
-          sudo apt-get install -y libfuse2
+          sudo apt-get install -y libfuse2 file
           wget -O appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool
           ./appimagetool --appimage-extract
-          sudo mv squashfs-root/usr/bin/appimagetool /usr/local/bin/
-          sudo chmod +x /usr/local/bin/appimagetool
+          sudo mv squashfs-root /opt/appimagetool
+          sudo ln -s /opt/appimagetool/AppRun /usr/local/bin/appimagetool
 
       - name: Create AppImage
         run: |

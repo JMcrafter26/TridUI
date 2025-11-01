@@ -281,9 +281,12 @@ jobs:
 
       - name: Install AppImage dependencies
         run: |
+          sudo apt-get install -y libfuse2
           wget -O appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool
-          sudo mv appimagetool /usr/local/bin/
+          ./appimagetool --appimage-extract
+          sudo mv squashfs-root/usr/bin/appimagetool /usr/local/bin/
+          sudo chmod +x /usr/local/bin/appimagetool
 
       - name: Create AppImage
         run: |
@@ -324,7 +327,7 @@ jobs:
           
           cp TridUI.AppDir/usr/share/applications/TridUI.desktop TridUI.AppDir/
           
-          ARCH=x86_64 appimagetool TridUI.AppDir build/bin/linux/TridUI-linux-amd64.AppImage
+          ARCH=x86_64 appimagetool --no-appstream TridUI.AppDir build/bin/linux/TridUI-linux-amd64.AppImage
 
       - name: Install .deb packaging tools
         run: |

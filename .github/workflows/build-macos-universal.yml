@@ -1,10 +1,10 @@
-name: "Build macOS App"
+name: "Build macOS App (Universal)"
 on:
   workflow_dispatch:
     # This allows manual triggering from the GitHub Actions tab
 
 jobs:
-  build-macos:
+  build-macos-universal:
     runs-on: macos-latest
     steps:
       - name: Checkout code
@@ -46,34 +46,19 @@ jobs:
         run: |
           go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
-      # - name: Install frontend dependencies
-      #   working-directory: frontend
-      #   run: |
-      #     pnpm install --no-frozen-lockfile
-
       - name: Clean build directory
         run: |
           rm -rf build/bin/darwin
           mkdir -p build/bin/darwin
 
-      - name: Build Wails application (arm64)
+      - name: Build Wails application (universal)
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: |
-          wails build -platform darwin/arm64 -clean
+          wails build -platform darwin/universal -clean
           mkdir -p build/bin/darwin
           if [ -d "build/bin/TridUI.app" ]; then
-            cp -R build/bin/TridUI.app build/bin/darwin/TridUI-arm64.app
-          fi
-
-      - name: Build Wails application (amd64)
-        env:
-          NODE_OPTIONS: "--max-old-space-size=4096"
-        run: |
-          wails build -platform darwin/amd64 -clean
-          mkdir -p build/bin/darwin
-          if [ -d "build/bin/TridUI.app" ]; then
-            cp -R build/bin/TridUI.app build/bin/darwin/TridUI-amd64.app
+            cp -R build/bin/TridUI.app build/bin/darwin/TridUI.app
           fi
 
       # Optional: Code signing steps - uncomment when you have certificates
@@ -96,43 +81,26 @@ jobs:
         run: |
           brew install create-dmg
 
-      - name: Create DMG for arm64
+      - name: Create DMG
         run: |
           create-dmg \
             --volname "TrID UI" \
             --window-pos 200 120 \
             --window-size 600 400 \
             --icon-size 100 \
-            --icon "TridUI-arm64.app" 175 190 \
-            --hide-extension "TridUI-arm64.app" \
+            --icon "TridUI.app" 175 190 \
+            --hide-extension "TridUI.app" \
             --app-drop-link 425 190 \
-            "build/bin/darwin/TridUI-arm64.dmg" \
-            "build/bin/darwin/TridUI-arm64.app" || true
+            "build/bin/darwin/TridUI.dmg" \
+            "build/bin/darwin/TridUI.app" || true
           # Fallback to zip if DMG creation fails
-          if [ ! -f "build/bin/darwin/TridUI-arm64.dmg" ]; then
-            cd build/bin/darwin && zip -r TridUI-arm64.zip TridUI-arm64.app && cd ../../..
-          fi
-
-      - name: Create DMG for amd64
-        run: |
-          create-dmg \
-            --volname "TrID UI" \
-            --window-pos 200 120 \
-            --window-size 600 400 \
-            --icon-size 100 \
-            --icon "TridUI-amd64.app" 175 190 \
-            --hide-extension "TridUI-amd64.app" \
-            --app-drop-link 425 190 \
-            "build/bin/darwin/TridUI-amd64.dmg" \
-            "build/bin/darwin/TridUI-amd64.app" || true
-          # Fallback to zip if DMG creation fails
-          if [ ! -f "build/bin/darwin/TridUI-amd64.dmg" ]; then
-            cd build/bin/darwin && zip -r TridUI-amd64.zip TridUI-amd64.app && cd ../../..
+          if [ ! -f "build/bin/darwin/TridUI.dmg" ]; then
+            cd build/bin/darwin && zip -r TridUI.zip TridUI.app && cd ../../..
           fi
 
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TridUI-macos
+          name: TridUI-macos-universal
           path: build/bin/darwin/*
           retention-days: 7

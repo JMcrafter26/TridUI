@@ -146,24 +146,35 @@ jobs:
           rm -rf build/bin/darwin
           mkdir -p build/bin/darwin
 
-      - name: Build Wails application (arm64)
+      - name: Build Wails application (universal)
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: |
-          wails build -platform darwin/arm64 -clean
+          wails build -platform darwin/universal -clean
           mkdir -p build/bin/darwin
           if [ -d "build/bin/TridUI.app" ]; then
-            cp -R build/bin/TridUI.app build/bin/darwin/TridUI-arm64.app
+            cp -R build/bin/TridUI.app build/bin/darwin/TridUI.app
           fi
 
-      - name: Build Wails application (amd64)
-        env:
-          NODE_OPTIONS: "--max-old-space-size=4096"
+      - name: Install create-dmg
         run: |
-          wails build -platform darwin/amd64
-          mkdir -p build/bin/darwin
-          if [ -d "build/bin/TridUI.app" ]; then
-            cp -R build/bin/TridUI.app build/bin/darwin/TridUI-amd64.app
+          brew install create-dmg
+
+      - name: Create DMG
+        run: |
+          create-dmg \
+            --volname "TrID UI" \
+            --window-pos 200 120 \
+            --window-size 600 400 \
+            --icon-size 100 \
+            --icon "TridUI.app" 175 190 \
+            --hide-extension "TridUI.app" \
+            --app-drop-link 425 190 \
+            "build/bin/darwin/TridUI.dmg" \
+            "build/bin/darwin/TridUI.app" || true
+          # Fallback to zip if DMG creation fails
+          if [ ! -f "build/bin/darwin/TridUI.dmg" ]; then
+            cd build/bin/darwin && zip -r TridUI.zip TridUI.app && cd ../../..
           fi
 
       - name: Upload macOS artifacts

@@ -70,26 +70,30 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: |
-          wails build -platform windows/amd64 -upx -nsis -clean -o "windows\TridUI-win-amd64.exe"
+          wails build -platform windows/amd64 -upx -nsis -clean
           New-Item -ItemType Directory -Force -Path "build\bin\windows"
-          if (Test-Path "build\bin\TridUI-win-amd64.exe") {
-            Move-Item -Force "build\bin\TridUI-win-amd64.exe" "build\bin\windows\TridUI-win-amd64.exe"
+          # Move the binary
+          if (Test-Path "build\bin\TridUI.exe") {
+            Move-Item -Force "build\bin\TridUI.exe" "build\bin\windows\TridUI-win-amd64.exe"
           }
-          if (Test-Path "build\bin\TridUI-win-amd64-installer.exe") {
-            Move-Item -Force "build\bin\TridUI-win-amd64-installer.exe" "build\bin\windows\TridUI-win-amd64-installer.exe"
+          # Move the installer
+          if (Test-Path "build\bin\TridUI-amd64-installer.exe") {
+            Move-Item -Force "build\bin\TridUI-amd64-installer.exe" "build\bin\windows\TridUI-win-amd64-installer.exe"
           }
 
       - name: Build Wails application (arm64)
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: |
-          wails build -platform windows/arm64 -nsis -o "windows\TridUI-win-arm64.exe"
+          wails build -platform windows/arm64 -nsis
           New-Item -ItemType Directory -Force -Path "build\bin\windows"
-          if (Test-Path "build\bin\TridUI-win-arm64.exe") {
-            Move-Item -Force "build\bin\TridUI-win-arm64.exe" "build\bin\windows\TridUI-win-arm64.exe"
+          # Move the binary
+          if (Test-Path "build\bin\TridUI.exe") {
+            Move-Item -Force "build\bin\TridUI.exe" "build\bin\windows\TridUI-win-arm64.exe"
           }
-          if (Test-Path "build\bin\TridUI-win-arm64-installer.exe") {
-            Move-Item -Force "build\bin\TridUI-win-arm64-installer.exe" "build\bin\windows\TridUI-win-arm64-installer.exe"
+          # Move the installer
+          if (Test-Path "build\bin\TridUI-arm64-installer.exe") {
+            Move-Item -Force "build\bin\TridUI-arm64-installer.exe" "build\bin\windows\TridUI-win-arm64-installer.exe"
           }
 
       - name: Upload Windows artifacts
@@ -281,12 +285,12 @@ jobs:
 
       - name: Install AppImage dependencies
         run: |
-          sudo apt-get install -y libfuse2
+          sudo apt-get install -y libfuse2 file
           wget -O appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool
           ./appimagetool --appimage-extract
-          sudo mv squashfs-root/usr/bin/appimagetool /usr/local/bin/
-          sudo chmod +x /usr/local/bin/appimagetool
+          sudo mv squashfs-root /opt/appimagetool
+          sudo ln -s /opt/appimagetool/AppRun /usr/local/bin/appimagetool
 
       - name: Create AppImage
         run: |

@@ -70,26 +70,26 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: |
-          wails build -platform windows/amd64 -upx -nsis -clean -o "windows\TridUI-amd64.exe"
+          wails build -platform windows/amd64 -upx -nsis -clean -o "windows\TridUI-win-amd64.exe"
           New-Item -ItemType Directory -Force -Path "build\bin\windows"
-          if (Test-Path "build\bin\TridUI-amd64.exe") {
-            Move-Item -Force "build\bin\TridUI-amd64.exe" "build\bin\windows\TridUI-amd64.exe"
+          if (Test-Path "build\bin\TridUI-win-amd64.exe") {
+            Move-Item -Force "build\bin\TridUI-win-amd64.exe" "build\bin\windows\TridUI-win-amd64.exe"
           }
-          if (Test-Path "build\bin\TridUI-amd64-installer.exe") {
-            Move-Item -Force "build\bin\TridUI-amd64-installer.exe" "build\bin\windows\TridUI-amd64-installer.exe"
+          if (Test-Path "build\bin\TridUI-win-amd64-installer.exe") {
+            Move-Item -Force "build\bin\TridUI-win-amd64-installer.exe" "build\bin\windows\TridUI-win-amd64-installer.exe"
           }
 
       - name: Build Wails application (arm64)
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: |
-          wails build -platform windows/arm64 -nsis -o "windows\TridUI-arm64.exe"
+          wails build -platform windows/arm64 -nsis -o "windows\TridUI-win-arm64.exe"
           New-Item -ItemType Directory -Force -Path "build\bin\windows"
-          if (Test-Path "build\bin\TridUI-arm64.exe") {
-            Move-Item -Force "build\bin\TridUI-arm64.exe" "build\bin\windows\TridUI-arm64.exe"
+          if (Test-Path "build\bin\TridUI-win-arm64.exe") {
+            Move-Item -Force "build\bin\TridUI-win-arm64.exe" "build\bin\windows\TridUI-win-arm64.exe"
           }
-          if (Test-Path "build\bin\TridUI-arm64-installer.exe") {
-            Move-Item -Force "build\bin\TridUI-arm64-installer.exe" "build\bin\windows\TridUI-arm64-installer.exe"
+          if (Test-Path "build\bin\TridUI-win-arm64-installer.exe") {
+            Move-Item -Force "build\bin\TridUI-win-arm64-installer.exe" "build\bin\windows\TridUI-win-arm64-installer.exe"
           }
 
       - name: Upload Windows artifacts
@@ -162,6 +162,12 @@ jobs:
 
       - name: Create DMG
         run: |
+          # Use icon from build dir or fall back to repo root
+          ICON_PATH="build/appicon.png"
+          if [ ! -f "$ICON_PATH" ]; then
+            ICON_PATH="icon.png"
+          fi
+          
           create-dmg \
             --volname "TrID UI" \
             --window-pos 200 120 \
@@ -170,11 +176,11 @@ jobs:
             --icon "TridUI.app" 175 190 \
             --hide-extension "TridUI.app" \
             --app-drop-link 425 190 \
-            "build/bin/darwin/TridUI.dmg" \
+            "build/bin/darwin/TridUI-macOS.dmg" \
             "build/bin/darwin/TridUI.app" || true
           # Fallback to zip if DMG creation fails
-          if [ ! -f "build/bin/darwin/TridUI.dmg" ]; then
-            cd build/bin/darwin && zip -r TridUI.zip TridUI.app && cd ../../..
+          if [ ! -f "build/bin/darwin/TridUI-macOS.dmg" ]; then
+            cd build/bin/darwin && zip -r TridUI-macOS.zip TridUI.app && cd ../../..
           fi
 
       - name: Upload macOS artifacts
@@ -269,9 +275,101 @@ jobs:
           wails build -platform linux/amd64 -upx
           mkdir -p build/bin/linux
           if [ -f "build/bin/TridUI" ]; then
-            cp "build/bin/TridUI" "build/bin/linux/TridUI-amd64"
-            chmod +x "build/bin/linux/TridUI-amd64"
+            cp "build/bin/TridUI" "build/bin/linux/TridUI-linux-amd64"
+            chmod +x "build/bin/linux/TridUI-linux-amd64"
           fi
+
+      - name: Install AppImage dependencies
+        run: |
+          wget -O appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool
+          sudo mv appimagetool /usr/local/bin/
+
+      - name: Create AppImage
+        run: |
+          mkdir -p TridUI.AppDir/usr/bin
+          mkdir -p TridUI.AppDir/usr/share/applications
+          mkdir -p TridUI.AppDir/usr/share/icons/hicolor/256x256/apps
+          
+          cp build/bin/linux/TridUI-linux-amd64 TridUI.AppDir/usr/bin/TridUI
+          
+          cat > TridUI.AppDir/usr/share/applications/TridUI.desktop << 'EOF'
+          [Desktop Entry]
+          Name=TrID UI
+          Exec=TridUI
+          Icon=TridUI
+          Type=Application
+          Categories=Utility;
+          Comment=File type identification tool
+          Terminal=false
+          EOF
+          
+          if [ -f "icon.png" ]; then
+            cp icon.png TridUI.AppDir/usr/share/icons/hicolor/256x256/apps/TridUI.png
+            cp icon.png TridUI.AppDir/TridUI.png
+          elif [ -f "build/appicon.png" ]; then
+            cp build/appicon.png TridUI.AppDir/usr/share/icons/hicolor/256x256/apps/TridUI.png
+            cp build/appicon.png TridUI.AppDir/TridUI.png
+          fi
+          
+          cat > TridUI.AppDir/AppRun << 'EOF'
+          #!/bin/bash
+          SELF=$(readlink -f "$0")
+          HERE=${SELF%/*}
+          export PATH="${HERE}/usr/bin/:${PATH}"
+          export LD_LIBRARY_PATH="${HERE}/usr/lib/:${LD_LIBRARY_PATH}"
+          exec "${HERE}/usr/bin/TridUI" "$@"
+          EOF
+          chmod +x TridUI.AppDir/AppRun
+          
+          cp TridUI.AppDir/usr/share/applications/TridUI.desktop TridUI.AppDir/
+          
+          ARCH=x86_64 appimagetool TridUI.AppDir build/bin/linux/TridUI-linux-amd64.AppImage
+
+      - name: Install .deb packaging tools
+        run: |
+          sudo apt-get install -y dpkg-dev fakeroot
+
+      - name: Create .deb package
+        run: |
+          mkdir -p tridui-deb/DEBIAN
+          mkdir -p tridui-deb/usr/bin
+          mkdir -p tridui-deb/usr/share/applications
+          mkdir -p tridui-deb/usr/share/icons/hicolor/256x256/apps
+          
+          cp build/bin/linux/TridUI-linux-amd64 tridui-deb/usr/bin/tridui
+          chmod +x tridui-deb/usr/bin/tridui
+          
+          cat > tridui-deb/usr/share/applications/tridui.desktop << 'EOF'
+          [Desktop Entry]
+          Name=TrID UI
+          Exec=/usr/bin/tridui
+          Icon=tridui
+          Type=Application
+          Categories=Utility;
+          Comment=File type identification tool
+          Terminal=false
+          EOF
+          
+          if [ -f "icon.png" ]; then
+            cp icon.png tridui-deb/usr/share/icons/hicolor/256x256/apps/tridui.png
+          elif [ -f "build/appicon.png" ]; then
+            cp build/appicon.png tridui-deb/usr/share/icons/hicolor/256x256/apps/tridui.png
+          fi
+          
+          cat > tridui-deb/DEBIAN/control << 'EOF'
+          Package: tridui
+          Version: 1.1.0
+          Section: utils
+          Priority: optional
+          Architecture: amd64
+          Maintainer: JMcrafter26 <your-email@example.com>
+          Description: TrID UI - File Type Identification Tool
+           A desktop application for identifying file types based on binary signatures.
+           Features drag-and-drop interface, multi-language support, and automatic updates.
+          EOF
+          
+          fakeroot dpkg-deb --build tridui-deb build/bin/linux/TridUI-linux-amd64.deb
 
       # ARM64 build disabled - requires cross-compilation toolchain
       # To build for ARM64, use a native ARM64 runner or set up cross-compilation

@@ -61,6 +61,7 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: |
           wails build -platform darwin/arm64 -clean
+          mkdir -p build/bin/darwin
           if [ -d "build/bin/TridUI.app" ]; then
             cp -R build/bin/TridUI.app build/bin/darwin/TridUI-arm64.app
           fi
@@ -70,6 +71,7 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: |
           wails build -platform darwin/amd64 -clean
+          mkdir -p build/bin/darwin
           if [ -d "build/bin/TridUI.app" ]; then
             cp -R build/bin/TridUI.app build/bin/darwin/TridUI-amd64.app
           fi

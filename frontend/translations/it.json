@@ -20,7 +20,7 @@
 		"version": "Versione",
 		"update_check_failed": "Impossibile verificare gli aggiornamenti",
 		"update_available": "Aggiornamento disponibile!",
-		"new_version_available": "La versione {updateInfo.latestVersion} è ora disponibile",
+		"new_version_available": "La versione {latestVersion} è ora disponibile",
 		"released": "Rilasciato",
 		"release_notes": "Note di rilascio",
 		"download": "Scarica",
@@ -107,6 +107,8 @@
 		"auto_update_definitions_description": "Scarica e installa automaticamente gli aggiornamenti delle definizioni all'avvio dell'app",
 		"check_app_updates": "Controlla aggiornamenti app all'avvio",
 		"check_app_updates_description": "Controlla automaticamente le nuove versioni dell'app all'avvio",
-		"app_updates": "Aggiornamenti App"
+		"updates": "Aggiornamenti",
+		"start_pinned": "Avvia app in modalità sempre in primo piano",
+		"start_pinned_description": "Fissa automaticamente la finestra in primo piano all'avvio dell'app"
 	}
 }

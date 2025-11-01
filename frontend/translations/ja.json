@@ -20,7 +20,7 @@
 		"version": "バージョン",
 		"update_check_failed": "アップデートの確認に失敗しました",
 		"update_available": "アップデート可能！",
-		"new_version_available": "バージョン{updateInfo.latestVersion}が利用可能です",
+		"new_version_available": "バージョン {latestVersion} が利用可能です",
 		"released": "リリース日",
 		"release_notes": "リリースノート",
 		"download": "ダウンロード",
@@ -107,6 +107,8 @@
 		"auto_update_definitions_description": "アプリ起動時に定義の更新を自動的にダウンロードおよびインストールします",
 		"check_app_updates": "起動時にアプリの更新を確認",
 		"check_app_updates_description": "アプリ起動時に新しいバージョンを自動的に確認します",
-		"app_updates": "アプリの更新"
+		"updates": "更新",
+		"start_pinned": "常に最前面モードでアプリを起動",
+		"start_pinned_description": "アプリ起動時にウィンドウを自動的に最前面に固定します"
 	}
 }

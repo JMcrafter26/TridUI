@@ -3,6 +3,8 @@
 	import Header from './Header.svelte';
 	import { page } from '$app/stores';
 	import { setLocale, getLocale, locales, baseLocale } from '$lib/paraglide/runtime.js';
+	import { CheckDefinitionsExist, CheckForDefsUpdates, UpdateDefinitions, CheckForUpdates } from '../../wailsjs/go/main/App';
+	import { updateAvailable } from '$lib/stores/updateStore';
 	import '../app.css';
 	let { children } = $props();
 
@@ -28,6 +30,41 @@
 					break;
 				}
 			}
+		}
+
+		// Auto-update definitions on startup if enabled
+		const autoUpdateDefinitions = localStorage.getItem('autoUpdateDefinitions');
+		if (autoUpdateDefinitions !== 'false') { // Default to true if not set
+			CheckDefinitionsExist()
+				.then((exists) => {
+					if (exists) {
+						return CheckForDefsUpdates();
+					}
+				})
+				.then((updateInfo) => {
+					if (updateInfo && !updateInfo.isUpToDate) {
+						return UpdateDefinitions();
+					}
+				})
+				.catch((err) => {
+					console.error('Auto-update definitions failed:', err);
+				});
+		}
+
+		// Check for app updates on startup if enabled (non-blocking)
+		const checkAppUpdatesOnStartup = localStorage.getItem('checkAppUpdatesOnStartup');
+		if (checkAppUpdatesOnStartup !== 'false') { // Default to true if not set
+			CheckForUpdates()
+				.then((info) => {
+					if (info && info.updateAvailable) {
+						updateAvailable.set(info);
+					} else {
+						updateAvailable.set(null);
+					}
+				})
+				.catch((err) => {
+					console.error('Background app update check failed:', err);
+				});
 		}
 	});
 </script>

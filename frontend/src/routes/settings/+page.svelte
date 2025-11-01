@@ -29,6 +29,7 @@
 	let maxTotalResults = 50;
 	let autoUpdateDefinitions = true;
 	let checkAppUpdatesOnStartup = true;
+	let startPinned = false;
 
 	// Dynamically get language display names based on available locales
 	const availableLanguages = locales.map((locale) => {
@@ -127,6 +128,12 @@
 		localStorage.setItem('checkAppUpdatesOnStartup', checkAppUpdatesOnStartup.toString());
 	}
 
+	function handleStartPinnedChange(event: Event) {
+		const target = event.target as HTMLInputElement;
+		startPinned = target.checked;
+		localStorage.setItem('startPinned', startPinned.toString());
+	}
+
 	async function checkForUpdates() {
 		isCheckingUpdates = true;
 		updateError = '';
@@ -176,6 +183,7 @@
 		maxTotalResults = 50;
 		autoUpdateDefinitions = true;
 		checkAppUpdatesOnStartup = true;
+		startPinned = false;
 
 		// Clear localStorage
 		localStorage.removeItem('theme');
@@ -185,6 +193,7 @@
 		localStorage.removeItem('maxTotalResults');
 		localStorage.removeItem('autoUpdateDefinitions');
 		localStorage.removeItem('checkAppUpdatesOnStartup');
+		localStorage.removeItem('startPinned');
 
 		// Apply theme
 		applyTheme('auto');
@@ -241,6 +250,12 @@
 			checkAppUpdatesOnStartup = savedCheckAppUpdates === 'true';
 		} else {
 			checkAppUpdatesOnStartup = true; // Default to true
+		}
+
+		// Load start pinned setting
+		const savedStartPinned = localStorage.getItem('startPinned');
+		if (savedStartPinned) {
+			startPinned = savedStartPinned === 'true';
 		}
 
 		// Listen for system theme changes when in auto mode
@@ -358,9 +373,7 @@
 								<span class="font-semibold">
 									{updateInfo.isUpToDate ? m["settings.up_to_date"]() : m["settings.update_available"]()}
 								</span>
-								{#if !updateInfo.isUpToDate}
-									<span class="badge badge-primary">{m['settings.new_version']()}</span>
-								{/if}
+
 							</div>
 							{#if updateInfo.error}
 								<div class="text-xs text-error mt-1">{updateInfo.error}</div>
@@ -431,26 +444,6 @@
 							{/if}
 						</button>
 					{/if}
-				</div>
-
-				<!-- Auto-Update Definitions -->
-				<div class="mt-4">
-					<div class="form-control">
-						<label class="label cursor-pointer justify-start gap-3">
-							<input 
-								type="checkbox" 
-								class="checkbox checkbox-primary" 
-								bind:checked={autoUpdateDefinitions}
-								on:change={handleAutoUpdateDefinitionsChange}
-							/>
-							<div>
-								<span class="label-text font-medium">{m['settings.auto_update_definitions']()}</span>
-								<p class="label-text-alt text-xs opacity-70 mt-1 text-wrap max-w-md">
-									{m['settings.auto_update_definitions_description']()}
-								</p>
-							</div>
-						</label>
-					</div>
 				</div>
 
 				<!-- Info Box -->
@@ -550,6 +543,23 @@
 								</span>
 							</div>
 						</div>
+						<div class="divider my-2"></div>
+						<div class="form-control">
+						<label class="label cursor-pointer justify-start gap-3">
+							<input 
+								type="checkbox" 
+								class="checkbox checkbox-primary" 
+								bind:checked={startPinned}
+								on:change={handleStartPinnedChange}
+							/>
+							<div>
+								<span class="label-text font-medium text-wrap max-w-md">{m['settings.start_pinned']()}</span>
+								<p class="label-text-alt text-xs opacity-70 mt-1 text-wrap max-w-md">
+									{m['settings.start_pinned_description']()}
+								</p>
+							</div>
+						</label>
+					</div>
 					</div>
 				</div>
 			</div>
@@ -584,7 +594,7 @@
 						</div>
 					</div>
 
-					<div class="divider my-4"></div>
+					<div class="divider my-3"></div>
 
 					<!-- Scan Results Display -->
 					<div>
@@ -682,10 +692,10 @@
 				</div>
 			</div>
 
-					<!-- App Updates Section -->
-		<div class="divider mt-8">{m['settings.app_updates']()}</div>
+					<!-- Updates Section -->
+		<div class="divider mt-8">{m['settings.updates']()}</div>
 			<div class="card bg-base-100 shadow-sm">
-				<div class="card-body p-5">
+				<div class="card-body p-5 space-y-4">
 					<div class="form-control">
 						<label class="label cursor-pointer justify-start gap-3">
 							<input 
@@ -702,24 +712,44 @@
 							</div>
 						</label>
 					</div>
+
+									<!-- Auto-Update Definitions -->
+				<div>
+					<div class="form-control">
+						<label class="label cursor-pointer justify-start gap-3">
+							<input 
+								type="checkbox" 
+								class="checkbox checkbox-primary" 
+								bind:checked={autoUpdateDefinitions}
+								on:change={handleAutoUpdateDefinitionsChange}
+							/>
+							<div>
+								<span class="label-text font-medium">{m['settings.auto_update_definitions']()}</span>
+								<p class="label-text-alt text-xs opacity-70 mt-1 text-wrap max-w-md">
+									{m['settings.auto_update_definitions_description']()}
+								</p>
+							</div>
+						</label>
+					</div>
+				</div>
 				</div>
 			</div>
 
-			<!-- Debug Section -->
-			<details class="collapse border-base-300 border mt-6">
-				<summary class="collapse-title text-sm opacity-70">{m['settings.debug_tools']()}</summary>
-				<div class="collapse-content text-sm space-y-2">
-					<button class="btn btn-sm btn-primary" on:click={() => WindowSetSize(500, 400)}>
-						Reset window size
-					</button>
-					{#if definitionsPath}
-						<div class="text-xs opacity-70 break-all">
-							<strong>{m['settings.located_at']()}:</strong>
-							<span class="select-text text-wrap max-w-md wrap-anywhere">{definitionsPath}</span>
-						</div>
-					{/if}
-				</div>
-			</details>
+		<!-- Debug Section -->
+		<details class="collapse border-base-300 border mt-6">
+			<summary class="collapse-title text-sm opacity-70">{m['settings.debug_tools']()}</summary>
+			<div class="collapse-content text-sm space-y-2">
+				<button class="btn btn-sm btn-primary" on:click={() => WindowSetSize(500, 400)}>
+					Reset window size
+				</button>
+				{#if definitionsPath}
+					<div class="text-xs opacity-70 break-all">
+						<strong>{m['settings.located_at']()}:</strong>
+						<span class="select-text text-wrap max-w-md wrap-anywhere">{definitionsPath}</span>
+					</div>
+				{/if}
+			</div>
+		</details>
 
 			<!-- Reset Settings Section -->
 			<div class="divider mt-2"></div>

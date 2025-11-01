@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { m } from '$lib/paraglide/messages.js';
+	import { updateAvailable } from '$lib/stores/updateStore';
 	import logo from '$lib/images/app-icon.png';
-	import { Github, Download, RefreshCw, CircleCheck, CircleAlert, X } from '@lucide/svelte';
+	import { Github, Download, RefreshCw, CircleCheck, CircleAlert, X, Rocket } from '@lucide/svelte';
 	import { GetVersion, CheckForUpdates } from '../../../wailsjs/go/main/App';
 	import type { main } from '../../../wailsjs/go/models';
+	import snarkdown from 'snarkdown';
 
 	let version = '1.0.0';
 	let updateInfo: main.UpdateInfo | null = null;
@@ -15,14 +17,16 @@
 	onMount(async () => {
 		try {
 			version = await GetVersion();
-			
-			// Check for app updates on startup if enabled
-			const checkOnStartup = localStorage.getItem('checkAppUpdatesOnStartup');
-			if (checkOnStartup === 'true') {
-				// Non-blocking check
-				checkForUpdates().catch(err => {
-					console.error('Background update check failed:', err);
-				});
+			// Check if we already have update info from startup check
+			if ($updateAvailable) {
+				updateInfo = $updateAvailable;
+				// Scroll to the update alert after a short delay to ensure it's rendered
+				setTimeout(() => {
+					document.getElementById('update-available')?.scrollIntoView({
+						behavior: 'smooth',
+						block: 'center'
+					});
+				}, 100);
 			}
 		} catch (err) {
 			console.error('Failed to get version:', err);
@@ -37,6 +41,12 @@
 
 		try {
 			updateInfo = await CheckForUpdates();
+			// Update the store for the indicator
+			if (updateInfo && updateInfo.updateAvailable) {
+				updateAvailable.set(updateInfo);
+			} else {
+				updateAvailable.set(null);
+			}
 		} catch (err) {
 			console.error('Update check failed - full error:', err);
 
@@ -75,6 +85,15 @@
 			return dateStr;
 		}
 	}
+
+	function formatReleaseNotes(markdown: string): string {
+		if (!markdown) return '';
+		// Convert markdown to HTML
+		let html = snarkdown(markdown);
+		// Add target="_blank" to all links
+		html = html.replace(/<a /g, '<a target="_blank" rel="noopener noreferrer" ');
+		return html;
+	}
 </script>
 
 <svelte:head>
@@ -98,7 +117,12 @@
 				<p class="mt-4 text-sm text-base-content/80">{m['about.description']()}</p>
 
 				<div class="mt-6 flex flex-wrap gap-3 items-center">
-					<button class="btn btn-primary btn-sm" on:click={checkForUpdates} disabled={isChecking} aria-label={m['about.check_for_updates']()}>
+					<button
+						class="btn btn-primary btn-sm"
+						on:click={checkForUpdates}
+						disabled={isChecking}
+						aria-label={m['about.check_for_updates']()}
+					>
 						{#if isChecking}
 							<RefreshCw class="h-4 w-4 animate-spin" />
 							{m['about.checking_for_updates']()}
@@ -112,7 +136,8 @@
 						class="inline-flex items-center gap-2 btn btn-sm"
 						href="https://github.com/JMcrafter26/TridUI"
 						target="_blank"
-						rel="noopener noreferrer" aria-label={m['about.view_on_github']()}
+						rel="noopener noreferrer"
+						aria-label={m['about.view_on_github']()}
 					>
 						<span class="w-4 h-4 opacity-80">
 							<Github />
@@ -148,41 +173,57 @@
 			{/if}
 			{#if updateInfo}
 				{#if updateInfo.updateAvailable}
-					<div class="alert alert-soft alert-info mt-4">
-						<Download class="h-6 w-6" />
+					<div class="alert alert-soft alert-info mt-4" id="update-available">
+						<Rocket class="h-6 w-6" />
 						<div class="flex-1">
 							<h3 class="font-bold">{m['about.update_available']()}</h3>
 							<div class="text-sm mt-1">
 								<p>
-									{m['about.new_version_available'](updateInfo.latestVersion)}
+									{m['about.new_version_available']({ latestVersion: updateInfo.latestVersion })}
 									{#if updateInfo.publishedAt}
 										({m['about.released']()} {formatDate(updateInfo.publishedAt)})
 									{/if}
 								</p>
 							</div>
-							{#if updateInfo.releaseNotes}
-								<details class="mt-2">
-									<summary class="cursor-pointer font-semibold text-sm" 
-										>{m['about.release_notes']()}</summary
-									>
-									<div
-										class="mt-2 p-3 bg-base-100 rounded-lg text-sm whitespace-pre-wrap max-h-48 overflow-y-auto"
-									>
-										{updateInfo.releaseNotes}
-									</div>
-								</details>
-							{/if}
 						</div>
-						<button class="btn btn-sm btn-primary" on:click={openReleaseURL} aria-label={m['about.download']()}>
+
+						<button
+							class="btn btn-sm btn-primary"
+							on:click={openReleaseURL}
+							aria-label={m['about.download']()}
+						>
 							<Download class="h-4 w-4" />
 							{m['about.download']()}
 						</button>
 					</div>
+
+					{#if updateInfo.releaseNotes}
+						<div class="mt-1 p-4 bg-base-300 rounded-md max-h-80 overflow-auto w-full">
+							<h4 class="font-medium mb-2">{m['about.release_notes']()}:</h4>
+							<div
+								class="text-sm space-y-2 [&_h1]:text-xl [&_h1]:font-bold [&_h2]:text-lg [&_h2]:font-semibold [&_h3]:text-base [&_h3]:font-medium [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:ml-4 [&_ol]:space-y-1 [&_a]:text-primary [&_a]:underline [&_a]:hover:opacity-80 [&_strong]:font-semibold [&_em]:italic [&_code]:bg-base-100 [&_code]:px-1 [&_code]:rounded"
+							>
+								{@html formatReleaseNotes(updateInfo.releaseNotes)}
+							</div>
+							<a
+								href={updateInfo.releaseUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="btn btn-sm btn-secondary mt-4 inline-flex items-center gap-2"
+							>
+								<Github class="h-4 w-4" />
+								{m['about.view_on_github']()}
+							</a>
+						</div>
+					{/if}
 				{:else}
-					<div class="alert alert-soft alert-success mt-4 fixed bottom-3 md:bottom-6 max-w-md ">
+					<div class="alert alert-soft alert-success mt-4 fixed bottom-3 md:bottom-6 max-w-md">
 						<CircleCheck class="h-5 w-5 my-auto" />
 						<span>{m['about.up_to_date']()}</span>
-						<button class="btn btn-ghost btn-sm rounded-full p-1 my-auto hover:bg-success/10" on:click={() => (updateInfo = null)}>
+						<button
+							class="btn btn-ghost btn-sm rounded-full p-1 my-auto hover:bg-success/10"
+							on:click={() => (updateInfo = null)}
+						>
 							<X />
 						</button>
 					</div>

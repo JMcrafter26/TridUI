@@ -20,7 +20,7 @@
 		"version": "Версия",
 		"update_check_failed": "Не удалось проверить обновления",
 		"update_available": "Доступно обновление!",
-		"new_version_available": "Версия {updateInfo.latestVersion} теперь доступна",
+		"new_version_available": "Версия {latestVersion} доступна",
 		"released": "Выпущено",
 		"release_notes": "Примечания к выпуску",
 		"download": "Скачать",
@@ -107,6 +107,8 @@
 		"auto_update_definitions_description": "Автоматически загружать и устанавливать обновления определений при запуске приложения",
 		"check_app_updates": "Проверять обновления приложения при запуске",
 		"check_app_updates_description": "Автоматически проверять наличие новых версий приложения при запуске",
-		"app_updates": "Обновления приложения"
+		"updates": "Обновления",
+		"start_pinned": "Запускать приложение поверх всех окон",
+		"start_pinned_description": "Автоматически закреплять окно поверх других при запуске приложения"
 	}
 }

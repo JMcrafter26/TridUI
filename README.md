@@ -107,7 +107,6 @@ You can use the "Open App Dir" button in Settings to navigate to the correct loc
 
 ```bash
 # Install dependencies
-go mod download
 cd frontend && pnpm install
 cd ..
 

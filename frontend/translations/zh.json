@@ -20,7 +20,7 @@
 		"version": "版本",
 		"update_check_failed": "检查更新失败",
 		"update_available": "有可用更新！",
-		"new_version_available": "版本{updateInfo.latestVersion}现已可用",
+		"new_version_available": "版本 {latestVersion} 现已可用",
 		"released": "发布日期",
 		"release_notes": "发布说明",
 		"download": "下载",
@@ -107,6 +107,8 @@
 		"auto_update_definitions_description": "应用启动时自动下载和安装定义更新",
 		"check_app_updates": "启动时检查应用更新",
 		"check_app_updates_description": "应用启动时自动检查新版本",
-		"app_updates": "应用更新"
+		"updates": "更新",
+		"start_pinned": "以置顶模式启动应用",
+		"start_pinned_description": "应用启动时自动将窗口固定在最前面"
 	}
 }

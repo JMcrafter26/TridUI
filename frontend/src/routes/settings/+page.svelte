@@ -199,7 +199,7 @@
 		applyTheme('auto');
 
 		// Reload to reset language to browser default
-		window.location.reload();
+		window.location.href = '/';
 	}
 
 	onMount(() => {

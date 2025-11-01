@@ -59,11 +59,19 @@ The application uses a native Go implementation of the TrID file identification 
 <details>
 <summary>Click to expand</summary>
 
-https://github.com/user-attachments/assets/3a9b397c-e459-49c5-b4f6-ce81d550aeb9
+https://github.com/user-attachments/assets/ecd4dbf3-77a3-4f07-8436-c1068e755d5f
 
-https://github.com/user-attachments/assets/77765177-005c-4336-b691-aa7862b6efcd
+https://github.com/user-attachments/assets/45d88137-3bf9-4c25-b516-6f344a1403a5
 
-https://github.com/user-attachments/assets/a5d2b09b-a0f5-4f2a-99c2-bddd13e65647
+https://github.com/user-attachments/assets/766d55df-33e6-45d7-b2ae-cc4e02f55429
+
+https://github.com/user-attachments/assets/c1adec87-dc68-4c0c-860f-f6f7d1cd1303
+
+https://github.com/user-attachments/assets/6716fdbf-65c1-4c07-b8af-26a2912c84e6
+
+https://github.com/user-attachments/assets/5c1e32e7-84ea-4815-9097-5134956f5e4d
+
+https://github.com/user-attachments/assets/bde82ca9-fa8e-45a3-acd4-c31040aea11b
 
 </details>
 

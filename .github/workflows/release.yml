@@ -166,8 +166,10 @@ jobs:
 
       - name: Create DMG and ZIP
         run: |
-          # Create ZIP of TridUI.app
-          cd build/bin/darwin && zip -r TridUI-macOS.zip TridUI.app && cd ../../..
+          # Create ZIP of TridUI.app using ditto (preserves permissions and attributes)
+          cd build/bin/darwin
+          ditto -c -k --keepParent TridUI.app TridUI-macOS.zip
+          cd ../../..
           
           # Use icon from build dir or fall back to repo root
           ICON_PATH="build/appicon.png"

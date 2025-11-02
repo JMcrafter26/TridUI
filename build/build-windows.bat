@@ -2,195 +2,277 @@
 setlocal enabledelayedexpansion
 title Build TridUI for Windows
 
-echo ===== TridUI-Wails Windows Build Script =====
+echo.
+echo ========================================
+echo   TridUI Windows Build Script
+echo ========================================
 echo.
 
-:: Check for required tools
+:: Step 1: Check for required tools
+echo [1/6] Checking Prerequisites...
+echo ----------------------------------------
+
+:: Check for Go
 where go >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ERROR: Go is not installed or not in PATH.
-    echo Please install Go 1.18 or later from https://golang.org/dl/
+    echo [ERROR] Go is not installed or not in PATH.
+    echo.
+    echo Please install Go 1.22 or later from https://golang.org/dl/
+    echo After installation, restart your terminal and try again.
     goto :error
 )
 
+:: Check Go version
+for /f "tokens=3" %%i in ('go version') do set GO_VERSION=%%i
+echo [OK] Go detected: %GO_VERSION%
+
+:: Validate Go version (basic check for 1.22+)
+echo %GO_VERSION% | findstr /R "go1\.2[2-9]\." >nul
+if %errorlevel% neq 0 (
+    echo %GO_VERSION% | findstr /R "go1\.[3-9][0-9]\." >nul
+    if %errorlevel% neq 0 (
+        echo [WARNING] Go version may be too old. Wails v2.10.2+ requires Go 1.22.0 or later.
+        echo [WARNING] Current version: %GO_VERSION%
+        echo.
+        timeout /t 3 >nul
+    )
+)
+
+:: Check for Wails CLI
 where wails >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ERROR: Wails CLI is not installed or not in PATH.
-    echo Install it with: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+    echo [ERROR] Wails CLI is not installed or not in PATH.
+    echo.
+    echo Install it with:
+    echo   go install github.com/wailsapp/wails/v2/cmd/wails@latest
+    echo.
+    echo After installation, ensure %%GOPATH%%\bin is in your PATH.
+    goto :error
+)
+echo [OK] Wails CLI detected
+
+:: Check for Node.js
+where node >nul 2>&1
+if %errorlevel% neq 0 (
+    echo [WARNING] Node.js is not installed or not in PATH.
+    echo [WARNING] Frontend dependencies may not build correctly.
+    echo.
+    timeout /t 2 >nul
+) else (
+    for /f "tokens=*" %%i in ('node -v') do set NODE_VERSION=%%i
+    echo [OK] Node.js detected: !NODE_VERSION!
+)
+
+:: Check for pnpm
+where pnpm >nul 2>&1
+if %errorlevel% neq 0 (
+    echo [WARNING] pnpm is not installed or not in PATH.
+    echo [WARNING] Install it with: npm install -g pnpm
+    echo.
+    timeout /t 2 >nul
+) else (
+    for /f "tokens=*" %%i in ('pnpm -v') do set PNPM_VERSION=%%i
+    echo [OK] pnpm detected: !PNPM_VERSION!
+)
+
+echo.
+
+:: Navigate to project root
+cd /d %~dp0\..
+if %errorlevel% neq 0 (
+    echo [ERROR] Failed to navigate to project root directory.
     goto :error
 )
 
-where deno >nul 2>&1
-if %errorlevel% neq 0 (
-    echo WARNING: Deno is not installed or not in PATH.
-    echo The sandbox host build may fail.
-    echo Install Deno from https://deno.land/
-    echo.
-    timeout /t 3 >nul
+echo [2/6] Verifying Project Structure...
+echo ----------------------------------------
+
+:: Verify essential files exist
+if not exist "wails.json" (
+    echo [ERROR] wails.json not found. Are you in the TridUI project directory?
+    goto :error
+)
+echo [OK] Project structure verified
+
+if not exist "frontend\package.json" (
+    echo [WARNING] frontend\package.json not found. Frontend build may fail.
+    timeout /t 2 >nul
 )
 
-:: Navigate to script directory
-cd /d %~dp0\..\
+echo.
 
-@REM echo Current Directory:
-echo %cd%
+:: Step 2: Check for optional tools
+echo [3/6] Detecting Optional Build Tools...
+echo ----------------------------------------
 
-:: Initialize build parameters
-set useUpx=""
-set useNsis=""
-
-:: Check for optional tools
-echo Step 2: Checking for Optional Tools...
-echo ------------------------------
+set "useUpx="
+set "useNsis="
 
 :: Check if UPX is installed
 where upx >nul 2>&1
 if %errorlevel% neq 0 (
-    echo UPX is not installed. Binaries will not be compressed.
-    echo To enable compression, install UPX from: https://github.com/upx/upx/releases
+    echo [INFO] UPX not found - binaries will not be compressed
+    echo       Install from: https://github.com/upx/upx/releases
 ) else (
-    set useUpx="-upx"
-    echo UPX is installed. Binaries will be compressed.
+    set "useUpx=-upx"
+    for /f "tokens=*" %%i in ('upx --version 2^>^&1 ^| findstr /R "^upx"') do set UPX_VERSION=%%i
+    echo [OK] UPX detected - compression enabled
+    echo     !UPX_VERSION!
 )
 
 :: Check if NSIS is installed
 where makensis >nul 2>&1
 if %errorlevel% neq 0 (
-    echo NSIS is not installed. No installer will be created.
-    echo To enable installer creation, install NSIS from: https://nsis.sourceforge.io/Download
+    echo [INFO] NSIS not found - installer will not be created
+    echo       Install from: https://nsis.sourceforge.io/Download
 ) else (
-    set useNsis="-nsis"
-    echo NSIS is installed. An installer will be created.
+    set "useNsis=-nsis"
+    for /f "tokens=2" %%i in ('makensis /VERSION') do set NSIS_VERSION=%%i
+    echo [OK] NSIS detected - installer creation enabled
+    echo     Version: !NSIS_VERSION!
 )
 
 echo.
 
-:: Clean the build directory
-echo Step 3: Preparing Build Environment...
-echo ------------------------------
+:: Step 3: Prepare build environment
+echo [4/6] Preparing Build Environment...
+echo ----------------------------------------
 
+:: Clean previous builds
 if exist "build\bin\windows" (
-    echo Cleaning previous build files...
-    rmdir /s /q "build\bin\windows"
+    echo Cleaning previous build artifacts...
+    rmdir /s /q "build\bin\windows" 2>nul
+    if %errorlevel% neq 0 (
+        echo [WARNING] Could not fully clean build directory. Some files may be in use.
+    )
 )
 
-:: Create build directory structure
+:: Create output directory
 mkdir "build\bin\windows" 2>nul
+if not exist "build\bin\windows" (
+    echo [ERROR] Failed to create output directory: build\bin\windows
+    goto :error
+)
+echo [OK] Build directory prepared
 
-:: Detect system architecture
-echo Step 4: Detecting System Architecture...
-echo ------------------------------
+echo.
+
+:: Step 4: Detect system architecture
+echo [5/6] Detecting System Architecture...
+echo ----------------------------------------
 
 set "ARCH=%PROCESSOR_ARCHITECTURE%"
 if "%ARCH%"=="AMD64" (
     set "PLATFORM=windows/amd64"
+    set "ARCH_NAME=amd64"
 ) else if "%ARCH%"=="ARM64" (
     set "PLATFORM=windows/arm64"
+    set "ARCH_NAME=arm64"
 ) else (
-    echo ERROR: Unsupported architecture: %ARCH%
-    echo Only AMD64 and ARM64 architectures are supported.
+    echo [ERROR] Unsupported architecture: %ARCH%
+    echo        Only AMD64 and ARM64 are supported.
     goto :error
 )
 
-echo Detected platform: %PLATFORM%
+echo [OK] Building for: %PLATFORM%
 echo.
 
+:: Step 5: Build the application
+echo [6/6] Building Application...
+echo ----------------------------------------
+echo This may take several minutes on first build...
+echo.
 
-echo Step 5: Building Application...
-echo ------------------------------
-echo Building TridUI for %PLATFORM%...
+:: Build with Wails CLI
+set "BUILD_CMD=wails build -platform %PLATFORM% %useUpx% %useNsis% -clean"
+echo Command: %BUILD_CMD%
+echo.
 
-:: Format the output filename by replacing "windows/" with "-"
-set "SAFE_PLATFORM=%PLATFORM:windows/=-%"
+%BUILD_CMD%
 
-:: Build options
-set "BUILD_OPTS=-platform %PLATFORM% %useUpx% %useNsis% --o windows\TridUI%SAFE_PLATFORM%.exe -clean"
-
-:: Execute build command with a more descriptive message
-echo Running: wails build %BUILD_OPTS%
-wails build %BUILD_OPTS%
-
-:: Check for build errors
 if %errorlevel% neq 0 (
-    echo ERROR: Build failed for %PLATFORM%.
+    echo.
+    echo [ERROR] Build failed. Check the output above for details.
+    echo.
+    echo Common issues:
+    echo - Frontend dependencies not installed: cd frontend ^&^& pnpm install
+    echo - Outdated Wails CLI: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+    echo - Missing system dependencies
     goto :error
 )
 
-:: Create output directory if it doesn't exist (just in case)
-if not exist "build\bin\windows" (
-    mkdir "build\bin\windows"
-)
+echo.
+echo [OK] Build completed successfully!
+echo.
 
-:: Verify and relocate the binary
-if exist "build\bin\TridUI%SAFE_PLATFORM%.exe" (
-    echo Moving binary to build\bin\windows\...
-    move "build\bin\TridUI%SAFE_PLATFORM%.exe" "build\bin\windows\TridUI%SAFE_PLATFORM%.exe" >nul 2>&1
-    if %errorlevel% neq 0 (
-        echo WARNING: Failed to move the executable. It may already be in the correct location.
+:: Verify output files
+echo ========================================
+echo   Build Summary
+echo ========================================
+echo.
+
+set "OUTPUT_COUNT=0"
+
+if exist "build\bin\TridUI.exe" (
+    echo [OK] Executable: build\bin\TridUI.exe
+    set /a OUTPUT_COUNT+=1
+    
+    :: Move to windows directory with proper naming
+    move /Y "build\bin\TridUI.exe" "build\bin\windows\TridUI-win-%ARCH_NAME%.exe" >nul 2>&1
+    if %errorlevel% equ 0 (
+        echo     Moved to: build\bin\windows\TridUI-win-%ARCH_NAME%.exe
     )
 )
 
-:: Move the installer if it was created
-if exist "build\bin\TridUI%SAFE_PLATFORM%-installer.exe" (
-    echo Moving installer to build\bin\windows\...
-    move "build\bin\TridUI%SAFE_PLATFORM%-installer.exe" "build\bin\windows\TridUI%SAFE_PLATFORM%-installer.exe" >nul 2>&1
-    if %errorlevel% neq 0 (
-        echo WARNING: Failed to move the installer. It may already be in the correct location.
+if exist "build\bin\TridUI-%ARCH_NAME%-installer.exe" (
+    echo [OK] Installer: build\bin\TridUI-%ARCH_NAME%-installer.exe
+    set /a OUTPUT_COUNT+=1
+    
+    :: Move installer
+    move /Y "build\bin\TridUI-%ARCH_NAME%-installer.exe" "build\bin\windows\TridUI-win-%ARCH_NAME%-installer.exe" >nul 2>&1
+    if %errorlevel% equ 0 (
+        echo     Moved to: build\bin\windows\TridUI-win-%ARCH_NAME%-installer.exe
     )
 )
 
-:: Copy the sandbox host to the Windows directory if it exists
-if exist "deno_host\compiled\sandbox_host.exe" (
-    echo Copying Deno Sandbox Host to build\bin\windows\...
-    copy "deno_host\compiled\sandbox_host.exe" "build\bin\windows\" >nul 2>&1
-    if %errorlevel% neq 0 (
-        echo WARNING: Failed to copy the sandbox host.
-    )
+echo.
+echo Output directory: build\bin\windows\
+echo Total files: %OUTPUT_COUNT%
+echo.
 
-    :: Zip compressed sandbox host
-    echo Zipping Deno Sandbox Host...
-    powershell -command "Compress-Archive -Path 'build\bin\windows\sandbox_host.exe' -DestinationPath 'build\bin\windows\sandbox_host_windows.zip' -Force" >nul 2>&1
+if %OUTPUT_COUNT% equ 0 (
+    echo [WARNING] No output files detected. Build may have failed silently.
+    goto :error
 )
 
-:: Display successful completion message
+:: Additional information
+echo ========================================
+echo   Next Steps
+echo ========================================
 echo.
-echo ===== Build Process Complete =====
+echo - Test the application: build\bin\windows\TridUI-win-%ARCH_NAME%.exe
+echo - WebView2 Runtime required for end users
+echo - Distribute the installer for easier deployment
 echo.
-echo Build completed successfully!
-echo.
-echo Output files:
-echo - Executable: build\bin\windows\TridUI%SAFE_PLATFORM%.exe
-
-:: Check and report if installer was created
-if exist "build\bin\windows\TridUI%SAFE_PLATFORM%-installer.exe" (
-    echo - Installer: build\bin\windows\TridUI%SAFE_PLATFORM%-installer.exe
-)
-
-:: Check and report if sandbox host was copied
-if exist "build\bin\windows\sandbox_host.exe" (
-    echo - Sandbox Host: build\bin\windows\sandbox_host.exe
-)
-
-echo.
-echo NOTE: If you distribute this application, users will need the WebView2 Runtime.
-echo Wails will prompt users to install it if needed.
+echo Build completed at: %date% %time%
 echo.
 
-:: Exit successfully
 goto :end
 
 :error
 echo.
-echo ===== Build Process Failed =====
+echo ========================================
+echo   BUILD FAILED
+echo ========================================
 echo.
-echo Please fix the errors above and try again.
+echo Please review the errors above and:
+echo 1. Ensure all prerequisites are installed
+echo 2. Check the Wails documentation: https://wails.io
+echo 3. Review the build logs for specific errors
 echo.
 exit /b 1
 
 :end
-:: Wait before exiting if script was double-clicked
-if "%1"=="" (
-    echo Press any key to exit...
-    timeout /t 5 >nul
-)
+echo Press any key to exit...
+pause >nul
 exit /b 0

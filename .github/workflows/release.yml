@@ -17,7 +17,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.21'
+          go-version: '1.22'
           check-latest: true
           cache: true
 
@@ -114,7 +114,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.21'
+          go-version: '1.22'
           check-latest: true
           cache: true
 
@@ -164,14 +164,18 @@ jobs:
         run: |
           brew install create-dmg
 
-      - name: Create DMG
+      - name: Create DMG and ZIP
         run: |
+          # Create ZIP of TridUI.app
+          cd build/bin/darwin && zip -r TridUI-macOS.zip TridUI.app && cd ../../..
+          
           # Use icon from build dir or fall back to repo root
           ICON_PATH="build/appicon.png"
           if [ ! -f "$ICON_PATH" ]; then
             ICON_PATH="icon.png"
           fi
           
+          # Create DMG
           create-dmg \
             --volname "TrID UI" \
             --window-pos 200 120 \
@@ -181,11 +185,7 @@ jobs:
             --hide-extension "TridUI.app" \
             --app-drop-link 425 190 \
             "build/bin/darwin/TridUI-macOS.dmg" \
-            "build/bin/darwin/TridUI.app" || true
-          # Fallback to zip if DMG creation fails
-          if [ ! -f "build/bin/darwin/TridUI-macOS.dmg" ]; then
-            cd build/bin/darwin && zip -r TridUI-macOS.zip TridUI.app && cd ../../..
-          fi
+            "build/bin/darwin/TridUI.app" || echo "DMG creation failed, but ZIP is available"
 
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
@@ -236,7 +236,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.21'
+          go-version: '1.22'
           check-latest: true
           cache: true
 
@@ -386,4 +386,45 @@ jobs:
         with:
           name: TridUI-linux
           path: build/bin/linux/*
+          retention-days: 90
+
+  combine-binaries:
+    runs-on: ubuntu-latest
+    needs: [build-windows, build-macos, build-linux]
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create combined zip
+        run: |
+          mkdir -p TridUI-v1.1.0-all-platforms
+          
+          # Copy Windows binaries
+          if [ -d "artifacts/TridUI-windows" ]; then
+            mkdir -p TridUI-v1.1.0-all-platforms/windows
+            cp -r artifacts/TridUI-windows/* TridUI-v1.1.0-all-platforms/windows/
+          fi
+          
+          # Copy macOS binaries
+          if [ -d "artifacts/TridUI-macos" ]; then
+            mkdir -p TridUI-v1.1.0-all-platforms/macos
+            cp -r artifacts/TridUI-macos/* TridUI-v1.1.0-all-platforms/macos/
+          fi
+          
+          # Copy Linux binaries
+          if [ -d "artifacts/TridUI-linux" ]; then
+            mkdir -p TridUI-v1.1.0-all-platforms/linux
+            cp -r artifacts/TridUI-linux/* TridUI-v1.1.0-all-platforms/linux/
+          fi
+          
+          # Create the combined zip
+          zip -r TridUI-v1.1.0-all-platforms.zip TridUI-v1.1.0-all-platforms
+
+      - name: Upload combined binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: TridUI-all-platforms
+          path: TridUI-v1.1.0-all-platforms.zip
           retention-days: 90

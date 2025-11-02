@@ -1,200 +1,184 @@
 # Build Directory
 
-The build directory is used to house all the build files and assets for your application. 
+This directory contains platform-specific build configurations and scripts for TridUI.
 
-The structure is:
+## Quick Start
 
-* bin - Output directory
-* darwin - macOS specific files
-* windows - Windows specific files
+**Windows:**
+```cmd
+.\build\build-windows.bat
+```
+
+**macOS:**
+```bash
+chmod +x build/build-darwin.sh
+./build/build-darwin.sh
+```
+
+**Linux:**
+```bash
+chmod +x build/build-linux.sh
+./build/build-linux.sh
+```
 
 ## Build Scripts
 
-This directory contains scripts for building TridUI on different platforms.
+The build scripts are fully automated and include:
+- ✅ Prerequisite validation (Go, Wails, Node.js, pnpm)
+- ✅ Version checking (Go 1.22+ required for Wails v2.10.2+)
+- ✅ System dependency verification
+- ✅ Optional tool detection (UPX, NSIS, create-dmg)
+- ✅ Clean build environment preparation
+- ✅ Architecture detection
+- ✅ Comprehensive error reporting
+- ✅ Build artifact verification
 
-### Windows Build
+### Prerequisites
 
-#### Prerequisites
+**All Platforms:**
+- **Go 1.22+** - [Download](https://golang.org/dl/)
+- **Wails CLI** - Install with: `go install github.com/wailsapp/wails/v2/cmd/wails@latest`
+- **Node.js 20+** - [Download](https://nodejs.org/)
+- **pnpm 10+** - Install with: `npm install -g pnpm`
 
-Before building on Windows, ensure you have the following installed:
+**Windows:**
+- WebView2 Runtime (automatically installed by Wails if missing)
+- Optional: [UPX](https://github.com/upx/upx/releases) for compression
+- Optional: [NSIS](https://nsis.sourceforge.io/Download) for installers
 
-1. Go (1.18 or newer)
-2. Wails CLI (`go install github.com/wailsapp/wails/v2/cmd/wails@latest`)
-3. Deno (for sandbox host)
-4. Node.js and npm (for frontend)
-5. UPX (optional, for binary compression)
-6. NSIS (optional, for installer creation)
+**macOS:**
+- Xcode Command Line Tools: `xcode-select --install`
+- Optional: [UPX](https://github.com/upx/upx/releases) (not recommended on Apple Silicon)
+- Optional: [create-dmg](https://github.com/create-dmg/create-dmg): `brew install create-dmg`
 
-#### Building on Windows
-
-To build TridUI for Windows:
-
-1. Open a PowerShell or Command Prompt
-2. Navigate to the project directory
-3. Run the build script:
-   ```powershell
-   .\build\build-windows.bat
-   ```
-
-4. The built application will be available in `build\bin\windows\`
-
-#### Build Output on Windows
-
-- `TridUI-amd64.exe` - The standalone application executable
-- `TridUI-amd64-installer.exe` - The installer (if NSIS is installed)
-
-### macOS Build
-
-#### Prerequisites
-
-Before building on macOS, ensure you have the following installed:
-
-1. Go (1.18 or newer)
-2. Wails CLI (`go install github.com/wailsapp/wails/v2/cmd/wails@latest`)
-3. Deno (for sandbox host)
-4. Node.js and npm (for frontend)
-5. UPX (optional, for binary compression) - Note: There are known issues with UPX on Apple Silicon
-
-#### Building on macOS
-
-To build TridUI for macOS:
-
-1. Make the build script executable (only needed once):
-   ```bash
-   chmod +x build/build-darwin.sh
-   ```
-
-2. Run the build script:
-   ```bash
-   ./build/build-darwin.sh
-   ```
-
-3. The built application will be available in `build/bin/darwin/TridUI.app`
-
-#### Advanced macOS Build Options
-
-- For a universal binary (works on both Intel and Apple Silicon), uncomment the relevant section in the build-darwin.sh script
-- If you want to customize the minimum macOS version, you can use:
-  ```bash
-  CGO_CFLAGS=-mmacosx-version-min=10.15.0 CGO_LDFLAGS=-mmacosx-version-min=10.15.0 ./build/build-darwin.sh
-  ```
-
-### Linux Build
-
-#### Prerequisites
-
-Before building on Linux, ensure you have the following installed:
-
-1. Go (1.18 or newer)
-2. Wails CLI (`go install github.com/wailsapp/wails/v2/cmd/wails@latest`)
-3. Deno (for sandbox host)
-4. Node.js and npm (for frontend)
-5. UPX (optional, for binary compression)
-6. Required system dependencies:
-   - For Ubuntu/Debian:
-     ```bash
-     sudo apt install build-essential libgtk-3-dev libwebkit2gtk-4.0-dev
-     ```
-   - For Fedora:
-     ```bash
-     sudo dnf install gcc-c++ gtk3-devel webkit2gtk3-devel
-     ```
-   - For Arch:
-     ```bash
-     sudo pacman -S gcc gtk3 webkit2gtk
-     ```
-
-#### Building on Linux
-
-To build TridUI for Linux:
-
-1. Make the build script executable (only needed once):
-   ```bash
-   chmod +x build/build-linux.sh
-   ```
-
-2. Run the build script:
-   ```bash
-   ./build/build-linux.sh
-   ```
-
-3. The built application will be available in `build/bin/linux/`
-
-#### Build Output on Linux
-
-- `TridUI-amd64` - The executable for x86_64 systems
-- `TridUI-arm64` - The executable for ARM64 systems (if built on such a system)
-
-#### Running on Linux
-
-For the application to run properly, users may need to install runtime dependencies:
-
+**Linux:**
 ```bash
-# Ubuntu/Debian
-sudo apt install libgtk-3-0 libwebkit2gtk-4.0-37 gstreamer1.0-plugins-good
+# Debian/Ubuntu
+sudo apt install libgtk-3-dev libwebkit2gtk-4.1-dev
 
 # Fedora
-sudo dnf install gtk3 webkit2gtk4.0 gstreamer1-plugins-good
+sudo dnf install gtk3-devel webkit2gtk4.1-devel
 
 # Arch
-sudo pacman -S gtk3 webkit2gtk gst-plugins-good
+sudo pacman -S gtk3 webkit2gtk
+
+# Optional: UPX for compression
 ```
 
-## Cross-Platform Development Notes
+### Build Outputs
 
-### Preparing Scripts for Different Platforms
+**Windows:** `build/bin/windows/`
+- `TridUI-win-amd64.exe` - Portable executable
+- `TridUI-win-amd64-installer.exe` - NSIS installer (if available)
+- `TridUI-win-arm64.exe` - ARM64 executable
+- `TridUI-win-arm64-installer.exe` - ARM64 installer (if available)
 
-If you're developing on one platform and preparing scripts for another:
+**macOS:** `build/bin/darwin/`
+- `TridUI.app` - Application bundle
+- `TridUI-macOS-{arch}.zip` - Zipped app bundle
+- `TridUI-macOS-{arch}.dmg` - DMG installer (if create-dmg available)
+  - `{arch}` can be: `amd64`, `arm64`, or `universal`
 
-#### Windows to Unix (macOS/Linux) Transfer
+**Linux:** `build/bin/linux/`
+- `TridUI-linux-amd64` - x86_64 executable
+- `TridUI-linux-arm64` - ARM64 executable
 
-1. Make sure to convert the line endings of shell scripts from CRLF to LF before transferring to macOS or Linux
-2. You can use tools like VS Code (set to LF line endings) or `dos2unix` for this conversion
-3. Shell scripts must have execute permissions set after transfer: `chmod +x script.sh`
+### Advanced Usage
 
-#### Unix to Windows Transfer
+**Manual Wails Commands:**
+```bash
+# Cross-platform builds
+wails build -platform windows/amd64
+wails build -platform darwin/universal
+wails build -platform linux/amd64
 
-1. Windows batch files should use CRLF line endings
-2. If transferring files from macOS or Linux, ensure your Git configuration is set properly to handle line endings
+# With compression
+wails build -upx
 
-### System-Specific Considerations
+# With Windows installer
+wails build -platform windows/amd64 -nsis
 
-#### Windows
-- Make sure WebView2 runtime is installed (Wails will help detect this)
-- NSIS is required only for creating installers
+# Development mode (hot reload)
+wails dev
+```
 
-#### macOS
-- For distribution, consider code signing and notarization
-- Universal binaries (targeting both Intel and Apple Silicon) require additional build settings
+**Frontend Development:**
+```bash
+cd frontend
+pnpm install        # Install dependencies
+pnpm dev           # Start dev server
+pnpm build         # Build for production
+```
 
-#### Linux
-- System dependencies (GTK3, WebKit) must be installed before building
-- Additional media playback libraries may be needed for audio/video elements
-- Different distributions may have different package names for dependencies
+### Troubleshooting
 
-## Directory Structure Details
+**Build fails with "go: no such tool":**
+- Update Go to 1.22 or later
+- Run: `go install github.com/wailsapp/wails/v2/cmd/wails@latest`
 
-### Mac
+**Frontend build errors:**
+- Run: `cd frontend && pnpm install`
+- Ensure Node.js 20+ is installed
 
-The `darwin` directory holds files specific to Mac builds.
-These may be customised and used as part of the build. To return these files to the default state, simply delete them
-and build with `wails build`.
+**Linux: WebKit2GTK errors:**
+- Install development headers (see Linux prerequisites above)
+- Create symlink if using WebKit2GTK 4.1: `sudo ln -sf /usr/lib/x86_64-linux-gnu/pkgconfig/webkit2gtk-4.1.pc /usr/lib/x86_64-linux-gnu/pkgconfig/webkit2gtk-4.0.pc`
 
-The directory contains the following files:
+**macOS: Xcode errors:**
+- Install Command Line Tools: `xcode-select --install`
+- Accept license: `sudo xcodebuild -license accept`
 
-- `Info.plist` - the main plist file used for Mac builds. It is used when building using `wails build`.
-- `Info.dev.plist` - same as the main plist file but used when building using `wails dev`.
+**Windows: NSIS installer not created:**
+- Install NSIS from https://nsis.sourceforge.io/Download
+- Ensure `makensis.exe` is in PATH
 
-### Windows
+## Directory Structure
 
-The `windows` directory contains the manifest and rc files used when building with `wails build`.
-These may be customised for your application. To return these files to the default state, simply delete them and
-build with `wails build`.
+```
+build/
+├── bin/                    # Build outputs
+│   ├── windows/           # Windows binaries
+│   ├── darwin/            # macOS app bundles
+│   └── linux/             # Linux executables
+├── darwin/                 # macOS-specific config
+│   ├── Info.plist         # App bundle info (production)
+│   ├── Info.dev.plist     # App bundle info (development)
+│   └── gon-sign.json      # Code signing config
+├── windows/                # Windows-specific config
+│   ├── icon.ico           # Application icon
+│   ├── info.json          # App metadata
+│   ├── wails.exe.manifest # Windows manifest
+│   └── installer/         # NSIS installer files
+├── build-windows.bat       # Windows build script
+├── build-darwin.sh         # macOS build script
+└── build-linux.sh          # Linux build script
+```
 
-- `icon.ico` - The icon used for the application. This is used when building using `wails build`. If you wish to
-  use a different icon, simply replace this file with your own. If it is missing, a new `icon.ico` file
-  will be created using the `appicon.png` file in the build directory.
-- `installer/*` - The files used to create the Windows installer. These are used when building using `wails build`.
-- `info.json` - Application details used for Windows builds. The data here will be used by the Windows installer,
-  as well as the application itself (right click the exe -> properties -> details)
-- `wails.exe.manifest` - The main application manifest file.
+### Platform-Specific Files
+
+**macOS (`darwin/`):**
+- `Info.plist` - Used for production builds (`wails build`)
+- `Info.dev.plist` - Used for development builds (`wails dev`)
+- Delete these files to regenerate defaults
+
+**Windows (`windows/`):**
+- `icon.ico` - Application icon (regenerated from `appicon.png` if missing)
+- `info.json` - Metadata for Windows Explorer properties
+- `wails.exe.manifest` - Windows application manifest
+- `installer/` - NSIS installer templates and scripts
+
+## Distribution Notes
+
+**Windows:**
+- End users need WebView2 Runtime (usually pre-installed on Windows 11)
+- Use the NSIS installer for automatic WebView2 installation
+
+**macOS:**
+- For public distribution, consider code signing and notarization
+- Universal binaries work on both Intel and Apple Silicon Macs
+- DMG files provide the best user experience
+
+**Linux:**
+- Users need runtime dependencies (GTK3, WebKit2GTK)
+- Consider packaging as AppImage or .deb (see GitHub Actions workflows)
+- Different distributions may need different dependency packages

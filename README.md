@@ -120,14 +120,40 @@ You can use the "Open App Dir" button in Settings to navigate to the correct loc
 
 ### Building from Source
 
-```bash
-# Install dependencies
-cd frontend && pnpm install
-cd ..
+> **📖 Full build documentation:** See [`build/README.md`](build/README.md) for detailed instructions and troubleshooting.
 
-# Build the application
-wails build
+**Quick Build:**
+
+```bash
+# Windows
+.\build\build-windows.bat
+
+# macOS
+chmod +x build/build-darwin.sh && ./build/build-darwin.sh
+
+# Linux
+chmod +x build/build-linux.sh && ./build/build-linux.sh
 ```
+
+**What the build scripts do:**
+- ✅ Validate prerequisites (Go 1.22+, Wails CLI, Node.js, pnpm)
+- ✅ Check system dependencies
+- ✅ Detect optional tools (UPX, NSIS, create-dmg)
+- ✅ Auto-detect architecture
+- ✅ Create distributable packages
+
+**Minimum Requirements:**
+- Go 1.22+ • Node.js 20+ • pnpm 10+ • Wails CLI
+
+**Install Wails CLI:**
+```bash
+go install github.com/wailsapp/wails/v2/cmd/wails@latest
+```
+
+**Output locations:**
+- Windows: `build/bin/windows/TridUI-win-{arch}.exe`
+- macOS: `build/bin/darwin/TridUI-macOS-{arch}.dmg` (+ .app, .zip)
+- Linux: `build/bin/linux/TridUI-linux-{arch}`
 
 ## Usage
 

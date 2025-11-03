@@ -16,8 +16,8 @@ func (a *App) OpenFileDialog() (string, error) {
 		Title: "Select File to Analyze",
 		Filters: []wailsruntime.FileFilter{
 			{
-				DisplayName: "All Files (*.*)",
-				Pattern:     "*.*",
+				DisplayName: "All Files (*)",
+				Pattern:     "*",
 			},
 		},
 	})

@@ -4,11 +4,16 @@
 
 @plugin "daisyui";
 
+html,
 body {
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+
+  border-radius: 20px;
+  overflow: hidden; 
+  /* background-color: transparent !important; */
 
 }
 

@@ -23,6 +23,14 @@
         <string>true</string>
         <key>NSHumanReadableCopyright</key>
         <string>{{.Info.Copyright}}</string>
+
+        <key>NSDocumentsFolderUsageDescription</key>
+        <string>We need access to your files to analyze them.</string>
+        <key>NSDownloadsFolderUsageDescription</key>
+        <string>We need access to your downloads to analyze files.</string>
+        <key>NSDesktopFolderUsageDescription</key>
+        <string>We need access to your desktop to analyze files.</string>
+
         {{if .Info.FileAssociations}}
         <key>CFBundleDocumentTypes</key>
         <array>

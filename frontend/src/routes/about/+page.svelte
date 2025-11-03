@@ -5,6 +5,7 @@
 	import logo from '$lib/images/app-icon.png';
 	import { Github, Download, RefreshCw, CircleCheck, CircleAlert, X, Rocket } from '@lucide/svelte';
 	import { GetVersion, CheckForUpdates } from '../../../wailsjs/go/main/App';
+	import { BrowserOpenURL } from '../../../wailsjs/runtime/runtime';
 	import type { main } from '../../../wailsjs/go/models';
 	import snarkdown from 'snarkdown';
 
@@ -90,8 +91,10 @@
 		if (!markdown) return '';
 		// Convert markdown to HTML
 		let html = snarkdown(markdown);
-		// Add target="_blank" to all links
-		html = html.replace(/<a /g, '<a target="_blank" rel="noopener noreferrer" ');
+		// Add target="_blank" to all links and rel="noopener noreferrer" and BrowserOpenURL(url) on:click
+		html = html.replace(/<a href="(.*?)"/g, (_match, p1) => {
+			return `<a href="${p1}" target="_blank" rel="noopener noreferrer" on:click="BrowserOpenURL('${p1.replace(/'/g, "\\'")}')"`;
+		});
 		return html;
 	}
 </script>

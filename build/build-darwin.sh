@@ -208,7 +208,7 @@ print_step "6/6" "Building Application..."
 echo "This may take several minutes on first build..."
 echo ""
 
-BUILD_CMD="wails build -platform $PLATFORM $UPX_FLAGS -clean"
+BUILD_CMD="wails build -platform $PLATFORM $UPX_FLAGS -clean -darwin-entitlements build/darwin/TridUI.entitlements"
 echo "Command: $BUILD_CMD"
 echo ""
 

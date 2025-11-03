@@ -25,7 +25,9 @@
 		"release_notes": "Notes de version",
 		"download": "Télécharger",
 		"up_to_date": "Vous utilisez la dernière version !",
-		"checking_for_updates": "Vérification des mises à jour"
+		"checking_for_updates": "Vérification des mises à jour",
+		"view_current_release_notes": "Voir les notes de version actuelles",
+		"current_release_notes": "Notes de version actuelles"
 	},
 	"home": {
 		"click_to_browse": "Cliquez pour parcourir ou faites glisser un fichier ici",

@@ -18,7 +18,9 @@
 		"download": "Download",
 		"up_to_date": "You're running the latest version!",
 		"checking_for_updates": "Checking for updates",
-		"made_with_hearts_by": "Made with ❤️ by Cufiy"
+		"made_with_hearts_by": "Made with ❤️ by Cufiy",
+		"view_current_release_notes": "View Current Release Notes",
+		"current_release_notes": "Current Release Notes"
 	},
 	"header": {
 		"home": "Home",

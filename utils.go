@@ -14,12 +14,7 @@ import (
 func (a *App) OpenFileDialog() (string, error) {
 	filePath, err := wailsruntime.OpenFileDialog(a.ctx, wailsruntime.OpenDialogOptions{
 		Title: "Select File to Analyze",
-		Filters: []wailsruntime.FileFilter{
-			{
-				DisplayName: "All Files (*)",
-				Pattern:     "*",
-			},
-		},
+		// No filters specified - allows selecting any file including those without extensions
 	})
 	return filePath, err
 }
@@ -93,11 +88,13 @@ func (a *App) GetConfig() (string, error) {
 	// config is in a file in getAppDataDir()/config.json
 	appDataDir, err := getAppDataDir()
 	if err != nil {
+		wailsruntime.LogError(a.ctx, "Failed to get app data dir: "+err.Error())
 		return "", fmt.Errorf("failed to get app data dir: %w", err)
 	}
 	configPath := filepath.Join(appDataDir, "config.json")
 	configJSON, err := os.ReadFile(configPath)
 	if err != nil {
+		wailsruntime.LogErrorf(a.ctx, "Failed to read config.json from %s: %v", configPath, err)
 		return "", fmt.Errorf("failed to read config.json: %w", err)
 	}
 	return string(configJSON), nil

@@ -3,7 +3,7 @@
 	import { m } from '$lib/paraglide/messages.js';
 	import { updateAvailable } from '$lib/stores/updateStore';
 	import logo from '$lib/images/app-icon.png';
-	import { Github, Download, RefreshCw, CircleCheck, CircleAlert, X, Rocket } from '@lucide/svelte';
+	import { Github, Download, RefreshCw, CircleCheck, CircleAlert, X, Rocket, ChevronDown, ChevronUp } from '@lucide/svelte';
 	import { GetVersion, CheckForUpdates } from '../../../wailsjs/go/main/App';
 	import { BrowserOpenURL } from '../../../wailsjs/runtime/runtime';
 	import type { main } from '../../../wailsjs/go/models';
@@ -14,6 +14,8 @@
 	let isChecking = false;
 	let errorTitle = '';
 	let errorMessage = '';
+	let showReleaseNotes = false;
+	let showSuccessAlert = false;
 
 	onMount(async () => {
 		try {
@@ -21,13 +23,15 @@
 			// Check if we already have update info from startup check
 			if ($updateAvailable) {
 				updateInfo = $updateAvailable;
-				// Scroll to the update alert after a short delay to ensure it's rendered
-				setTimeout(() => {
-					document.getElementById('update-available')?.scrollIntoView({
-						behavior: 'smooth',
-						block: 'center'
-					});
-				}, 100);
+				// Scroll to the update alert after a short delay if there's an update
+				if (updateInfo.updateAvailable) {
+					setTimeout(() => {
+						document.getElementById('update-available')?.scrollIntoView({
+							behavior: 'smooth',
+							block: 'center'
+						});
+					}, 100);
+				}
 			}
 		} catch (err) {
 			console.error('Failed to get version:', err);
@@ -39,6 +43,8 @@
 		errorTitle = '';
 		errorMessage = '';
 		updateInfo = null;
+		showReleaseNotes = false;
+		showSuccessAlert = true;
 
 		try {
 			updateInfo = await CheckForUpdates();
@@ -92,10 +98,18 @@
 		// Convert markdown to HTML
 		let html = snarkdown(markdown);
 		// Add target="_blank" to all links and rel="noopener noreferrer" and BrowserOpenURL(url) on:click
-		html = html.replace(/<a href="(.*?)"/g, (_match, p1) => {
-			return `<a href="${p1}" target="_blank" rel="noopener noreferrer" on:click="BrowserOpenURL('${p1.replace(/'/g, "\\'")}')"`;
+		// Replace anchors with buttons that open the URL in a new window
+		html = html.replace(/<a\s+href="([^"]*)"(.*?)>/gi, (_match, href, attrs) => {
+			const escaped = href.replace(/'/g, "\\'");
+			return `<button class="link cursor-pointer" on:click="BrowserOpenURL('${escaped}')"${attrs}>`;
 		});
+		// Close buttons for closing anchor tags
+		html = html.replace(/<\/a>/gi, '</button>');
 		return html;
+	}
+
+	function toggleReleaseNotes() {
+		showReleaseNotes = !showReleaseNotes;
 	}
 </script>
 
@@ -135,18 +149,16 @@
 						{/if}
 					</button>
 
-					<a
+					<button
 						class="inline-flex items-center gap-2 btn btn-sm"
-						href="https://github.com/JMcrafter26/TridUI"
-						target="_blank"
-						rel="noopener noreferrer"
+						on:click={() => BrowserOpenURL('https://github.com/JMcrafter26/TridUI')}
 						aria-label={m['about.view_on_github']()}
 					>
 						<span class="w-4 h-4 opacity-80">
 							<Github />
 						</span>
 						<span>{m['about.view_on_github']()}</span>
-					</a>
+					</button>
 				</div>
 			</div>
 
@@ -220,18 +232,69 @@
 						</div>
 					{/if}
 				{:else}
-					<div class="alert alert-soft alert-success mt-4 fixed bottom-3 md:bottom-6 max-w-md">
-						<CircleCheck class="h-5 w-5 my-auto" />
-						<span>{m['about.up_to_date']()}</span>
-						<button
-							class="btn btn-ghost btn-sm rounded-full p-1 my-auto hover:bg-success/10"
-							on:click={() => (updateInfo = null)}
-						>
-							<X />
-						</button>
-					</div>
+					{#if showSuccessAlert}
+						<div class="alert alert-soft alert-success mt-4 fixed bottom-3 md:bottom-6 max-w-md">
+							<CircleCheck class="h-5 w-5 my-auto" />
+							<span>{m['about.up_to_date']()}</span>
+							<button
+								class="btn btn-ghost btn-sm rounded-full p-1 my-auto hover:bg-success/10"
+								on:click={() => (showSuccessAlert = false)}
+							>
+								<X />
+							</button>
+						</div>
+					{/if}
 				{/if}
-			{/if}
+
+			{#if updateInfo && !updateInfo.updateAvailable && updateInfo.releaseNotes}
+				<details class="mt-4 w-full" open={showReleaseNotes}>
+							<summary
+								class="cursor-pointer select-none p-3 bg-base-300 rounded-md hover:bg-base-300/80 transition-colors flex items-center justify-between"
+								on:click|preventDefault={toggleReleaseNotes}
+							>
+								<span class="font-medium flex items-center gap-2">
+									{m['about.current_release_notes']()}
+									{#if updateInfo.publishedAt && !showReleaseNotes}
+										<span class="text-xs text-base-content/70 font-normal">
+											({formatDate(updateInfo.publishedAt)})
+										</span>
+								{/if}
+							</span>
+							{#if showReleaseNotes}
+								<ChevronUp class="h-4 w-4" />
+							{:else}
+								<ChevronDown class="h-4 w-4" />
+							{/if}
+							</summary>
+					{#if showReleaseNotes}
+						<div class="p-4 bg-base-300/50 rounded-b-md max-h-80 overflow-auto">
+									<div class="text-sm mb-2">
+										<span class="font-medium">Version {updateInfo.currentVersion}</span>
+										{#if updateInfo.publishedAt}
+											<span class="text-base-content/70"> • {formatDate(updateInfo.publishedAt)}</span>
+										{/if}
+									</div>
+									<div
+										class="text-sm space-y-2 [&_h1]:text-xl [&_h1]:font-bold [&_h2]:text-lg [&_h2]:font-semibold [&_h3]:text-base [&_h3]:font-medium [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:ml-4 [&_ol]:space-y-1 [&_a]:text-primary [&_a]:underline [&_a]:hover:opacity-80 [&_strong]:font-semibold [&_em]:italic [&_code]:bg-base-100 [&_code]:px-1 [&_code]:rounded text-wrap wrap-anywhere"
+									>
+										{@html formatReleaseNotes(updateInfo.releaseNotes)}
+									</div>
+									{#if updateInfo.releaseUrl}
+										<a
+											href={updateInfo.releaseUrl}
+											target="_blank"
+											rel="noopener noreferrer"
+											class="btn btn-sm btn-secondary mt-4 inline-flex items-center gap-2"
+										>
+											<Github class="h-4 w-4" />
+											{m['about.view_on_github']()}
+										</a>
+									{/if}
+								</div>
+							{/if}
+						</details>
+					{/if}
+				{/if}
 
 			<div class="divider md:divider-horizontal"></div>
 

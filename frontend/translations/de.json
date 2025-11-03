@@ -26,7 +26,9 @@
 		"download": "Herunterladen",
 		"up_to_date": "Sie verwenden die neueste Version!",
 		"checking_for_updates": "Suche nach Updates",
-		"made_with_hearts_by": "Mit ❤️ von Cufiy erstellt"
+		"made_with_hearts_by": "Mit ❤️ erstellt von Cufiy",
+		"view_current_release_notes": "Aktuelle Versionshinweise anzeigen",
+		"current_release_notes": "Aktuelle Versionshinweise"
 	},
 	"home": {
 		"click_to_browse": "Klicken Sie zum Durchsuchen oder ziehen Sie eine Datei hierher",

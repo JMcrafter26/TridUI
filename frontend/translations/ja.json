@@ -26,7 +26,9 @@
 		"download": "ダウンロード",
 		"up_to_date": "最新バージョンを使用しています！",
 		"checking_for_updates": "アップデートを確認中",
-		"made_with_hearts_by": "❤️を込めてCufiyが作成"
+		"made_with_hearts_by": "❤️を込めてCufiyが作成",
+		"view_current_release_notes": "現在のリリースノートを表示",
+		"current_release_notes": "現在のリリースノート"
 	},
 	"home": {
 		"click_to_browse": "クリックして参照するか、ファイルをここにドラッグ",

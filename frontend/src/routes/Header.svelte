@@ -6,7 +6,6 @@
 
 	import { House, Settings, Info, Menu, X, Minus, Pin } from '@lucide/svelte';
 	import { WindowSetAlwaysOnTop, WindowMinimise, Quit } from '../../wailsjs/runtime/runtime.js';
-	import { Greet } from '../../wailsjs/go/main/App.js';
 
 	// pin button
 	let isPinned = false;

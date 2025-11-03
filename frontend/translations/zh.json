@@ -26,7 +26,9 @@
 		"download": "下载",
 		"up_to_date": "您正在使用最新版本！",
 		"checking_for_updates": "正在检查更新",
-		"made_with_hearts_by": "由Cufiy用❤️制作"
+		"made_with_hearts_by": "由Cufiy用❤️制作",
+		"view_current_release_notes": "查看当前版本说明",
+		"current_release_notes": "当前版本说明"
 	},
 	"home": {
 		"click_to_browse": "点击浏览或将文件拖到此处",

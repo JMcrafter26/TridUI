@@ -100,6 +100,7 @@ func (a *App) ProcessFile(filePath string, maxResults int) (*TridScanResult, err
 	// Get file info
 	fileInfo, err := os.Stat(filePath)
 	if err != nil {
+		runtime.LogErrorf(a.ctx, "Failed to get file info for %s: %v", filePath, err)
 		return nil, fmt.Errorf("failed to get file info: %w", err)
 	}
 
@@ -112,6 +113,7 @@ func (a *App) ProcessFile(filePath string, maxResults int) (*TridScanResult, err
 	// Initialize the analyzer
 	analyzer, err := initializeAnalyzer()
 	if err != nil {
+		runtime.LogError(a.ctx, "Failed to initialize analyzer: "+err.Error())
 		result.Error = err.Error()
 		return result, nil // Return result with error instead of failing
 	}
@@ -119,6 +121,7 @@ func (a *App) ProcessFile(filePath string, maxResults int) (*TridScanResult, err
 	// Analyze the file
 	results, err := analyzer.AnalyzeFile(filePath)
 	if err != nil {
+		runtime.LogErrorf(a.ctx, "Failed to analyze file %s: %v", filePath, err)
 		result.Error = fmt.Sprintf("Failed to analyze file: %v", err)
 		return result, nil
 	}
@@ -180,6 +183,7 @@ func (a *App) ProcessFile(filePath string, maxResults int) (*TridScanResult, err
 func (a *App) GetDefinitionsPath() (string, error) {
 	appDataDir, err := getAppDataDir()
 	if err != nil {
+		runtime.LogError(a.ctx, "Failed to get app data dir: "+err.Error())
 		return "", err
 	}
 	return filepath.Join(appDataDir, "triddefs.trd"), nil
@@ -192,6 +196,9 @@ func (a *App) CheckDefinitionsExist() (bool, error) {
 		return false, err
 	}
 	_, err = os.Stat(defsPath)
+	if err != nil && !os.IsNotExist(err) {
+		runtime.LogErrorf(a.ctx, "Error checking definitions file: %v", err)
+	}
 	return err == nil, nil
 }
 
@@ -201,6 +208,8 @@ func (a *App) CheckForDefsUpdates() (*TridUpdateInfo, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	runtime.LogDebug(a.ctx, "Checking for TrID definitions updates")
 
 	updater := trid.NewUpdater(defsPath)
 	info, err := updater.CheckForUpdates()
@@ -217,11 +226,19 @@ func (a *App) CheckForDefsUpdates() (*TridUpdateInfo, error) {
 		result.LastUpdated = info.LastUpdated.Format("2006-01-02 15:04:05")
 	}
 
+	if err != nil {
+		runtime.LogErrorf(a.ctx, "Error checking for definitions updates: %v", err)
+	} else {
+		runtime.LogInfof(a.ctx, "Definitions update check complete. Up to date: %v", result.IsUpToDate)
+	}
+
 	return result, err
 }
 
 // UpdateDefinitions downloads and installs the latest definitions
 func (a *App) UpdateDefinitions() error {
+	runtime.LogInfo(a.ctx, "Starting TrID definitions update")
+
 	defsPath, err := a.GetDefinitionsPath()
 	if err != nil {
 		return err
@@ -243,12 +260,15 @@ func (a *App) UpdateDefinitions() error {
 	})
 
 	if err != nil {
+		runtime.LogErrorf(a.ctx, "Failed to update definitions: %v", err)
 		return err
 	}
 
 	// Reset the analyzer to force reload with new definitions
 	analyzerOnce = sync.Once{}
 	analyzer = nil
+
+	runtime.LogInfo(a.ctx, "TrID definitions updated successfully")
 
 	// Emit completion event
 	runtime.EventsEmit(a.ctx, "trid:update:complete", true)

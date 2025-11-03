@@ -26,7 +26,9 @@
 		"download": "Pobierz",
 		"up_to_date": "Używasz najnowszej wersji!",
 		"checking_for_updates": "Sprawdzanie aktualizacji",
-		"made_with_hearts_by": "Stworzone z ❤️ przez Cufiy"
+		"made_with_hearts_by": "Stworzone z ❤️ przez Cufiy",
+		"view_current_release_notes": "Zobacz bieżące informacje o wydaniu",
+		"current_release_notes": "Bieżące informacje o wydaniu"
 	},
 	"home": {
 		"click_to_browse": "Kliknij, aby przeglądać lub przeciągnij plik tutaj",

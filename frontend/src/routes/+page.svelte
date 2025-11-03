@@ -279,11 +279,11 @@
 
 					<!-- Error Alert -->
 					{#if scanResult.error}
-						<div class="alert alert-error">
+						<div class="alert alert-error alert-soft">
 							<CircleAlert class="h-6 w-6" />
 							<div>
 								<h3 class="font-bold">{m['home.error']()}</h3>
-								<div class="text-sm">{scanResult.error}</div>
+								<div class="text-sm wrap-anywhere select-text">{scanResult.error}</div>
 							</div>
 						</div>
 					{/if}

@@ -24,9 +24,11 @@
 		"released": "Выпущено",
 		"release_notes": "Примечания к выпуску",
 		"download": "Скачать",
-		"up_to_date": "Вы используете последнюю версию!",
+		"up_to_date": "У вас установлена последняя версия!",
 		"checking_for_updates": "Проверка обновлений",
-		"made_with_hearts_by": "Сделано с ❤️ от Cufiy"
+		"made_with_hearts_by": "Сделано с ❤️ Cufiy",
+		"view_current_release_notes": "Посмотреть текущие примечания к выпуску",
+		"current_release_notes": "Текущие примечания к выпуску"
 	},
 	"home": {
 		"click_to_browse": "Нажмите, чтобы выбрать, или перетащите файл сюда",

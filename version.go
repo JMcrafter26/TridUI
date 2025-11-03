@@ -44,12 +44,12 @@ type GitHubErrorResponse struct {
 }
 
 // GetVersion returns the current application version
-func GetVersion() string {
+func (a *App) GetVersion() string {
 	return AppVersion
 }
 
 // CheckForUpdates checks GitHub for the latest release and compares versions
-func CheckForUpdates() (*UpdateInfo, error) {
+func (a *App) CheckForUpdates() (*UpdateInfo, error) {
 	url := fmt.Sprintf("https://api.github.com/repos/%s/%s/releases/latest", RepoOwner, RepoName)
 
 	client := &http.Client{
@@ -79,10 +79,10 @@ func CheckForUpdates() (*UpdateInfo, error) {
 		if err := json.Unmarshal(body, &ghError); err == nil && ghError.Message != "" {
 			// Return user-friendly error message for common cases
 			if resp.StatusCode == http.StatusForbidden && strings.Contains(ghError.Message, "rate limit") {
-				return nil, fmt.Errorf("API rate limit exceeded. Please try again later or use authentication for higher limits.")
+				return nil, fmt.Errorf("API rate limit exceeded. Please try again later or use authentication for higher limits")
 			}
 			if resp.StatusCode == http.StatusNotFound {
-				return nil, fmt.Errorf("No releases found for this repository")
+				return nil, fmt.Errorf("no releases found for this repository")
 			}
 			// Return the GitHub error message
 			return nil, fmt.Errorf("%s", ghError.Message)

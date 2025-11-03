@@ -56,10 +56,8 @@
 		if (checkAppUpdatesOnStartup !== 'false') { // Default to true if not set
 			CheckForUpdates()
 				.then((info) => {
-					if (info && info.updateAvailable) {
+					if (info) {
 						updateAvailable.set(info);
-					} else {
-						updateAvailable.set(null);
 					}
 				})
 				.catch((err) => {

@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { m } from '$lib/paraglide/messages.js';
 	import { setLocale, getLocale, locales } from '$lib/paraglide/runtime.js';
-	import { WindowSetSize, EventsOn, EventsOff } from '../../../wailsjs/runtime/runtime';
+	import { WindowSetSize, EventsOn, EventsOff, LogPrint } from '../../../wailsjs/runtime/runtime';
 	import {
 		CheckDefinitionsExist,
 		CheckForDefsUpdates,
@@ -62,7 +62,7 @@
 		}
 	}
 
-	function applyTheme(theme: 'light' | 'dark' | 'auto') {
+	function applyTheme(theme: 'light' | 'dark' | 'triduidark' | 'auto') {
 		if (typeof window === 'undefined') return;
 		
 		if (theme === 'auto') {
@@ -71,6 +71,8 @@
 		} else {
 			document.documentElement.setAttribute('data-theme', theme);
 		}
+
+		LogPrint('Applied theme: ' + theme);
 		
 		localStorage.setItem('theme', theme);
 	}
@@ -535,6 +537,10 @@
 								</option>
 								<option value="auto">
 									{m['settings.theme_auto']()}
+								</option>
+
+								<option value="triduidark">
+									TridUI Dark
 								</option>
 							</select>
 							<div class="mt-2">

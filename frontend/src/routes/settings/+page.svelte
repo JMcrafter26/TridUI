@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { m } from '$lib/paraglide/messages.js';
 	import { setLocale, getLocale, locales } from '$lib/paraglide/runtime.js';
-	import { WindowSetSize, EventsOn, EventsOff, LogPrint } from '../../../wailsjs/runtime/runtime';
+	import { WindowSetSize, EventsOn, EventsOff, LogPrint, BrowserOpenURL } from '../../../wailsjs/runtime/runtime';
 	import {
 		CheckDefinitionsExist,
 		CheckForDefsUpdates,
@@ -22,7 +22,7 @@
 	let updateMessage = '';
 	let updateError = '';
 	let currentLocale = getLocale();
-	let currentTheme: 'light' | 'dark' | 'auto' = 'auto';
+	let currentTheme: 'light' | 'dark' | 'triduilight' | 'triduidark' | 'auto' = 'auto';
 	let currentSearchEngine = 'Google';
 	let maxVisibleMatches = 5;
 	let confidenceThreshold = 10.0;
@@ -62,7 +62,7 @@
 		}
 	}
 
-	function applyTheme(theme: 'light' | 'dark' | 'triduidark' | 'auto') {
+	function applyTheme(theme: 'light' | 'dark' | 'triduilight' | 'triduidark' | 'auto') {
 		if (typeof window === 'undefined') return;
 		
 		if (theme === 'auto') {
@@ -79,7 +79,7 @@
 
 	function handleThemeChange(event: Event) {
 		const target = event.target as HTMLSelectElement;
-		const newTheme = target.value as 'light' | 'dark' | 'auto';
+		const newTheme = target.value as 'light' | 'dark' | 'auto' | 'triduilight' | 'triduidark';
 		currentTheme = newTheme;
 		applyTheme(newTheme);
 	}
@@ -206,7 +206,7 @@
 
 	onMount(() => {
 		// Load saved theme
-		const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'auto' | null;
+		const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'auto' | 'triduidark' | 'triduilight' | null;
 		if (savedTheme) {
 			currentTheme = savedTheme;
 			applyTheme(savedTheme);
@@ -306,11 +306,24 @@
 			updateMessage = m['settings.update_complete']();
 		});
 
+		// Handle clicks on links with data-browserOpen attribute
+		const handleLinkClick = (event: MouseEvent) => {
+			const target = event.target as HTMLElement;
+			const anchor = target.closest('a[data-browserOpen="true"]');
+			if (anchor && anchor instanceof HTMLAnchorElement) {
+				event.preventDefault();
+				BrowserOpenURL(anchor.href);
+			}
+		};
+
+		document.addEventListener('click', handleLinkClick);
+
 		return () => {
 			EventsOff('trid:update:progress');
 			EventsOff('trid:update:complete');
 			const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 			mediaQuery.removeEventListener('change', handleSystemThemeChange);
+			document.removeEventListener('click', handleLinkClick);
 		};
 	});
 	</script>
@@ -335,7 +348,7 @@
 						<Info class="h-5 w-5" />
 						<div class="flex-1">
 							<h3 class="font-bold">{m['settings.definitions_installed']()}</h3>
-							<div class="text-sm">
+							<div class="text-sm text-warp max-w-md wrap-anywhere">
 								{#if updateInfo}
 									<div class="mt-1 space-y-1">
 										<div>{m['settings.definitions']()}: <span class="select-text">{updateInfo.defsCount.toLocaleString()}</span> file types</div>
@@ -539,9 +552,13 @@
 									{m['settings.theme_auto']()}
 								</option>
 
+								<option value="triduilight">
+									TridUI Light
+								</option>
 								<option value="triduidark">
 									TridUI Dark
 								</option>
+
 							</select>
 							<div class="mt-2">
 								<span class="label-text-alt text-xs opacity-70 text-wrap max-w-md">
@@ -730,7 +747,7 @@
 								on:change={handleAutoUpdateDefinitionsChange}
 							/>
 							<div>
-								<span class="label-text font-medium">{m['settings.auto_update_definitions']()}</span>
+								<span class="label-text font-medium text-wrap max-w-md">{m['settings.auto_update_definitions']()}</span>
 								<p class="label-text-alt text-xs opacity-70 mt-1 text-wrap max-w-md">
 									{m['settings.auto_update_definitions_description']()}
 								</p>

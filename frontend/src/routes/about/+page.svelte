@@ -38,6 +38,23 @@
 		}
 	});
 
+	onMount(() => {
+		// Handle clicks on links with data-browserOpen attribute
+		const handleLinkClick = (event: MouseEvent) => {
+			const target = event.target as HTMLElement;
+			const anchor = target.closest('a[data-browserOpen="true"]');
+			if (anchor && anchor instanceof HTMLAnchorElement) {
+				event.preventDefault();
+				BrowserOpenURL(anchor.href);
+			}
+		};
+
+		document.addEventListener('click', handleLinkClick);
+		return () => {
+			document.removeEventListener('click', handleLinkClick);
+		};
+	});
+
 	async function checkForUpdates() {
 		isChecking = true;
 		errorTitle = '';
@@ -101,10 +118,10 @@
 		// Replace anchors with buttons that open the URL in a new window
 		html = html.replace(/<a\s+href="([^"]*)"(.*?)>/gi, (_match, href, attrs) => {
 			const escaped = href.replace(/'/g, "\\'");
-			return `<button class="link cursor-pointer" on:click="BrowserOpenURL('${escaped}')"${attrs}>`;
+			return `<a class="link cursor-pointer" href="${escaped}" data-browserOpen="true" ${attrs}>`;
 		});
 		// Close buttons for closing anchor tags
-		html = html.replace(/<\/a>/gi, '</button>');
+		// html = html.replace(/<\/a>/gi, '</button>');
 		return html;
 	}
 
@@ -122,7 +139,7 @@
 	<div class="card bg-base-200 shadow-lg h-full overflow-auto">
 		<div class="card-body p-6 md:p-10 flex flex-col md:flex-row items-center gap-6 mb-4">
 			<div class="shrink-0">
-				<img src={logo} alt="App icon" class="w-32 h-32 object-cover" />
+				<img src={logo} alt="App icon" class="w-32 h-32 object-cover transition-all hover:scale-110 hover:rotate-3" />
 			</div>
 
 			<div class="flex-1 min-w-0">
@@ -247,9 +264,11 @@
 				{/if}
 
 			{#if updateInfo && !updateInfo.updateAvailable && updateInfo.releaseNotes}
-				<details class="mt-4 w-full" open={showReleaseNotes}>
+				<details class="mt-4 w-full group" open={showReleaseNotes}>
 							<summary
-								class="cursor-pointer select-none p-3 bg-base-300 rounded-md hover:bg-base-300/80 transition-colors flex items-center justify-between"
+								class="cursor-pointer select-none p-3 bg-base-300 rounded-lg hover:bg-base-300/80 transition-colors flex items-center justify-between sticky top-0
+
+								group-open:rounded-b-none"
 								on:click|preventDefault={toggleReleaseNotes}
 							>
 								<span class="font-medium flex items-center gap-2">
@@ -278,17 +297,15 @@
 										class="text-sm space-y-2 [&_h1]:text-xl [&_h1]:font-bold [&_h2]:text-lg [&_h2]:font-semibold [&_h3]:text-base [&_h3]:font-medium [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:ml-4 [&_ol]:space-y-1 [&_a]:text-primary [&_a]:underline [&_a]:hover:opacity-80 [&_strong]:font-semibold [&_em]:italic [&_code]:bg-base-100 [&_code]:px-1 [&_code]:rounded text-wrap wrap-anywhere"
 									>
 										{@html formatReleaseNotes(updateInfo.releaseNotes)}
-									</div>
-									{#if updateInfo.releaseUrl}
-										<a
-											href={updateInfo.releaseUrl}
-											target="_blank"
-											rel="noopener noreferrer"
-											class="btn btn-sm btn-secondary mt-4 inline-flex items-center gap-2"
-										>
-											<Github class="h-4 w-4" />
-											{m['about.view_on_github']()}
-										</a>
+								</div>
+								{#if updateInfo.releaseUrl}
+									<button
+										on:click={() => BrowserOpenURL(updateInfo?.releaseUrl || '')}
+										class="btn btn-sm btn-secondary mt-4 inline-flex items-center gap-2"
+									>
+										<Github class="h-4 w-4" />
+										{m['about.view_on_github']()}
+									</button>
 									{/if}
 								</div>
 							{/if}
@@ -308,7 +325,7 @@
 				</div>
 
 				<div class="mt-4 text-xs text-base-content/50 italic text-center mb-0">
-					<p>{m['about.made_with_hearts_by']()}</p>
+					<p class="transition-all hover:rotate-x-180">{m['about.made_with_hearts_by']()}</p>
 				</div>
 			</div>
 		</div>

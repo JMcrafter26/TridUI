@@ -11,7 +11,7 @@
 	"about": {
 		"about": "关于",
 		"description": "Trid UI是一个轻量级桌面应用程序，为TrID提供了友好的用户界面，TrID是一个用于扫描和分析文件的强大工具。",
-		"made_by": "此应用程序由<a href='https://go.jm26.net/github' class='link' target='_blank' rel='noopener noreferrer'>Cufiy</a>创建，基于<a href='https://mark0.net/' class='link' target='_blank' rel='noopener noreferrer'>Marco Pontello</a>开发的原始TrID软件。应用图标基于icons8.com的眼睛图标",
+		"made_by": "此应用程序由<a href='https://go.jm26.net/github' class='link' data-browserOpen='true'>Cufiy</a>创建，基于<a href='https://mark0.net/' class='link' data-browserOpen='true'>Marco Pontello</a>开发的原始TrID软件。应用图标基于icons8.com的眼睛图标",
 		"check_for_updates": "检查更新",
 		"view_on_github": "在GitHub上查看",
 		"about_and_credits": "关于和致谢",
@@ -85,7 +85,7 @@
 		"language": "语言",
 		"language_description": "选择应用程序语言",
 		"language_disclaimer": "此翻译可能不完美。如果您发现任何问题，请在GitHub上报告。",
-		"language_help_translation": "如果您想帮助改进翻译，请访问我们的<a href='https://github.com/JMcrafter26/TridUI/issues' target='_blank' class='link'>GitHub Issues</a>页面。",
+		"language_help_translation": "如果您想帮助改进翻译，请访问我们的<a href='https://github.com/JMcrafter26/TridUI/issues' class='link' data-browserOpen='true'>GitHub Issues</a>页面。",
 		"theme": "主题",
 		"theme_description": "选择您喜欢的主题",
 		"theme_light": "浅色",

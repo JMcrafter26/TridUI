@@ -11,7 +11,7 @@
 	"about": {
 		"about": "Informazioni",
 		"description": "Trid UI è un'applicazione desktop leggera che fornisce un'interfaccia user-friendly per TrID, uno strumento potente per scansionare e analizzare file.",
-		"made_by": "Questa applicazione è stata creata da <a href='https://go.jm26.net/github' class='link' target='_blank' rel='noopener noreferrer'>Cufiy</a> ed è basata sul software TrID originale sviluppato da <a href='https://mark0.net/' class='link' target='_blank' rel='noopener noreferrer'>Marco Pontello</a>. L'icona dell'app è basata sull'icona occhio di icons8.com",
+		"made_by": "Questa applicazione è stata creata da <a href='https://go.jm26.net/github' class='link' data-browserOpen='true'>Cufiy</a> ed è basata sul software TrID originale sviluppato da <a href='https://mark0.net/' class='link' data-browserOpen='true'>Marco Pontello</a>. L'icona dell'app è basata sull'icona occhio di icons8.com",
 		"check_for_updates": "Cerca aggiornamenti",
 		"view_on_github": "Visualizza su GitHub",
 		"about_and_credits": "Informazioni e Crediti",
@@ -61,7 +61,7 @@
 		"language": "Lingua",
 		"language_description": "Seleziona la tua lingua preferita",
 		"language_disclaimer": "Questa traduzione potrebbe non essere perfetta. Se trovi problemi, segnalali su GitHub.",
-		"language_help_translation": "Se desideri contribuire a migliorare le traduzioni, visita la nostra <a href='https://github.com/JMcrafter26/TridUI/issues' target='_blank' class='link'>pagina GitHub Issues</a>.",
+		"language_help_translation": "Se desideri contribuire a migliorare le traduzioni, visita la nostra <a href='https://github.com/JMcrafter26/TridUI/issues' class='link' data-browserOpen='true'>pagina GitHub Issues</a>.",
 		"trid_definitions": "Definizioni TrID",
 		"definitions_installed": "Definizioni installate",
 		"definitions": "Definizioni",

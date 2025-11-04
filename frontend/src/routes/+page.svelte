@@ -204,15 +204,16 @@
 				on:dragover={handleDragOver}
 				aria-label={m['home.click_to_browse']()}
 				class="w-full h-full rounded-box border-2 border-dashed transition-all duration-200 flex items-center justify-center shadow-lg cursor-pointer
+				hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-primary/30 group
 					{isDragging
 					? 'border-primary bg-primary/10 scale-[1.02] shadow-[0_0_0_4px_hsl(var(--p)/0.2)]'
-					: 'border-base-content/30 bg-base-200 hover:border-primary hover:bg-base-300'}"
+					: 'border-base-content/30 bg-base-200 hover:border-primary hover:bg-primary/1'}"
 			>
 				<div
 					class="text-base-content text-lg text-center px-4 sm:px-8 py-4 flex flex-col items-center justify-center h-full"
 				>
 					<div class="flex-1 flex flex-col items-center justify-center">
-						<FileUp class="h-16 w-16 mx-auto mb-4 opacity-50" />
+						<FileUp class="h-16 w-16 mx-auto mb-4 opacity-50 group-hover:scale-105 transition-all group-hover:-translate-y-1" />
 						<p class="font-semibold text-xl">{m['home.click_to_browse']()}</p>
 						<p class="text-sm sm:text-sm opacity-75 mt-2">{m['home.any_file_type']()}</p>
 					</div>

@@ -164,45 +164,241 @@ jobs:
           mkdir -p tridui-deb/usr/bin
           mkdir -p tridui-deb/usr/share/applications
           mkdir -p tridui-deb/usr/share/icons/hicolor/256x256/apps
+          mkdir -p tridui-deb/usr/share/icons/hicolor/128x128/apps
+          mkdir -p tridui-deb/usr/share/icons/hicolor/64x64/apps
+          mkdir -p tridui-deb/usr/share/pixmaps
+          mkdir -p tridui-deb/usr/share/doc/tridui
+          mkdir -p tridui-deb/usr/share/metainfo
           
           # Copy binary
           cp build/bin/linux/TridUI-linux-amd64 tridui-deb/usr/bin/tridui
           chmod +x tridui-deb/usr/bin/tridui
           
-          # Create desktop file
+          # Create desktop file with extended info
           cat > tridui-deb/usr/share/applications/tridui.desktop << 'EOF'
           [Desktop Entry]
           Name=TrID UI
-          Exec=/usr/bin/tridui
+          GenericName=File Type Identifier
+          Comment=Identify file types using binary signatures with TrID
+          Exec=/usr/bin/tridui %F
           Icon=tridui
           Type=Application
-          Categories=Utility;
-          Comment=File type identification tool
+          Categories=Utility;System;FileTools;
+          Keywords=file;type;identifier;trid;signature;format;analysis;
           Terminal=false
+          StartupNotify=true
+          StartupWMClass=TridUI
+          MimeType=application/octet-stream;
+          Actions=About;
+          
+          [Desktop Action About]
+          Name=About TrID UI
+          Exec=/usr/bin/tridui --about
           EOF
           
-          # Copy icon
+          # Copy icon in multiple sizes
           if [ -f "icon.png" ]; then
             cp icon.png tridui-deb/usr/share/icons/hicolor/256x256/apps/tridui.png
+            cp icon.png tridui-deb/usr/share/pixmaps/tridui.png
+            # Create smaller versions if ImageMagick is available
+            if command -v convert &> /dev/null; then
+              convert icon.png -resize 128x128 tridui-deb/usr/share/icons/hicolor/128x128/apps/tridui.png
+              convert icon.png -resize 64x64 tridui-deb/usr/share/icons/hicolor/64x64/apps/tridui.png
+            fi
           elif [ -f "build/appicon.png" ]; then
             cp build/appicon.png tridui-deb/usr/share/icons/hicolor/256x256/apps/tridui.png
+            cp build/appicon.png tridui-deb/usr/share/pixmaps/tridui.png
           fi
           
-          # Create control file
+          # Create AppStream metadata for software centers
+          cat > tridui-deb/usr/share/metainfo/com.github.jmcrafter26.tridui.metainfo.xml << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <component type="desktop-application">
+            <id>com.github.jmcrafter26.tridui</id>
+            <metadata_license>CC0-1.0</metadata_license>
+            <project_license>AGPL-3.0-or-later</project_license>
+            <name>TrID UI</name>
+            <summary>Identify file types using binary signatures</summary>
+            <description>
+              <p>
+                TrID UI is a lightweight desktop application that provides a user-friendly interface for TrID,
+                a powerful tool for scanning and analyzing files. With TrID UI, users can easily select or drop
+                files to initiate local scans, making it convenient to detect unrecognized file types.
+              </p>
+              <p>Features:</p>
+              <ul>
+                <li>Fast native Go-based file scanning</li>
+                <li>Accurate file type identification using TrID definitions</li>
+                <li>Cross-platform desktop application</li>
+                <li>100% local processing - no data leaves your computer</li>
+                <li>Modern, intuitive user interface</li>
+                <li>Detailed match results with confidence scores</li>
+                <li>Drag-and-drop file support</li>
+                <li>Automatic definitions updates with one click</li>
+                <li>Multi-language support</li>
+              </ul>
+            </description>
+            <launchable type="desktop-id">tridui.desktop</launchable>
+            <screenshots>
+              <screenshot type="default">
+                <image>https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/home.png?raw=true</image>
+                <caption>Main interface with drag-and-drop support</caption>
+              </screenshot>
+              <screenshot>
+                <image>https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/scan.png?raw=true</image>
+                <caption>File scan results with confidence scores</caption>
+              </screenshot>
+              <screenshot>
+                <image>https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/settings.png?raw=true</image>
+                <caption>Settings and automatic updates</caption>
+              </screenshot>
+            </screenshots>
+            <url type="homepage">https://github.com/JMcrafter26/TridUI</url>
+            <url type="bugtracker">https://github.com/JMcrafter26/TridUI/issues</url>
+            <url type="help">https://github.com/JMcrafter26/TridUI#readme</url>
+            <url type="vcs-browser">https://github.com/JMcrafter26/TridUI</url>
+            <developer_name>JMcrafter26 (Cufiy)</developer_name>
+            <content_rating type="oars-1.1" />
+            <releases>
+              <release version="1.1.0" date="2025-11-04">
+                <description>
+                  <p>Latest stable release with enhanced features and improvements.</p>
+                </description>
+              </release>
+            </releases>
+            <categories>
+              <category>Utility</category>
+              <category>System</category>
+            </categories>
+            <keywords>
+              <keyword>file</keyword>
+              <keyword>type</keyword>
+              <keyword>identifier</keyword>
+              <keyword>trid</keyword>
+              <keyword>signature</keyword>
+              <keyword>format</keyword>
+            </keywords>
+          </component>
+          EOF
+          
+          # Create copyright file
+          cat > tridui-deb/usr/share/doc/tridui/copyright << 'EOF'
+          Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+          Upstream-Name: TrID UI
+          Upstream-Contact: JMcrafter26 <https://github.com/JMcrafter26>
+          Source: https://github.com/JMcrafter26/TridUI
+          
+          Files: *
+          Copyright: 2025 JMcrafter26 (Cufiy)
+          License: AGPL-3.0-or-later
+          
+          License: AGPL-3.0-or-later
+           This program is free software: you can redistribute it and/or modify
+           it under the terms of the GNU Affero General Public License as published by
+           the Free Software Foundation, either version 3 of the License, or
+           (at your option) any later version.
+           .
+           This program is distributed in the hope that it will be useful,
+           but WITHOUT ANY WARRANTY; without even the implied warranty of
+           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+           GNU Affero General Public License for more details.
+           .
+           You should have received a copy of the GNU Affero General Public License
+           along with this program.  If not, see <https://www.gnu.org/licenses/>.
+          EOF
+          
+          # Create changelog
+          cat > tridui-deb/usr/share/doc/tridui/changelog << 'EOF'
+          tridui (1.1.0) stable; urgency=medium
+          
+            * Enhanced file type detection accuracy
+            * Multi-language support
+            * Automatic definition updates
+            * Modern UI improvements
+            * Cross-platform compatibility
+          
+           -- JMcrafter26 <your-email@example.com>  Mon, 04 Nov 2025 00:00:00 +0000
+          EOF
+          gzip -9 -n tridui-deb/usr/share/doc/tridui/changelog
+          
+          # Create control file with extended description
           cat > tridui-deb/DEBIAN/control << 'EOF'
           Package: tridui
           Version: 1.1.0
           Section: utils
           Priority: optional
           Architecture: amd64
+          Depends: libgtk-3-0, libwebkit2gtk-4.1-0
+          Recommends: xdg-utils
           Maintainer: JMcrafter26 <your-email@example.com>
-          Description: TrID UI - File Type Identification Tool
-           A desktop application for identifying file types based on binary signatures.
-           Features drag-and-drop interface, multi-language support, and automatic updates.
+          Homepage: https://github.com/JMcrafter26/TridUI
+          Vcs-Git: https://github.com/JMcrafter26/TridUI.git
+          Vcs-Browser: https://github.com/JMcrafter26/TridUI
+          Description: File type identification tool with modern UI
+           TrID UI is a lightweight desktop application that provides a user-friendly
+           interface for TrID, a powerful tool for scanning and analyzing files.
+           .
+           With TrID UI, users can easily select or drop files on the Home screen to
+           initiate local scans, making it convenient to detect unrecognized file types.
+           The application uses a native Go implementation of the TrID file identification
+           algorithm, providing fast and accurate file type detection without external
+           dependencies.
+           .
+           Key Features:
+            - Fast native Go-based file scanning
+            - Accurate file type identification using TrID definitions (18,000+ types)
+            - 100% local processing - no data leaves your computer
+            - Modern, intuitive user interface with drag-and-drop support
+            - Detailed match results with confidence scores
+            - Automatic definitions updates
+            - Multi-language support (10+ languages)
+            - Cross-platform compatibility
           EOF
           
-          # Build .deb
-          fakeroot dpkg-deb --build tridui-deb build/bin/linux/TridUI-linux-amd64.deb
+          # Create postinst script for icon cache update
+          cat > tridui-deb/DEBIAN/postinst << 'EOF'
+          #!/bin/sh
+          set -e
+          
+          if [ "$1" = "configure" ]; then
+              # Update desktop database
+              if command -v update-desktop-database >/dev/null 2>&1; then
+                  update-desktop-database -q /usr/share/applications || true
+              fi
+              
+              # Update icon cache
+              if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+                  gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor || true
+              fi
+          fi
+          
+          exit 0
+          EOF
+          chmod 755 tridui-deb/DEBIAN/postinst
+          
+          # Create postrm script for cleanup
+          cat > tridui-deb/DEBIAN/postrm << 'EOF'
+          #!/bin/sh
+          set -e
+          
+          if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
+              # Update desktop database
+              if command -v update-desktop-database >/dev/null 2>&1; then
+                  update-desktop-database -q /usr/share/applications || true
+              fi
+              
+              # Update icon cache
+              if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+                  gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor || true
+              fi
+          fi
+          
+          exit 0
+          EOF
+          chmod 755 tridui-deb/DEBIAN/postrm
+          
+          # Build .deb with compression
+          fakeroot dpkg-deb --build -Zgzip tridui-deb build/bin/linux/TridUI-linux-amd64.deb
 
       # ARM64 build disabled - requires cross-compilation toolchain
       # To build for ARM64, use a native ARM64 runner or set up cross-compilation

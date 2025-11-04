@@ -8,7 +8,7 @@
 @plugin "daisyui/theme" {
   name: "triduidark";
   default: false;
-  prefersdark: true;
+  prefersdark: false;
   color-scheme: "dark";
   --color-base-100: oklch(0.186 0.006 285.9);
   --color-base-200: oklch(14% 0.005 285.823);

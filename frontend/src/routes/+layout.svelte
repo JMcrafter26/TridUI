@@ -8,7 +8,41 @@
 	import '../app.css';
 	let { children } = $props();
 
+	// Apply theme immediately before mount to prevent flash
+	if (typeof window !== 'undefined') {
+		const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'auto' | 'triduidark' | 'triduilight' | null;
+		const theme = savedTheme || 'auto';
+		
+		if (theme === 'auto') {
+			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+			document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+		} else {
+			document.documentElement.setAttribute('data-theme', theme);
+		}
+	}
+
+	function applyTheme(theme: 'light' | 'dark' | 'triduilight' | 'triduidark' | 'auto') {
+		if (typeof window === 'undefined') return;
+		
+		if (theme === 'auto') {
+			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+			document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+		} else {
+			document.documentElement.setAttribute('data-theme', theme);
+		}
+	}
+
 	onMount(() => {
+		// Listen for system theme changes when in auto mode
+		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+		const handleSystemThemeChange = () => {
+			const currentTheme = localStorage.getItem('theme');
+			if (currentTheme === 'auto' || !currentTheme) {
+				applyTheme('auto');
+			}
+		};
+		mediaQuery.addEventListener('change', handleSystemThemeChange);
+
 		// Check if user has manually set a language preference
 		const hasManualPreference = localStorage.getItem('language-manually-set');
 		
@@ -64,6 +98,11 @@
 					console.error('Background app update check failed:', err);
 				});
 		}
+
+		// Cleanup function
+		return () => {
+			mediaQuery.removeEventListener('change', handleSystemThemeChange);
+		};
 	});
 </script>
 

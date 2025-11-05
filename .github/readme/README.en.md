@@ -1,6 +1,5 @@
-
 <div style="display: flex; align-items: center; margin-bottom: 16px;">
-  <img src="./icon.png" alt="TrID UI Icon" style="width: 64px; height: 64px; border-radius: 12px;" />
+  <img src="../../icon.png" alt="TrID UI Icon" style="width: 64px; height: 64px; border-radius: 12px;" />
   <h1 style="margin-left: 16px;">TrID UI</h1>
 </div>
 
@@ -11,15 +10,15 @@
 <p align="center">
   <span style="font-size: 0.95em; opacity: .8">
     <strong>English</strong> •
-    <a href=".github/readme/README.de.md">Deutsch</a> •
-    <a href=".github/readme/README.es.md">Español</a> •
-    <a href=".github/readme/README.fr.md">Français</a> •
-    <a href=".github/readme/README.it.md">Italiano</a> •
-    <a href=".github/readme/README.ja.md">日本語</a> •
-    <a href=".github/readme/README.pl.md">Polski</a> •
-    <a href=".github/readme/README.pt.md">Português</a> •
-    <a href=".github/readme/README.ru.md">Русский</a> •
-    <a href=".github/readme/README.zh.md">简体中文</a>
+    <a href="README.de.md">Deutsch</a> •
+    <a href="README.es.md">Español</a> •
+    <a href="README.fr.md">Français</a> •
+    <a href="README.it.md">Italiano</a> •
+    <a href="README.ja.md">日本語</a> •
+    <a href="README.pl.md">Polski</a> •
+    <a href="README.pt.md">Português</a> •
+    <a href="README.ru.md">Русский</a> •
+    <a href="README.zh.md">简体中文</a>
   </span>
 </p>
 
@@ -135,7 +134,7 @@ You can use the "Open App Dir" button in Settings to navigate to the correct loc
 
 ### Building from Source
 
-> **📖 Full build documentation:** See [`build/README.md`](build/README.md) for detailed instructions and troubleshooting.
+> **📖 Full build documentation:** See [`build/README.md`](../../build/README.md) for detailed instructions and troubleshooting.
 
 **Quick Build:**
 

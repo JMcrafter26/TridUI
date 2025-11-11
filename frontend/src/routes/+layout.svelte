@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import Header from './Header.svelte';
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 	import { setLocale, getLocale, locales, baseLocale } from '$lib/paraglide/runtime.js';
 	import { CheckDefinitionsExist, CheckForDefsUpdates, UpdateDefinitions, CheckForUpdates } from '../../wailsjs/go/main/App';
 	import { updateAvailable } from '$lib/stores/updateStore';
@@ -47,6 +48,26 @@
 	}
 
 	onMount(() => {
+		// Global drag and drop handler - detect file drag and navigate to home
+		const handleDragEnter = (e: DragEvent) => {
+			if (e.dataTransfer?.types.includes('Files')) {
+				e.preventDefault();
+				// Only navigate if not already on home page
+				if (window.location.pathname !== '/') {
+					goto('/');
+				}
+			}
+		};
+
+		const handleDragOver = (e: DragEvent) => {
+			if (e.dataTransfer?.types.includes('Files')) {
+				e.preventDefault();
+			}
+		};
+
+		window.addEventListener('dragenter', handleDragEnter, true);
+		window.addEventListener('dragover', handleDragOver, true);
+
 		// Listen for system theme changes when in auto mode
 		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 		const handleSystemThemeChange = () => {
@@ -115,6 +136,8 @@
 
 		// Cleanup function
 		return () => {
+			window.removeEventListener('dragenter', handleDragEnter, true);
+			window.removeEventListener('dragover', handleDragOver, true);
 			mediaQuery.removeEventListener('change', handleSystemThemeChange);
 		};
 	});

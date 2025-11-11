@@ -33,13 +33,15 @@
 	let confidenceThreshold = 10.0;
 	let maxTotalResults = 50;
 
-	function getSetting(key: string): string | null {
-		const array = localStorage.getItem('_trid_settings_');
-		const value = array ? JSON.parse(array)[key] : null;
-		return value;
+	function getSetting(key: string): any {
+		const settingsData = localStorage.getItem('_trid_settings_');
+		if (!settingsData) return null;
+		
+		const settings = JSON.parse(settingsData);
+		return settings[key] !== undefined ? settings[key] : null;
 	}
 
-	function setSetting(key: string, value: string | null): void {
+	function setSetting(key: string, value: any): void {
 		const settings = JSON.parse(localStorage.getItem('_trid_settings_') || '{}');
 		settings[key] = value;
 		localStorage.setItem('_trid_settings_', JSON.stringify(settings));
@@ -56,6 +58,25 @@
 		} catch (err) {
 			console.error('File selection error:', err);
 		}
+	}
+
+	function abreviateFileName(filePath: string): string {
+		const maxLength = 25;
+		if (filePath.length <= maxLength) return filePath;
+
+		// check if filename contains a . and a file extension and check if file extension is not longer than 5
+		const lastDotIndex = filePath.lastIndexOf('.');
+		if (lastDotIndex !== -1) {
+			const fileName = filePath.slice(0, lastDotIndex);
+			const fileExtension = filePath.slice(lastDotIndex + 1);
+			if (fileExtension.length > 5) {
+				return `${fileName.slice(0, 20)}...${fileName.slice(-7)}.${fileExtension}`;
+			} else {
+				return `${fileName.slice(0, 20)}...${fileExtension}`;
+			}
+		}
+
+		return `${filePath.slice(0, 20)}...${filePath.slice(-7)}`;
 	}
 
 	async function processSelectedFile(filePath: string) {
@@ -155,6 +176,13 @@
 	}
 
 	onMount(() => {
+		// Check for pending file drop from layout
+		const pendingFile = sessionStorage.getItem('pendingFilePath');
+		if (pendingFile) {
+			sessionStorage.removeItem('pendingFilePath');
+			processSelectedFile(pendingFile);
+		}
+
 		// Load settings from localStorage
 		const savedMaxResults = getSetting('maxVisibleMatches');
 		if (savedMaxResults) {
@@ -294,7 +322,7 @@
 					<div class="flex items-center justify-between mt-1 text-wrap">
 						<div>
 							<h2 class="text-2xl font-bold text-pretty max-w-full wrap-anywhere">
-								{scanResult.fileName}
+								{abreviateFileName(scanResult.fileName)}
 							</h2>
 							<p class="text-sm opacity-70">{formatFileSize(scanResult.fileSize)}</p>
 						</div>

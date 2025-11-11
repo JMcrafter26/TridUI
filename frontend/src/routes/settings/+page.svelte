@@ -8,9 +8,10 @@
 		CheckForDefsUpdates,
 		UpdateDefinitions,
 		GetDefinitionsPath,
-		OpenAppDir
+		OpenAppDir,
+		GetOSName
 	} from '../../../wailsjs/go/main/App';
-	import { Download, RefreshCw, FolderOpen, CircleCheck, CircleAlert, Info, Languages, Moon, Sun, Monitor, Search, List, Funnel, RotateCcw, TriangleAlert } from '@lucide/svelte';
+	import { Download, RefreshCw, FolderOpen, CircleCheck, CircleAlert, Info, Languages, Moon, Sun, Monitor, Search, List, Funnel, RotateCcw, TriangleAlert, Smile, Shredder, Bug } from '@lucide/svelte';
 	import { searchEngines } from '$lib/config/searchEngines';
 
 	let definitionsExist = false;
@@ -278,7 +279,7 @@
 			.then((path) => {
 				definitionsPath = path;
 				// Auto-check for updates if definitions exist
-				if (definitionsExist) {
+				if (definitionsExist && checkAppUpdatesOnStartup) {
 					return checkForUpdates();
 				}
 			})
@@ -341,6 +342,8 @@
 			<!-- TrID Definitions Section -->
 			<div class="space-y-4">
 				<div class="divider mt-0">{m['settings.trid_definitions']()}</div>
+				<div class="card bg-base-100 shadow-sm">
+					<div class="card-body p-5 space-y-4">
 
 				<!-- Definitions Status -->
 				<div class="alert {definitionsExist ? 'alert-info' : 'alert-warning'} alert-soft">
@@ -478,6 +481,8 @@
 						>
 					</p>
 				</div>
+			</div>
+			</div>
 			</div>
 
 			<!-- Appearance Section -->
@@ -759,8 +764,8 @@
 			</div>
 
 		<!-- Debug Section -->
-		<details class="collapse border-base-300 border mt-6">
-			<summary class="collapse-title text-sm opacity-70">{m['settings.debug_tools']()}</summary>
+		<details class="collapse border-base-300 bg-base-100 border mt-6">
+			<summary class="collapse-title text-sm opacity-70"><Bug class="inline-block h-4 w-4" /> {m['settings.debug_tools']()}</summary>
 			<div class="collapse-content text-sm space-y-2">
 				<button class="btn btn-sm btn-primary" on:click={() => WindowSetSize(500, 400)}>
 					Reset window size
@@ -771,6 +776,30 @@
 						<span class="select-text text-wrap max-w-md wrap-anywhere">{definitionsPath}</span>
 					</div>
 				{/if}
+				<button class="btn btn-sm btn-secondary text-wrap wrap-anywhere" on:click={
+					// change the button text temporarily to "Elevating process... Just kidding!" for 2 seconds
+					async (e) => {
+						const btn = e.currentTarget as HTMLButtonElement;
+						btn.disabled = true;
+						// hide the first span and show the second span
+						btn.children[0].classList.add('hidden');
+						btn.children[1].classList.remove('hidden');
+						await new Promise((resolve) => setTimeout(resolve, 4000));
+						// remove hidden from children 1 child and add hidden to children 0 child
+						btn.children[1].children[0].classList.remove('hidden');
+						await new Promise((resolve) => setTimeout(resolve, 2000));
+						btn.children[1].classList.add('hidden');
+						btn.children[1].children[0].classList.add('hidden');
+						btn.children[0].classList.remove('hidden');
+						btn.disabled = false;
+					}
+				}
+				>
+					<span><Shredder class="inline-block h-4 w-4" />Delete {#await GetOSName() then os}
+						{os === 'windows' ? 'C:/Windows/System32' : os === 'macos' ? '/System' : '/root'}
+					{/await} directory (for testing)</span>
+					<span class="hidden">Elevating process... <span class="hidden">Just kidding! <Smile class="inline-block h-4 w-4" /></span></span>
+				</button>
 			</div>
 		</details>
 

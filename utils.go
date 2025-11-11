@@ -19,6 +19,10 @@ func (a *App) OpenFileDialog() (string, error) {
 	return filePath, err
 }
 
+func (a *App) GetOSName() string {
+	return gort.GOOS
+}
+
 // getAppDataDir returns the appropriate application data directory for the current OS
 func getAppDataDir() (string, error) {
 	var appDataDir string

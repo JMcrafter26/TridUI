@@ -16,6 +16,7 @@
 	let errorMessage = '';
 	let showReleaseNotes = false;
 	let showSuccessAlert = false;
+	let imgClickCount = 0;
 
 	onMount(async () => {
 		try {
@@ -139,7 +140,38 @@
 	<div class="card bg-base-200 shadow-lg h-full overflow-auto">
 		<div class="card-body p-6 md:p-10 flex flex-col md:flex-row items-center gap-6 mb-4">
 			<div class="shrink-0">
-				<img src={logo} alt="App icon" class="w-32 h-32 object-cover transition-all hover:scale-110 hover:rotate-3" />
+				<button on:click={
+					() => {
+						imgClickCount++;
+						const img = document.querySelector('img[alt="App icon"]') as HTMLImageElement;
+						if (img) {
+							img.style.filter = `hue-rotate(${(imgClickCount % 5) * 72}deg)`;
+							img.style.transform = `scale(${1 + imgClickCount * 0.1}) rotate(${(imgClickCount % 5) * 15}deg)`;
+							if (imgClickCount >= 5) {
+								imgClickCount = 0;
+								img.style.transform = 'scale(1) rotate(360deg)';
+								img.style.filter = 'hue-rotate(0deg)';
+								img.addEventListener('transitionend', () => {
+									img.style.transform = 'rotate(0deg)';
+									void img.offsetWidth;
+									img.style.transition = '';
+								}, { once: true });
+							}
+						}
+					}
+				}
+					on:mouseleave={() => {
+						const img = document.querySelector('img[alt="App icon"]') as HTMLImageElement;
+						if (img) {
+							imgClickCount = 0;
+							img.style.transform = 'scale(1) rotate(0deg)';
+						}
+					}}
+				>
+					<img src={logo} alt="App icon" class="w-32 h-32 object-cover transition-all hover:scale-110 hover:rotate-3"
+						loading="lazy"
+					/>
+				</button>
 			</div>
 
 			<div class="flex-1 min-w-0">

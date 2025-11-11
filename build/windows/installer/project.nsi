@@ -58,10 +58,10 @@ ManifestDPIAware true
 # !define MUI_WELCOMEFINISHPAGE_BITMAP "resources\leftimage.bmp" #Include this to add a bitmap on the left side of the Welcome Page. Must be a size of 164x314
 !define MUI_FINISHPAGE_NOAUTOCLOSE # Wait on the INSTFILES page so the user can take a look into the details of the installation steps
 !define MUI_FINISHPAGE_RUN "$INSTDIR\${PRODUCT_EXECUTABLE}" # Run the application after installation
-!define MUI_FINISHPAGE_RUN_TEXT "Launch ${INFO_PRODUCTNAME}"
+!define MUI_FINISHPAGE_RUN_TEXT_VAR LaunchAppText
 !define MUI_FINISHPAGE_SHOWREADME ""
 !define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
-!define MUI_FINISHPAGE_SHOWREADME_TEXT "Create Desktop Shortcut"
+!define MUI_FINISHPAGE_SHOWREADME_TEXT_VAR CreateDesktopShortcutTextVar
 !define MUI_FINISHPAGE_SHOWREADME_FUNCTION CreateDesktopShortcut
 !define MUI_ABORTWARNING # This will warn the user if they exit from the installer.
 
@@ -77,7 +77,29 @@ ManifestDPIAware true
 UninstPage custom un.SorryPageCreate un.SorryPageLeave
 !insertmacro MUI_UNPAGE_INSTFILES # Uninstalling page
 
-!insertmacro MUI_LANGUAGE "English" # Set the Language of the installer
+# Multilingual support - NSIS will automatically select based on system language
+!insertmacro MUI_LANGUAGE "English"
+!insertmacro MUI_LANGUAGE "German"
+!insertmacro MUI_LANGUAGE "Spanish"
+!insertmacro MUI_LANGUAGE "French"
+!insertmacro MUI_LANGUAGE "Italian"
+!insertmacro MUI_LANGUAGE "Japanese"
+!insertmacro MUI_LANGUAGE "Polish"
+!insertmacro MUI_LANGUAGE "Portuguese"
+!insertmacro MUI_LANGUAGE "Russian"
+!insertmacro MUI_LANGUAGE "SimpChinese"
+
+# Include translation files
+!include "translations\English.nsh"
+!include "translations\German.nsh"
+!include "translations\Spanish.nsh"
+!include "translations\French.nsh"
+!include "translations\Italian.nsh"
+!include "translations\Japanese.nsh"
+!include "translations\Polish.nsh"
+!include "translations\Portuguese.nsh"
+!include "translations\Russian.nsh"
+!include "translations\SimpChinese.nsh"
 
 ## The following two statements can be used to sign the installer and the uninstaller. The path to the binaries are provided in %1
 #!uninstfinalize 'signtool --file "%1"'
@@ -88,8 +110,15 @@ OutFile "..\..\bin\${INFO_PROJECTNAME}-${ARCH}-installer.exe" # Name of the inst
 InstallDir "$AppData\TridUI" # Default installing folder is %APPDATA%\TridUI
 ShowInstDetails show # This will always show the installation details.
 
+Var LaunchAppText
+Var CreateDesktopShortcutTextVar
+
 Function .onInit
    !insertmacro wails.checkArchitecture
+   
+   ; Set multilingual strings based on selected language
+    StrCpy $LaunchAppText $(LaunchApp)
+    StrCpy $CreateDesktopShortcutTextVar $(CreateDesktopShortcutText)
 FunctionEnd
 
 Function CreateDesktopShortcut
@@ -122,19 +151,26 @@ Section
     WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${INFO_PRODUCTNAME}" "NoRepair" 1
 SectionEnd
 
+!define MUI_UNWELCOMEPAGE_TITLE_VAR UninstallTitleText
+!define MUI_UNWELCOMEPAGE_TEXT_VAR UninstallWelcomeText
+
+Var UninstallTitleText
+Var UninstallWelcomeText
+
 Function un.onInit
     !insertmacro MUI_UNGETLANGUAGE
+    
+    ; Set multilingual strings based on selected language
+    StrCpy $UninstallTitleText $(UninstallTitle)
+    StrCpy $UninstallWelcomeText $(UninstallWelcome)
 FunctionEnd
-
-!define MUI_UNWELCOMEPAGE_TITLE "Uninstalling TridUI"
-!define MUI_UNWELCOMEPAGE_TEXT "Welcome to the TridUI uninstaller."
 
 ; Variables for uninstaller
 Var SorryDialog
 Var GitHubButton
 
 Function un.SorryPageCreate
-    !insertmacro MUI_HEADER_TEXT "We're Sorry to See You Go" "Thank you for trying TridUI"
+    !insertmacro MUI_HEADER_TEXT $(SorryTitle) $(SorrySubtitle)
     
     nsDialogs::Create 1018
     Pop $SorryDialog
@@ -143,20 +179,20 @@ Function un.SorryPageCreate
         Abort
     ${EndIf}
     
-    ${NSD_CreateLabel} 10u 10u 90% 25u "We're sorry to see you go."
+    ${NSD_CreateLabel} 10u 10u 90% 25u $(SorryLine1)
     Pop $0
 
-    ${NSD_CreateLabel} 10u 35u 90% 35u "If you ran into any issues, have suggestions, or just want to share your experience, please let us know. You can always reach out or get help using GitHub:"
+    ${NSD_CreateLabel} 10u 35u 90% 35u $(SorryLine2)
     Pop $0
     
-    ${NSD_CreateLabel} 20u 70u 70% 15u "- Need assistance with TridUI? Have feedback/ideas? Want to stay in touch?"
+    ${NSD_CreateLabel} 20u 70u 70% 15u $(SorryLine3)
     Pop $0
 
-    ${NSD_CreateButton} 10u 90u 120u 20u "Open GitHub page"
+    ${NSD_CreateButton} 10u 90u 120u 20u $(OpenGitHubButton)
     Pop $GitHubButton
     ${NSD_OnClick} $GitHubButton un.OpenGitHub
     
-    ${NSD_CreateLabel} 10u 120u 90% 15u "Thank you for trying TridUI!"
+    ${NSD_CreateLabel} 10u 120u 90% 15u $(ThankYou)
     Pop $0
     
     nsDialogs::Show
@@ -178,6 +214,10 @@ Section "uninstall"
     
     ; Remove WebView2 DataPath
     RMDir /r "$AppData\${PRODUCT_EXECUTABLE}"
+
+    ; Remove triddefs.trd and triddefs.trd.meta
+    Delete "$AppData\TridUI\triddefs.trd"
+    Delete "$AppData\TridUI\triddefs.trd.meta"
     
     ; Remove application data folder in AppData\Roaming
     RMDir /r "$AppData\TridUI"

@@ -12,6 +12,8 @@ export function GetConfig():Promise<string>;
 
 export function GetDefinitionsPath():Promise<string>;
 
+export function GetOSName():Promise<string>;
+
 export function GetVersion():Promise<string>;
 
 export function OpenAppDir():Promise<void>;

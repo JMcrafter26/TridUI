@@ -22,6 +22,10 @@ export function GetDefinitionsPath() {
   return window['go']['main']['App']['GetDefinitionsPath']();
 }
 
+export function GetOSName() {
+  return window['go']['main']['App']['GetOSName']();
+}
+
 export function GetVersion() {
   return window['go']['main']['App']['GetVersion']();
 }

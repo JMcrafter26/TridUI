@@ -7,6 +7,15 @@
 	import { House, Settings, Info, Menu, X, Minus, Pin } from '@lucide/svelte';
 	import { WindowSetAlwaysOnTop, WindowMinimise, Quit } from '../../wailsjs/runtime/runtime.js';
 
+	// Helper to get settings from localStorage
+	function getSetting(key: string): any {
+		const settingsData = localStorage.getItem('_trid_settings_');
+		if (!settingsData) return null;
+		
+		const settings = JSON.parse(settingsData);
+		return settings[key] !== undefined ? settings[key] : null;
+	}
+
 	// pin button
 	let isPinned = false;
 	function togglePin() {
@@ -17,8 +26,8 @@
 
 	onMount(() => {
 		// Check if app should start pinned
-		const startPinned = localStorage.getItem('startPinned');
-		if (startPinned === 'true') {
+		const startPinned = getSetting('startPinned');
+		if (startPinned === true) {
 			isPinned = true;
 			WindowSetAlwaysOnTop(true);
 		}

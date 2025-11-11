@@ -17,6 +17,20 @@
 	let showReleaseNotes = false;
 	let showSuccessAlert = false;
 	let imgClickCount = 0;
+	let imgColorHue = 0;
+
+		// LocalStorage helper functions
+	function getSetting(key: string): string | null {
+		const array = localStorage.getItem('_trid_settings_');
+		const value = array ? JSON.parse(array)[key] : null;
+		return value;
+	}
+
+	function setSetting(key: string, value: string | null): void {
+		const settings = JSON.parse(localStorage.getItem('_trid_settings_') || '{}');
+		settings[key] = value;
+		localStorage.setItem('_trid_settings_', JSON.stringify(settings));
+	}
 
 	onMount(async () => {
 		try {
@@ -40,6 +54,15 @@
 	});
 
 	onMount(() => {
+
+				const storedHue = getSetting('imgColorHue');
+		if (storedHue) {
+			imgColorHue = parseInt(storedHue, 10) || 0;
+			const img = document.querySelector('img[alt="App icon"]') as HTMLImageElement;
+			if (img) {
+				img.style.filter = `hue-rotate(${imgColorHue}deg)`;
+			}
+		}
 		// Handle clicks on links with data-browserOpen attribute
 		const handleLinkClick = (event: MouseEvent) => {
 			const target = event.target as HTMLElement;
@@ -50,10 +73,13 @@
 			}
 		};
 
+
 		document.addEventListener('click', handleLinkClick);
 		return () => {
 			document.removeEventListener('click', handleLinkClick);
 		};
+
+		
 	});
 
 	async function checkForUpdates() {
@@ -145,10 +171,12 @@
 						imgClickCount++;
 						const img = document.querySelector('img[alt="App icon"]') as HTMLImageElement;
 						if (img) {
-							img.style.filter = `hue-rotate(${(imgClickCount % 5) * 72}deg)`;
+							imgColorHue = (imgColorHue + 72) % 360;
+							img.style.filter = `hue-rotate(${imgColorHue}deg)`;
 							img.style.transform = `scale(${1 + imgClickCount * 0.1}) rotate(${(imgClickCount % 5) * 15}deg)`;
 							if (imgClickCount >= 5) {
 								imgClickCount = 0;
+								imgColorHue = 0;
 								img.style.transform = 'scale(1) rotate(360deg)';
 								img.style.filter = 'hue-rotate(0deg)';
 								img.addEventListener('transitionend', () => {
@@ -157,6 +185,7 @@
 									img.style.transition = '';
 								}, { once: true });
 							}
+							setSetting('imgColorHue', imgColorHue.toString());
 						}
 					}
 				}

@@ -33,6 +33,18 @@
 	let confidenceThreshold = 10.0;
 	let maxTotalResults = 50;
 
+	function getSetting(key: string): string | null {
+		const array = localStorage.getItem('_trid_settings_');
+		const value = array ? JSON.parse(array)[key] : null;
+		return value;
+	}
+
+	function setSetting(key: string, value: string | null): void {
+		const settings = JSON.parse(localStorage.getItem('_trid_settings_') || '{}');
+		settings[key] = value;
+		localStorage.setItem('_trid_settings_', JSON.stringify(settings));
+	}
+
 	async function handleSelectFile() {
 		try {
 			// Call Go backend to open native file dialog - returns the file path directly (no memory loading!)
@@ -48,21 +60,21 @@
 
 	async function processSelectedFile(filePath: string) {
 		console.log('File selected:', filePath);
-		
+
 		// Reset state first
 		scanResult = null;
 		fileSelected = true;
 		selectedFileName = filePath.split(/[\\/]/).pop() || filePath;
-		
+
 		// Force UI update before starting scan
-		await new Promise(resolve => setTimeout(resolve, 0));
+		await new Promise((resolve) => setTimeout(resolve, 0));
 		isScanning = true;
 
 		try {
 			// Call your Wails backend function with the file path and max results
 			const result = await ProcessFile(filePath, maxTotalResults);
 			console.log('Scan result received, matches:', result.totalMatches);
-			
+
 			// Update state
 			isScanning = false;
 			scanResult = result;
@@ -116,20 +128,23 @@
 
 	function copyToClipboard(text: string, itemId: string) {
 		if (!text) return;
-		navigator.clipboard.writeText(text).then(() => {
-			copiedItem = itemId;
-			setTimeout(() => {
-				copiedItem = null;
-			}, 2000);
-		}).catch((err) => {
-			console.error('Could not copy text: ', err);
-		});
+		navigator.clipboard
+			.writeText(text)
+			.then(() => {
+				copiedItem = itemId;
+				setTimeout(() => {
+					copiedItem = null;
+				}, 2000);
+			})
+			.catch((err) => {
+				console.error('Could not copy text: ', err);
+			});
 	}
 
 	function searchOnline(name: string, extension?: string) {
 		if (!name) return;
-		const savedEngine = localStorage.getItem('searchEngine') || 'Google';
-		const engine = searchEngines.find(e => e.name === savedEngine) || searchEngines[0];
+		const savedEngine = getSetting('searchEngine') || 'Google';
+		const engine = searchEngines.find((e) => e.name === savedEngine) || searchEngines[0];
 		let url;
 		if ((engine.name === 'FileInfo' || engine.name === 'FileExt') && extension) {
 			url = `${engine.url}${encodeURIComponent(extension)}`;
@@ -141,19 +156,19 @@
 
 	onMount(() => {
 		// Load settings from localStorage
-		const savedMaxResults = localStorage.getItem('maxVisibleMatches');
+		const savedMaxResults = getSetting('maxVisibleMatches');
 		if (savedMaxResults) {
 			maxVisibleMatches = parseInt(savedMaxResults, 10);
 		}
-		const savedThreshold = localStorage.getItem('confidenceThreshold');
+		const savedThreshold = getSetting('confidenceThreshold');
 		if (savedThreshold) {
 			confidenceThreshold = parseFloat(savedThreshold);
 		}
-		const savedMaxTotal = localStorage.getItem('maxTotalResults');
+		const savedMaxTotal = getSetting('maxTotalResults');
 		if (savedMaxTotal) {
 			maxTotalResults = parseInt(savedMaxTotal, 10);
 		}
-		
+
 		// Check if definitions exist
 		CheckDefinitionsExist()
 			.then((exists) => {
@@ -213,14 +228,18 @@
 					class="text-base-content text-lg text-center px-4 sm:px-8 py-4 flex flex-col items-center justify-center h-full"
 				>
 					<div class="flex-1 flex flex-col items-center justify-center">
-						<FileUp class="h-16 w-16 mx-auto mb-4 opacity-50 group-hover:scale-105 transition-all group-hover:-translate-y-1" />
+						<FileUp
+							class="h-16 w-16 mx-auto mb-4 opacity-50 group-hover:scale-105 transition-all group-hover:-translate-y-1"
+						/>
 						<p class="font-semibold text-xl">{m['home.click_to_browse']()}</p>
 						<p class="text-sm sm:text-sm opacity-75 mt-2">{m['home.any_file_type']()}</p>
 					</div>
 
 					<div class="max-w-4xl mx-auto">
 						<p class="text-xs opacity-60 mt-4 sm:justify-center">
-							<a on:click|stopPropagation={() => goto('/about')} class="hover:underline"
+							<a
+								on:click|stopPropagation={() => goto('/about')}
+								class="hover:underline"
 								href="/about"
 								aria-label={m['about.about']()}
 								>&copy; 2025 TridUI {m['home.contribute']()}
@@ -243,23 +262,25 @@
 						<div class="card-body items-center text-center gap-6">
 							<!-- Animated Scanner Icon -->
 							<div class="relative">
-								<div class="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
+								<div
+									class="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"
+								></div>
 								<div class="relative bg-primary/10 p-8 rounded-full">
 									<FileSearch class="h-16 w-16 text-primary animate-pulse" />
 								</div>
 							</div>
-							
+
 							<!-- Status Text -->
 							<div class="space-y-2">
 								<h3 class="text-2xl font-bold">{m['home.scanning']()}</h3>
 								<p class="text-sm opacity-70 max-w-md break-all">{selectedFileName}</p>
 							</div>
-							
+
 							<!-- Loading Animation -->
 							<div class="flex gap-2">
 								<span class="loading loading-dots loading-lg text-primary"></span>
 							</div>
-							
+
 							<!-- Progress Message -->
 							<div class="text-xs opacity-60">
 								{m['home.analyzing_file']()}
@@ -272,10 +293,16 @@
 					<!-- Header with file info and reset button -->
 					<div class="flex items-center justify-between mt-1 text-wrap">
 						<div>
-							<h2 class="text-2xl font-bold text-pretty max-w-full wrap-anywhere">{scanResult.fileName}</h2>
+							<h2 class="text-2xl font-bold text-pretty max-w-full wrap-anywhere">
+								{scanResult.fileName}
+							</h2>
 							<p class="text-sm opacity-70">{formatFileSize(scanResult.fileSize)}</p>
 						</div>
-						<button on:click={resetState} class="btn btn-sm btn-ghost" aria-label={m['home.scan_another']()}>{m['home.scan_another']()}</button>
+						<button
+							on:click={resetState}
+							class="btn btn-sm btn-ghost"
+							aria-label={m['home.scan_another']()}>{m['home.scan_another']()}</button
+						>
 					</div>
 
 					<!-- Error Alert -->
@@ -293,7 +320,7 @@
 					{#if scanResult.bestMatch}
 						<div class="card bg-success/10 border border-success/30">
 							<div class="card-body">
-									<div class="flex items-start gap-3">
+								<div class="flex items-start gap-3">
 									<CircleCheck class="h-6 w-6 text-success shrink-0 mt-1" />
 									<div class="flex-1">
 										<h3 class="card-title text-success">{m['home.best_match']()}</h3>
@@ -303,7 +330,8 @@
 													class="tooltip font-semibold cursor-pointer text-left"
 													class:tooltip-open={copiedItem === 'best-name'}
 													data-tip={copiedItem === 'best-name' ? m['home.copied']() : ''}
-													on:click={() => copyToClipboard(scanResult?.bestMatch?.name || '', 'best-name')}
+													on:click={() =>
+														copyToClipboard(scanResult?.bestMatch?.name || '', 'best-name')}
 													aria-label={m['home.copy']()}
 												>
 													<span class="hover:opacity-80">{scanResult.bestMatch.name}</span>
@@ -313,7 +341,11 @@
 														class="tooltip badge badge-sm ml-2 cursor-pointer hover:badge-primary"
 														class:tooltip-open={copiedItem === 'best-extension'}
 														data-tip={copiedItem === 'best-extension' ? m['home.copied']() : ''}
-														on:click={() => copyToClipboard(scanResult?.bestMatch?.extension || '', 'best-extension')}
+														on:click={() =>
+															copyToClipboard(
+																scanResult?.bestMatch?.extension || '',
+																'best-extension'
+															)}
 														aria-label={m['home.copy']()}
 													>
 														.{scanResult.bestMatch.extension}
@@ -322,19 +354,31 @@
 												<!-- search online button -->
 												<button
 													class="badge badge-sm ml-1 cursor-pointer hover:badge-primary"
-													on:click={() => searchOnline(scanResult?.bestMatch?.name || '', scanResult?.bestMatch?.extension || '')}
+													on:click={() =>
+														searchOnline(
+															scanResult?.bestMatch?.name || '',
+															scanResult?.bestMatch?.extension || ''
+														)}
 													aria-label={m['home.search_online']()}
 												>
 													<Search class="h-4 w-4" />
 												</button>
 											</div>
 											{#if scanResult.bestMatch.description}
-												<button class="text-sm cursor-pointer tooltip" class:tooltip-open={copiedItem === 'best-description'}
+												<button
+													class="text-sm cursor-pointer tooltip"
+													class:tooltip-open={copiedItem === 'best-description'}
 													data-tip={copiedItem === 'best-description' ? m['home.copied']() : ''}
-													on:click={() => copyToClipboard(scanResult?.bestMatch?.description || '', 'best-description')}
+													on:click={() =>
+														copyToClipboard(
+															scanResult?.bestMatch?.description || '',
+															'best-description'
+														)}
 													aria-label={m['home.copy']()}
 												>
-													<span class="hover:opacity-60 opacity-80 inline">{scanResult.bestMatch.description}</span>
+													<span class="hover:opacity-60 opacity-80 inline"
+														>{scanResult.bestMatch.description}</span
+													>
 												</button>
 											{/if}
 											<div class="flex items-center gap-4 text-sm">
@@ -351,10 +395,13 @@
 															class="tooltip font-mono text-xs ml-1 cursor-pointer"
 															class:tooltip-open={copiedItem === 'best-mime'}
 															data-tip={copiedItem === 'best-mime' ? m['home.copied']() : ''}
-															on:click={() => copyToClipboard(scanResult?.bestMatch?.mimeType || '', 'best-mime')}
+															on:click={() =>
+																copyToClipboard(scanResult?.bestMatch?.mimeType || '', 'best-mime')}
 															aria-label={m['home.copy']()}
 														>
-															<span class="hover:opacity-80 inline">{scanResult.bestMatch.mimeType}</span>
+															<span class="hover:opacity-80 inline"
+																>{scanResult.bestMatch.mimeType}</span
+															>
 														</button>
 													</div>
 												{/if}
@@ -386,7 +433,9 @@
 													<button
 														class="tooltip font-medium cursor-pointer text-left"
 														class:tooltip-open={copiedItem === `match-${index}-name`}
-														data-tip={copiedItem === `match-${index}-name` ? m['home.copied']() : ''}
+														data-tip={copiedItem === `match-${index}-name`
+															? m['home.copied']()
+															: ''}
 														on:click={() => copyToClipboard(match.name, `match-${index}-name`)}
 														aria-label={m['home.copy']()}
 													>
@@ -396,8 +445,11 @@
 														<button
 															class="tooltip badge badge-xs ml-2 cursor-pointer hover:badge-primary"
 															class:tooltip-open={copiedItem === `match-${index}-ext`}
-															data-tip={copiedItem === `match-${index}-ext` ? m['home.copied']() : ''}
-															on:click={() => copyToClipboard(match.extension || '', `match-${index}-ext`)}
+															data-tip={copiedItem === `match-${index}-ext`
+																? m['home.copied']()
+																: ''}
+															on:click={() =>
+																copyToClipboard(match.extension || '', `match-${index}-ext`)}
 															aria-label={m['home.copy']()}
 														>
 															.{match.extension}
@@ -417,33 +469,42 @@
 												>
 											</div>
 											{#if match.description}
-												<button class="text-sm cursor-pointer tooltip" class:tooltip-open={copiedItem === 'match-description'}
+												<button
+													class="text-sm cursor-pointer tooltip"
+													class:tooltip-open={copiedItem === 'match-description'}
 													data-tip={copiedItem === 'match-description' ? m['home.copied']() : ''}
-													on:click={() => copyToClipboard(match?.description || '', 'match-description')}
+													on:click={() =>
+														copyToClipboard(match?.description || '', 'match-description')}
 													aria-label={m['home.copy']()}
 												>
-													<span class="hover:opacity-60 opacity-80 inline">{match.description}</span>
-												</button>											{/if}
+													<span class="hover:opacity-60 opacity-80 inline">{match.description}</span
+													>
+												</button>
+											{/if}
 										</div>
-								{/each}
-								{#if scanResult.totalMatches > maxVisibleMatches + 1 && !showAllMatches}
-									<button 
-										class="text-xs opacity-60 text-center pt-2 cursor-pointer hover:text-primary hover:underline w-full"
-										on:click={() => showAllMatches = true}
-										aria-label={m['home.show_more_matches']({ count: scanResult.totalMatches - maxVisibleMatches - 1 })}
-									>
-										{m['home.more_possible_matches']({ count: scanResult.totalMatches - maxVisibleMatches - 1 })}.
-									</button>
-								{/if}
-								{#if showAllMatches && scanResult.totalMatches > maxVisibleMatches + 1}
-									<button 
-										class="text-xs opacity-60 text-center pt-2 cursor-pointer hover:text-primary hover:underline w-full"
-										on:click={() => showAllMatches = false}
-										aria-label={m['home.show_less']()}
-									>
-										{m['home.show_less']()}
-									</button>
-								{/if}
+									{/each}
+									{#if scanResult.totalMatches > maxVisibleMatches + 1 && !showAllMatches}
+										<button
+											class="text-xs opacity-60 text-center pt-2 cursor-pointer hover:text-primary hover:underline w-full"
+											on:click={() => (showAllMatches = true)}
+											aria-label={m['home.show_more_matches']({
+												count: scanResult.totalMatches - maxVisibleMatches - 1
+											})}
+										>
+											{m['home.more_possible_matches']({
+												count: scanResult.totalMatches - maxVisibleMatches - 1
+											})}.
+										</button>
+									{/if}
+									{#if showAllMatches && scanResult.totalMatches > maxVisibleMatches + 1}
+										<button
+											class="text-xs opacity-60 text-center pt-2 cursor-pointer hover:text-primary hover:underline w-full"
+											on:click={() => (showAllMatches = false)}
+											aria-label={m['home.show_less']()}
+										>
+											{m['home.show_less']()}
+										</button>
+									{/if}
 								</div>
 							</div>
 						</div>
@@ -463,7 +524,11 @@
 											{m['home.no_matches_explanation']()}
 										</p>
 									</div>
-									<button on:click={resetState} class="btn btn-sm btn-ghost mt-2" aria-label={m['home.scan_another']()}>
+									<button
+										on:click={resetState}
+										class="btn btn-sm btn-ghost mt-2"
+										aria-label={m['home.scan_another']()}
+									>
 										{m['home.scan_another']()}
 									</button>
 								</div>
@@ -477,14 +542,20 @@
 </section>
 
 {#if showDefinitionsAlert}
-	<div class="alert alert-soft alert-warning mt-4 z-50 shadow-lg fixed bottom-3 md:bottom-6 max-w-md flex items-start gap-4 mr-20 ml-4">
+	<div
+		class="alert alert-soft alert-warning mt-4 z-50 shadow-lg fixed bottom-3 md:bottom-6 max-w-md flex items-start gap-4 mr-20 ml-4"
+	>
 		<CircleAlert class="h-6 w-6 text-warning my-auto" />
 		<div class="flex-1">
 			<h3 class="font-bold">{m['home.definitions_not_found']()}</h3>
 			<div class="text-sm">{m['home.definitions_not_found_explanation']()}</div>
 		</div>
 		<div class="flex gap-2 my-auto">
-			<button class="btn btn-sm btn-warning" on:click={goToSettings} aria-label={m['home.download']()}>
+			<button
+				class="btn btn-sm btn-warning"
+				on:click={goToSettings}
+				aria-label={m['home.download']()}
+			>
 				<Download class="h-4 w-4" />
 				{m['home.download']()}
 			</button>

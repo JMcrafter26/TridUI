@@ -2,7 +2,14 @@
 	import { onMount } from 'svelte';
 	import { m } from '$lib/paraglide/messages.js';
 	import { setLocale, getLocale, locales } from '$lib/paraglide/runtime.js';
-	import { WindowSetSize, EventsOn, EventsOff, LogPrint, BrowserOpenURL } from '../../../wailsjs/runtime/runtime';
+	import {
+		WindowSetSize,
+		EventsOn,
+		EventsOff,
+		LogPrint,
+		BrowserOpenURL,
+		OnFileDrop
+	} from '../../../wailsjs/runtime/runtime';
 	import {
 		CheckDefinitionsExist,
 		CheckForDefsUpdates,
@@ -11,9 +18,84 @@
 		OpenAppDir,
 		GetOSName
 	} from '../../../wailsjs/go/main/App';
-	import { Download, RefreshCw, FolderOpen, CircleCheck, CircleAlert, Info, Languages, Moon, Sun, Monitor, Search, List, Funnel, RotateCcw, TriangleAlert, Smile, Shredder, Bug } from '@lucide/svelte';
+	import {
+		Download,
+		RefreshCw,
+		FolderOpen,
+		CircleCheck,
+		CircleAlert,
+		Info,
+		Languages,
+		Moon,
+		Sun,
+		Monitor,
+		Search,
+		List,
+		Funnel,
+		RotateCcw,
+		TriangleAlert,
+		Smile,
+		Shredder,
+		Bug
+	} from '@lucide/svelte';
 	import { searchEngines } from '$lib/config/searchEngines';
+	import { goto } from '$app/navigation';
 
+	// Settings storage with defaults
+	type Settings = {
+		theme: 'light' | 'dark' | 'triduilight' | 'triduidark' | 'auto';
+		searchEngine: string;
+		maxVisibleMatches: number;
+		confidenceThreshold: number;
+		maxTotalResults: number;
+		autoUpdateDefinitions: boolean;
+		checkAppUpdatesOnStartup: boolean;
+		startPinned: boolean;
+		languageManuallySet: boolean;
+	};
+
+	const defaultSettings: Settings = {
+		theme: 'auto',
+		searchEngine: 'Google',
+		maxVisibleMatches: 5,
+		confidenceThreshold: 10.0,
+		maxTotalResults: 50,
+		autoUpdateDefinitions: true,
+		checkAppUpdatesOnStartup: true,
+		startPinned: false,
+		languageManuallySet: false
+	};
+
+	if (typeof localStorage === 'undefined' || localStorage === null) {
+			window.location.href = '/';
+		}
+
+	// LocalStorage helper functions
+	function getSetting<K extends keyof Settings>(key: K): Settings[K] {
+		const settingsData = localStorage.getItem('_trid_settings_');
+		if (!settingsData) return defaultSettings[key];
+		
+		const settings = JSON.parse(settingsData);
+		const value = settings[key];
+		
+		// If value doesn't exist in settings, return default
+		if (value === undefined || value === null) return defaultSettings[key];
+		
+		// JSON.parse already converts types correctly, just return the value
+		return value as Settings[K];
+	}
+
+	function setSetting<K extends keyof Settings>(key: K, value: Settings[K]): void {
+		const settings = JSON.parse(localStorage.getItem('_trid_settings_') || '{}');
+		settings[key] = value;
+		localStorage.setItem('_trid_settings_', JSON.stringify(settings));
+	}
+
+	function resetAllSettings(): void {
+		localStorage.removeItem('_trid_settings_');
+	}
+
+	// Component state
 	let definitionsExist = false;
 	let definitionsPath = '';
 	let updateInfo: any | null = null;
@@ -23,118 +105,63 @@
 	let updateMessage = '';
 	let updateError = '';
 	let currentLocale = getLocale();
-	let currentTheme: 'light' | 'dark' | 'triduilight' | 'triduidark' | 'auto' = 'auto';
-	let currentSearchEngine = 'Google';
-	let maxVisibleMatches = 5;
-	let confidenceThreshold = 10.0;
-	let maxTotalResults = 50;
-	let autoUpdateDefinitions = true;
-	let checkAppUpdatesOnStartup = true;
-	let startPinned = false;
+	let currentTheme = getSetting('theme');
+	let currentSearchEngine = getSetting('searchEngine');
+	let maxVisibleMatches = getSetting('maxVisibleMatches');
+	let confidenceThreshold = getSetting('confidenceThreshold');
+	let maxTotalResults = getSetting('maxTotalResults');
+	let autoUpdateDefinitions = getSetting('autoUpdateDefinitions');
+	let checkAppUpdatesOnStartup = getSetting('checkAppUpdatesOnStartup');
+	let startPinned = getSetting('startPinned');
 
 	// Dynamically get language display names based on available locales
 	const availableLanguages = locales.map((locale) => {
 		try {
-			// Use Intl.DisplayNames to get native language names
 			const displayNames = new Intl.DisplayNames([locale], { type: 'language' });
-			return {
-				code: locale,
-				name: displayNames.of(locale) || locale
-			};
+			return { code: locale, name: displayNames.of(locale) || locale };
 		} catch {
-			// Fallback if Intl.DisplayNames fails
-			return {
-				code: locale,
-				name: locale.toUpperCase()
-			};
+			return { code: locale, name: locale.toUpperCase() };
 		}
 	});
 
+	// Generic change handler for settings
+	function handleSettingChange<K extends keyof Settings>(
+		key: K,
+		value: Settings[K],
+		callback?: () => void
+	) {
+		setSetting(key, value);
+		if (callback) callback();
+	}
+
 	function handleLanguageChange(event: Event) {
-		const target = event.target as HTMLSelectElement;
-		const newLocale = target.value;
+		const newLocale = (event.target as HTMLSelectElement).value;
 		if (locales.includes(newLocale as any)) {
-			// Mark that user has manually selected a language
-			localStorage.setItem('language-manually-set', 'true');
+			setSetting('languageManuallySet', true);
 			setLocale(newLocale as any);
 			currentLocale = newLocale as any;
-			// goto /
 			window.location.href = '/';
 		}
 	}
 
 	function applyTheme(theme: 'light' | 'dark' | 'triduilight' | 'triduidark' | 'auto') {
 		if (typeof window === 'undefined') return;
-		
+
 		if (theme === 'auto') {
 			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-			document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+			document.documentElement.setAttribute('data-theme', prefersDark ? 'triduidark' : 'triduilight');
 		} else {
 			document.documentElement.setAttribute('data-theme', theme);
 		}
 
 		LogPrint('Applied theme: ' + theme);
-		
-		localStorage.setItem('theme', theme);
+		setSetting('theme', theme);
 	}
 
 	function handleThemeChange(event: Event) {
-		const target = event.target as HTMLSelectElement;
-		const newTheme = target.value as 'light' | 'dark' | 'auto' | 'triduilight' | 'triduidark';
+		const newTheme = (event.target as HTMLSelectElement).value as Settings['theme'];
 		currentTheme = newTheme;
 		applyTheme(newTheme);
-	}
-
-	function handleSearchEngineChange(event: Event) {
-		const target = event.target as HTMLSelectElement;
-		const newEngine = target.value;
-		currentSearchEngine = newEngine;
-		localStorage.setItem('searchEngine', newEngine);
-	}
-
-	function handleMaxResultsChange(event: Event) {
-		const target = event.target as HTMLInputElement;
-		const value = parseInt(target.value, 10);
-		if (value >= 1 && value <= 50) {
-			maxVisibleMatches = value;
-			localStorage.setItem('maxVisibleMatches', value.toString());
-		}
-	}
-
-	function handleThresholdChange(event: Event) {
-		const target = event.target as HTMLInputElement;
-		const value = parseFloat(target.value);
-		if (value >= 0 && value <= 100) {
-			confidenceThreshold = value;
-			localStorage.setItem('confidenceThreshold', value.toString());
-		}
-	}
-
-	function handleMaxTotalResultsChange(event: Event) {
-		const target = event.target as HTMLInputElement;
-		const value = parseInt(target.value, 10);
-		if (value >= 0 && value <= 10000) {
-			maxTotalResults = value;
-			localStorage.setItem('maxTotalResults', value.toString());
-		}
-	}
-
-	function handleAutoUpdateDefinitionsChange(event: Event) {
-		const target = event.target as HTMLInputElement;
-		autoUpdateDefinitions = target.checked;
-		localStorage.setItem('autoUpdateDefinitions', autoUpdateDefinitions.toString());
-	}
-
-	function handleCheckAppUpdatesChange(event: Event) {
-		const target = event.target as HTMLInputElement;
-		checkAppUpdatesOnStartup = target.checked;
-		localStorage.setItem('checkAppUpdatesOnStartup', checkAppUpdatesOnStartup.toString());
-	}
-
-	function handleStartPinnedChange(event: Event) {
-		const target = event.target as HTMLInputElement;
-		startPinned = target.checked;
-		localStorage.setItem('startPinned', startPinned.toString());
 	}
 
 	async function checkForUpdates() {
@@ -179,94 +206,33 @@
 
 	function resetSettings() {
 		// Reset to defaults
-		currentTheme = 'auto';
-		currentSearchEngine = 'Google';
-		maxVisibleMatches = 5;
-		confidenceThreshold = 10.0;
-		maxTotalResults = 50;
-		autoUpdateDefinitions = true;
-		checkAppUpdatesOnStartup = true;
-		startPinned = false;
+		currentTheme = defaultSettings.theme;
+		currentSearchEngine = defaultSettings.searchEngine;
+		maxVisibleMatches = defaultSettings.maxVisibleMatches;
+		confidenceThreshold = defaultSettings.confidenceThreshold;
+		maxTotalResults = defaultSettings.maxTotalResults;
+		autoUpdateDefinitions = defaultSettings.autoUpdateDefinitions;
+		checkAppUpdatesOnStartup = defaultSettings.checkAppUpdatesOnStartup;
+		startPinned = defaultSettings.startPinned;
 
 		// Clear localStorage
-		localStorage.removeItem('theme');
-		localStorage.removeItem('searchEngine');
-		localStorage.removeItem('maxVisibleMatches');
-		localStorage.removeItem('confidenceThreshold');
-		localStorage.removeItem('maxTotalResults');
-		localStorage.removeItem('autoUpdateDefinitions');
-		localStorage.removeItem('checkAppUpdatesOnStartup');
-		localStorage.removeItem('startPinned');
+		resetAllSettings();
 
 		// Apply theme
-		applyTheme('auto');
+		applyTheme(defaultSettings.theme);
 
 		// Reload to reset language to browser default
 		window.location.href = '/';
 	}
 
 	onMount(() => {
-		// Load saved theme
-		const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'auto' | 'triduidark' | 'triduilight' | null;
-		if (savedTheme) {
-			currentTheme = savedTheme;
-			applyTheme(savedTheme);
-		} else {
-			applyTheme('auto');
-		}
-
-		// Load saved search engine
-		const savedEngine = localStorage.getItem('searchEngine');
-		if (savedEngine) {
-			currentSearchEngine = savedEngine;
-		}
-
-		// Load max visible matches setting
-		const savedMaxResults = localStorage.getItem('maxVisibleMatches');
-		if (savedMaxResults) {
-			maxVisibleMatches = parseInt(savedMaxResults, 10);
-		}
-
-		// Load confidence threshold setting
-		const savedThreshold = localStorage.getItem('confidenceThreshold');
-		if (savedThreshold) {
-			confidenceThreshold = parseFloat(savedThreshold);
-		}
-
-		// Load max total results setting
-		const savedMaxTotal = localStorage.getItem('maxTotalResults');
-		if (savedMaxTotal) {
-			maxTotalResults = parseInt(savedMaxTotal, 10);
-		}
-
-		// Load auto update definitions setting
-		const savedAutoUpdate = localStorage.getItem('autoUpdateDefinitions');
-		if (savedAutoUpdate) {
-			autoUpdateDefinitions = savedAutoUpdate === 'true';
-		} else {
-			autoUpdateDefinitions = true; // Default to true
-		}
-
-		// Load check app updates on startup setting
-		const savedCheckAppUpdates = localStorage.getItem('checkAppUpdatesOnStartup');
-		if (savedCheckAppUpdates) {
-			checkAppUpdatesOnStartup = savedCheckAppUpdates === 'true';
-		} else {
-			checkAppUpdatesOnStartup = true; // Default to true
-		}
-
-		// Load start pinned setting
-		const savedStartPinned = localStorage.getItem('startPinned');
-		if (savedStartPinned) {
-			startPinned = savedStartPinned === 'true';
-		}
+		// Apply saved theme
+		applyTheme(currentTheme);
 
 		// Listen for system theme changes when in auto mode
 		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 		const handleSystemThemeChange = () => {
-			if (currentTheme === 'auto') {
-				applyTheme('auto');
-			}
+			if (currentTheme === 'auto') applyTheme('auto');
 		};
 		mediaQuery.addEventListener('change', handleSystemThemeChange);
 
@@ -299,7 +265,9 @@
 			updateMessage = data.message || '';
 			// if message includes DOWNLOADING, replace it with localized string
 			if (data.message && data.message.toUpperCase().includes('DOWNLOADING')) {
-				updateMessage = m['settings.downloading']() + `: ${Math.floor((data.downloaded || 0) / 1024).toLocaleString()} KB / ${Math.floor((data.total || 0) / 1024).toLocaleString()} KB`;
+				updateMessage =
+					m['settings.downloading']() +
+					`: ${Math.floor((data.downloaded || 0) / 1024).toLocaleString()} KB / ${Math.floor((data.total || 0) / 1024).toLocaleString()} KB`;
 			}
 		});
 
@@ -319,6 +287,8 @@
 
 		document.addEventListener('click', handleLinkClick);
 
+		
+
 		return () => {
 			EventsOff('trid:update:progress');
 			EventsOff('trid:update:complete');
@@ -327,7 +297,7 @@
 			document.removeEventListener('click', handleLinkClick);
 		};
 	});
-	</script>
+</script>
 
 <svelte:head>
 	<title>{m['settings.settings']()}</title>
@@ -344,145 +314,187 @@
 				<div class="divider mt-0">{m['settings.trid_definitions']()}</div>
 				<div class="card bg-base-100 shadow-sm">
 					<div class="card-body p-5 space-y-4">
-
-				<!-- Definitions Status -->
-				<div class="alert {definitionsExist ? 'alert-info' : 'alert-warning'} alert-soft">
-					{#if definitionsExist}
-						<Info class="h-5 w-5" />
-						<div class="flex-1">
-							<h3 class="font-bold">{m['settings.definitions_installed']()}</h3>
-							<div class="text-sm text-warp max-w-md wrap-anywhere">
-								{#if updateInfo}
-									<div class="mt-1 space-y-1">
-										<div>{m['settings.definitions']()}: <span class="select-text">{updateInfo.defsCount.toLocaleString()}</span> file types</div>
-										{#if updateInfo.lastUpdated}
-											<div>{m['settings.last_updated']()}: <span class="select-text">{updateInfo.lastUpdated}</span></div>
-										{/if}
-										{#if updateInfo.currentMD5 && updateInfo.currentMD5 !== 'none'}
-											<div class="text-xs opacity-70">MD5: <span class="select-all">{updateInfo.currentMD5}</span></div>
+						<!-- Definitions Status -->
+						<div class="alert {definitionsExist ? 'alert-info' : 'alert-warning'} alert-soft">
+							{#if definitionsExist}
+								<Info class="h-5 w-5" />
+								<div class="flex-1">
+									<h3 class="font-bold">{m['settings.definitions_installed']()}</h3>
+									<div class="text-sm text-warp max-w-md wrap-anywhere">
+										{#if updateInfo}
+											<div class="mt-1 space-y-1">
+												<div>
+													{m['settings.definitions']()}:
+													<span class="select-text"
+														>{updateInfo.defsCount.toLocaleString()} file types</span
+													>
+												</div>
+												{#if updateInfo.lastUpdated}
+													<div>
+														{m['settings.last_updated']()}:
+														<span class="select-text">{updateInfo.lastUpdated}</span>
+													</div>
+												{/if}
+												{#if updateInfo.currentMD5 && updateInfo.currentMD5 !== 'none'}
+													<div class="text-xs opacity-70">
+														MD5: <span class="select-all">{updateInfo.currentMD5}</span>
+													</div>
+												{/if}
+											</div>
+										{:else}
+											{m['settings.located_at']()}: {definitionsPath}
 										{/if}
 									</div>
-								{:else}
-									{m['settings.located_at']()}: {definitionsPath}
-								{/if}
-							</div>
-						</div>
-					{:else}
-						<CircleAlert class="h-5 w-5" />
-						<div class="flex-1">
-							<h3 class="font-bold">{m['settings.definitions_not_found']()}</h3>
-							<div class="text-sm">
-								{m['settings.definitions_not_found_explanation']()}
-							</div>
-						</div>
-					{/if}
-				</div>
-
-				<!-- Update Status -->
-				{#if updateInfo && definitionsExist}
-					<div class={'alert ' + (updateInfo.isUpToDate ? 'alert-success' : 'alert-warning') + ' alert-soft'}>
-						{#if updateInfo.isUpToDate}
-							<CircleCheck class="h-5 w-5" />
-						{:else}
-							<CircleAlert class="h-5 w-5" />
-						{/if}
-						<div class="flex-1">
-							<div class="flex items-center justify-between">
-								<span class="font-semibold">
-									{updateInfo.isUpToDate ? m["settings.up_to_date"]() : m["settings.update_available"]()}
-								</span>
-
-							</div>
-							{#if updateInfo.error}
-								<div class="text-xs text-error mt-1">{updateInfo.error}</div>
-							{/if}
-						</div>
-					</div>
-				{/if}
-
-				<!-- Error Display -->
-				{#if updateError}
-					<div class="alert alert-error alert-soft">
-						<CircleAlert class="h-5 w-5" />
-						<div>
-							<h3 class="font-bold">{m['settings.error']()}</h3>
-							<div class="text-sm">{updateError}</div>
-						</div>
-					</div>
-				{/if}
-
-				<!-- Update Progress -->
-				{#if isUpdating}
-					<div class="card bg-base-300">
-						<div class="card-body p-4">
-							<div class="flex items-center gap-3 mb-2">
-								<Download class="h-5 w-5 animate-bounce" />
-								<span class="font-semibold">{updateMessage}</span>
-							</div>
-							<progress
-								class="progress progress-primary w-full"
-								value={updateProgress}
-								max="100"
-							></progress>
-							<div class="text-xs text-center mt-1">{updateProgress}%</div>
-						</div>
-					</div>
-				{/if}
-
-				<!-- Action Buttons -->
-				<div class="flex flex-wrap gap-2">
-					<button
-						class="btn btn-primary"
-						on:click={checkForUpdates}
-						disabled={isCheckingUpdates || isUpdating}
-						aria-label={m["about.check_for_updates"]()}
-					>
-						{#if isCheckingUpdates}
-							<RefreshCw class="h-4 w-4 animate-spin" />
-							<span>{m["about.checking_for_updates"]()}</span>
-						{:else}
-							<RefreshCw class="h-4 w-4" />
-							<span>{m["about.check_for_updates"]()}</span>
-						{/if}
-					</button>
-
-					<button class="btn" on:click={openAppDirectory} aria-label={m["settings.open_app_directory"]()}>
-						<FolderOpen class="h-4 w-4" />
-						{m['settings.open_app_directory']()}
-					</button>
-
-					{#if !definitionsExist || (updateInfo && !updateInfo.isUpToDate)}
-						<button class="btn btn-success" on:click={downloadUpdates} disabled={isUpdating} aria-label="{isUpdating ? m["settings.updating"]() : definitionsExist ? m["settings.update_definitions"]() : m["settings.download_definitions"]()}">
-							{#if isUpdating}
-								<Download class="h-4 w-4 animate-bounce" />
-								{m["settings.updating"]()}
+								</div>
 							{:else}
-								<Download class="h-4 w-4" />
-								{definitionsExist ? m["settings.update_definitions"]() : m["settings.download_definitions"]()}
+								<CircleAlert class="h-5 w-5" />
+								<div class="flex-1">
+									<h3 class="font-bold">{m['settings.definitions_not_found']()}</h3>
+									<div class="text-sm">
+										{m['settings.definitions_not_found_explanation']()}
+									</div>
+								</div>
 							{/if}
-						</button>
-					{/if}
-				</div>
+						</div>
 
-				<!-- Info Box -->
-				<div class="text-xs opacity-70 mt-2 p-3 bg-base-300 rounded-lg">
-					<p class="mb-1">
-						<strong>{m['settings.note']()}</strong> {m['settings.definitions_info']()}
-					</p>
-					<p>
-						{m['settings.downloaded_from']()}:
-						<a
-							href="http://mark0.net/soft-trid-e.html"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="link"
-							aria-label="mark0.net"
-							>mark0.net</a
-						>
-					</p>
+						<!-- Update Status -->
+						{#if updateInfo && definitionsExist}
+							<div
+								class={'alert ' +
+									(updateInfo.isUpToDate ? 'alert-success' : 'alert-warning') +
+									' alert-soft'}
+							>
+								{#if updateInfo.isUpToDate}
+									<CircleCheck class="h-5 w-5" />
+								{:else}
+									<CircleAlert class="h-5 w-5" />
+								{/if}
+								<div class="flex-1">
+									<div class="flex items-center justify-between">
+										<span class="font-semibold">
+											{updateInfo.isUpToDate
+												? m['settings.up_to_date']()
+												: m['settings.update_available']()}
+										</span>
+									</div>
+									{#if updateInfo.error}
+										<div class="text-xs text-error mt-1">{updateInfo.error}</div>
+									{/if}
+								</div>
+							</div>
+						{/if}
+
+						<!-- Error Display -->
+						{#if updateError}
+							<div class="alert alert-error alert-soft">
+								<CircleAlert class="h-5 w-5" />
+								<div>
+									<h3 class="font-bold">{m['settings.error']()}</h3>
+									<div class="text-sm">{updateError}</div>
+								</div>
+							</div>
+						{/if}
+
+						<!-- Update Progress -->
+						{#if isUpdating}
+							<div class="card bg-base-300">
+								<div class="card-body p-4">
+									<div class="flex items-center gap-3 mb-2">
+										<Download class="h-5 w-5 animate-bounce" />
+										<span class="font-semibold">{updateMessage}</span>
+									</div>
+									<progress
+										class="progress progress-primary w-full"
+										value={updateProgress}
+										max="100"
+									></progress>
+									<div class="text-xs text-center mt-1">{updateProgress}%</div>
+								</div>
+							</div>
+						{/if}
+
+						<!-- Action Buttons -->
+						<div class="flex flex-wrap gap-2">
+							<button
+								class="btn btn-primary"
+								on:click={checkForUpdates}
+								disabled={isCheckingUpdates || isUpdating}
+								aria-label={m['about.check_for_updates']()}
+							>
+								{#if isCheckingUpdates}
+									<RefreshCw class="h-4 w-4 animate-spin" />
+									<span>{m['about.checking_for_updates']()}</span>
+								{:else}
+									<RefreshCw class="h-4 w-4" />
+									<span>{m['about.check_for_updates']()}</span>
+								{/if}
+							</button>
+
+							<button
+								class="btn"
+								on:click={(e: MouseEvent) => {
+									const btn = e.currentTarget as HTMLButtonElement | null;
+									if (btn) btn.disabled = true;
+									try {
+										openAppDirectory();
+									} catch (error) {
+										console.error('Failed to open app directory:', error);
+									} finally {
+										// wait 2000ms before re-enabling
+										setTimeout(() => {
+											if (btn) btn.disabled = false;
+										}, 3500);
+									}
+								}}
+								aria-label={m['settings.open_app_directory']()}
+							>
+								<FolderOpen class="h-4 w-4" />
+								{m['settings.open_app_directory']()}
+							</button>
+
+							{#if !definitionsExist || (updateInfo && !updateInfo.isUpToDate)}
+								<button
+									class="btn btn-success"
+									on:click={downloadUpdates}
+									disabled={isUpdating}
+									aria-label={isUpdating
+										? m['settings.updating']()
+										: definitionsExist
+											? m['settings.update_definitions']()
+											: m['settings.download_definitions']()}
+								>
+									{#if isUpdating}
+										<Download class="h-4 w-4 animate-bounce" />
+										{m['settings.updating']()}
+									{:else}
+										<Download class="h-4 w-4" />
+										{definitionsExist
+											? m['settings.update_definitions']()
+											: m['settings.download_definitions']()}
+									{/if}
+								</button>
+							{/if}
+						</div>
+
+						<!-- Info Box -->
+						<div class="text-xs opacity-70 mt-2 p-3 bg-base-300 rounded-lg">
+							<p class="mb-1">
+								<strong>{m['settings.note']()}</strong>
+								{m['settings.definitions_info']()}
+							</p>
+							<p>
+								{m['settings.downloaded_from']()}:
+								<a
+									href="http://mark0.net/soft-trid-e.html"
+									target="_blank"
+									rel="noopener noreferrer"
+									class="link"
+									aria-label="mark0.net">mark0.net</a
+								>
+							</p>
+						</div>
+					</div>
 				</div>
-			</div>
-			</div>
 			</div>
 
 			<!-- Appearance Section -->
@@ -521,7 +533,7 @@
 							{/if}
 							<div class="mt-2">
 								<span class="label-text-alt text-xs opacity-70">
-									{@html m['settings.language_help_translation']()} 
+									{@html m['settings.language_help_translation']()}
 								</span>
 							</div>
 						</div>
@@ -557,13 +569,8 @@
 									{m['settings.theme_auto']()}
 								</option>
 
-								<option value="triduilight">
-									TridUI Light
-								</option>
-								<option value="triduidark">
-									TridUI Dark
-								</option>
-
+								<option value="triduilight"> TridUI Light </option>
+								<option value="triduidark"> TridUI Dark </option>
 							</select>
 							<div class="mt-2">
 								<span class="label-text-alt text-xs opacity-70 text-wrap max-w-md">
@@ -573,27 +580,31 @@
 						</div>
 						<div class="divider my-2"></div>
 						<div class="form-control">
-						<label class="label cursor-pointer justify-start gap-3">
-							<input 
-								type="checkbox" 
-								class="checkbox checkbox-primary" 
-								bind:checked={startPinned}
-								on:change={handleStartPinnedChange}
-							/>
-							<div>
-								<span class="label-text font-medium text-wrap max-w-md">{m['settings.start_pinned']()}</span>
-								<p class="label-text-alt text-xs opacity-70 mt-1 text-wrap max-w-md">
-									{m['settings.start_pinned_description']()}
-								</p>
-							</div>
-						</label>
-					</div>
+							<label class="label cursor-pointer justify-start gap-3">
+								<input
+									type="checkbox"
+									class="checkbox checkbox-primary"
+									bind:checked={startPinned}
+									on:change={() => handleSettingChange('startPinned', startPinned)}
+								/>
+								<div>
+									<span class="label-text font-medium text-wrap max-w-md"
+										>{m['settings.start_pinned']()}</span
+									>
+									<p class="label-text-alt text-xs opacity-70 mt-1 text-wrap max-w-md">
+										{m['settings.start_pinned_description']()}
+									</p>
+								</div>
+							</label>
+						</div>
 					</div>
 				</div>
 			</div>
 
 			<!-- Search & Display Section -->
-			<div class="divider mt-8">{m['settings.search_engine']()} & {m['settings.scan_results']()}</div>
+			<div class="divider mt-8">
+				{m['settings.search_engine']()} & {m['settings.scan_results']()}
+			</div>
 			<div class="card bg-base-100 shadow-sm">
 				<div class="card-body p-5">
 					<!-- Search Engine -->
@@ -611,8 +622,8 @@
 							<select
 								id="search-engine-select"
 								class="select select-bordered w-full"
-								value={currentSearchEngine}
-								on:change={handleSearchEngineChange}
+								bind:value={currentSearchEngine}
+								on:change={() => handleSettingChange('searchEngine', currentSearchEngine)}
 								aria-label={m['settings.search_engine']()}
 							>
 								{#each searchEngines as engine}
@@ -630,7 +641,7 @@
 							<List class="h-5 w-5" />
 							{m['settings.scan_results']()}
 						</h3>
-						
+
 						<div class="space-y-5">
 							<!-- Max Visible Matches -->
 							<div class="form-control">
@@ -639,14 +650,17 @@
 										{m['settings.max_visible_matches']()}
 									</span>
 								</label>
-							<input
-								id="max-results-input"
-								type="number"
-								min="1"
-								max="50"
-								class="input input-bordered w-full"
-								bind:value={maxVisibleMatches}
-									on:change={handleMaxResultsChange}
+								<input
+									id="max-results-input"
+									type="number"
+									min="1"
+									max="50"
+									class="input input-bordered w-full"
+									bind:value={maxVisibleMatches}
+									on:change={() =>
+										maxVisibleMatches >= 1 &&
+										maxVisibleMatches <= 50 &&
+										handleSettingChange('maxVisibleMatches', maxVisibleMatches)}
 									aria-label={m['settings.max_visible_matches']()}
 								/>
 								<label class="label">
@@ -659,23 +673,26 @@
 							<!-- Confidence Threshold -->
 							<div class="form-control">
 								<label class="label" for="threshold-input">
-									<span class="label-text text-sm font-medium flex items-center gap-2 text-wrap max-w-md">
+									<span
+										class="label-text text-sm font-medium flex items-center gap-2 text-wrap max-w-md"
+									>
 										<Funnel class="h-4 w-4" />
 										{m['settings.confidence_threshold']()}
 									</span>
 								</label>
-							<div class="flex items-center gap-3">
-								<input
-									id="threshold-input"
-									type="range"
-									min="0"
-									max="100"
-									step="0.5"
-									class="range range-primary flex-1"
-									bind:value={confidenceThreshold}
-									on:change={handleThresholdChange}
-									aria-label={m['settings.confidence_threshold']()}
-								/>
+								<div class="flex items-center gap-3">
+									<input
+										id="threshold-input"
+										type="range"
+										min="0"
+										max="100"
+										step="0.5"
+										class="range range-primary flex-1"
+										bind:value={confidenceThreshold}
+										on:change={() =>
+											handleSettingChange('confidenceThreshold', confidenceThreshold)}
+										aria-label={m['settings.confidence_threshold']()}
+									/>
 									<span class="badge badge-neutral font-mono min-w-14 justify-center">
 										{confidenceThreshold.toFixed(1)}%
 									</span>
@@ -694,25 +711,31 @@
 										{m['settings.max_total_results']()}
 									</span>
 								</label>
-							<input
-								id="max-total-results-input"
-								type="number"
-								min="0"
-								max="10000"
-								class="input input-bordered w-full"
-								bind:value={maxTotalResults}
-									on:change={handleMaxTotalResultsChange}
+								<input
+									id="max-total-results-input"
+									type="number"
+									min="0"
+									max="10000"
+									class="input input-bordered w-full"
+									bind:value={maxTotalResults}
+									on:change={() =>
+										maxTotalResults >= 0 &&
+										maxTotalResults <= 10000 &&
+										handleSettingChange('maxTotalResults', maxTotalResults)}
 									aria-label={m['settings.max_total_results']()}
 									aria-describedby="max-total-results-desc"
 								/>
 								<div class="label">
-									<span id="max-total-results-desc" class="label-text-alt text-xs opacity-70 text-wrap max-w-md">
+									<span
+										id="max-total-results-desc"
+										class="label-text-alt text-xs opacity-70 text-wrap max-w-md"
+									>
 										{m['settings.max_total_results_description']()}
 									</span>
 								</div>
-							<div class="alert alert-warning alert-soft py-2 px-3 mt-2 text-wrap max-w-md">
-								<TriangleAlert class="h-4 w-4" />
-								<span class="text-xs">{m['settings.max_total_results_warning']()}</span>
+								<div class="alert alert-warning alert-soft py-2 px-3 mt-2 text-wrap max-w-md">
+									<TriangleAlert class="h-4 w-4" />
+									<span class="text-xs">{m['settings.max_total_results_warning']()}</span>
 								</div>
 							</div>
 						</div>
@@ -720,20 +743,23 @@
 				</div>
 			</div>
 
-					<!-- Updates Section -->
-		<div class="divider mt-8">{m['settings.updates']()}</div>
+			<!-- Updates Section -->
+			<div class="divider mt-8">{m['settings.updates']()}</div>
 			<div class="card bg-base-100 shadow-sm">
 				<div class="card-body p-5 space-y-4">
 					<div class="form-control">
 						<label class="label cursor-pointer justify-start gap-3">
-							<input 
-								type="checkbox" 
-								class="checkbox checkbox-primary" 
+							<input
+								type="checkbox"
+								class="checkbox checkbox-primary"
 								bind:checked={checkAppUpdatesOnStartup}
-								on:change={handleCheckAppUpdatesChange}
+								on:change={() =>
+									handleSettingChange('checkAppUpdatesOnStartup', checkAppUpdatesOnStartup)}
 							/>
 							<div>
-								<span class="label-text font-medium text-wrap max-w-md">{m['settings.check_app_updates']()}</span>
+								<span class="label-text font-medium text-wrap max-w-md"
+									>{m['settings.check_app_updates']()}</span
+								>
 								<p class="label-text-alt text-xs opacity-70 mt-1 text-wrap max-w-md">
 									{m['settings.check_app_updates_description']()}
 								</p>
@@ -741,67 +767,115 @@
 						</label>
 					</div>
 
-									<!-- Auto-Update Definitions -->
-				<div>
-					<div class="form-control">
-						<label class="label cursor-pointer justify-start gap-3">
-							<input 
-								type="checkbox" 
-								class="checkbox checkbox-primary" 
-								bind:checked={autoUpdateDefinitions}
-								on:change={handleAutoUpdateDefinitionsChange}
-							/>
-							<div>
-								<span class="label-text font-medium text-wrap max-w-md">{m['settings.auto_update_definitions']()}</span>
-								<p class="label-text-alt text-xs opacity-70 mt-1 text-wrap max-w-md">
-									{m['settings.auto_update_definitions_description']()}
-								</p>
-							</div>
-						</label>
+					<!-- Auto-Update Definitions -->
+					<div>
+						<div class="form-control">
+							<label class="label cursor-pointer justify-start gap-3">
+								<input
+									type="checkbox"
+									class="checkbox checkbox-primary"
+									bind:checked={autoUpdateDefinitions}
+									on:change={() =>
+										handleSettingChange('autoUpdateDefinitions', autoUpdateDefinitions)}
+								/>
+								<div>
+									<span class="label-text font-medium text-wrap max-w-md"
+										>{m['settings.auto_update_definitions']()}</span
+									>
+									<p class="label-text-alt text-xs opacity-70 mt-1 text-wrap max-w-md">
+										{m['settings.auto_update_definitions_description']()}
+									</p>
+								</div>
+							</label>
+						</div>
 					</div>
-				</div>
 				</div>
 			</div>
 
-		<!-- Debug Section -->
-		<details class="collapse border-base-300 bg-base-100 border mt-6">
-			<summary class="collapse-title text-sm opacity-70"><Bug class="inline-block h-4 w-4" /> {m['settings.debug_tools']()}</summary>
-			<div class="collapse-content text-sm space-y-2">
-				<button class="btn btn-sm btn-primary" on:click={() => WindowSetSize(500, 400)}>
-					Reset window size
-				</button>
-				{#if definitionsPath}
-					<div class="text-xs opacity-70 break-all">
-						<strong>{m['settings.located_at']()}:</strong>
-						<span class="select-text text-wrap max-w-md wrap-anywhere">{definitionsPath}</span>
-					</div>
-				{/if}
-				<button class="btn btn-sm btn-secondary text-wrap wrap-anywhere" on:click={
-					// change the button text temporarily to "Elevating process... Just kidding!" for 2 seconds
-					async (e) => {
-						const btn = e.currentTarget as HTMLButtonElement;
-						btn.disabled = true;
-						// hide the first span and show the second span
-						btn.children[0].classList.add('hidden');
-						btn.children[1].classList.remove('hidden');
-						await new Promise((resolve) => setTimeout(resolve, 4000));
-						// remove hidden from children 1 child and add hidden to children 0 child
-						btn.children[1].children[0].classList.remove('hidden');
-						await new Promise((resolve) => setTimeout(resolve, 2000));
-						btn.children[1].classList.add('hidden');
-						btn.children[1].children[0].classList.add('hidden');
-						btn.children[0].classList.remove('hidden');
-						btn.disabled = false;
-					}
-				}
+			<!-- Debug Section -->
+			<details class="collapse border-base-300 bg-base-100 border mt-6">
+				<summary class="collapse-title text-sm opacity-70"
+					><Bug class="inline-block h-4 w-4" /> {m['settings.debug_tools']()}</summary
 				>
-					<span><Shredder class="inline-block h-4 w-4" />Delete {#await GetOSName() then os}
-						{os === 'windows' ? 'C:/Windows/System32' : os === 'macos' ? '/System' : '/root'}
-					{/await} directory (for testing)</span>
-					<span class="hidden">Elevating process... <span class="hidden">Just kidding! <Smile class="inline-block h-4 w-4" /></span></span>
-				</button>
-			</div>
-		</details>
+				<div class="collapse-content text-sm space-y-2">
+					<button class="btn btn-sm btn-primary" on:click={() => WindowSetSize(500, 400)}>
+						Reset window size
+					</button>
+					<br />
+					<button class="btn btn-sm btn-secondary" on:click={(e) => {
+						const btn = e.currentTarget as HTMLButtonElement;
+						navigator.clipboard.writeText(localStorage.getItem('_trid_settings_') || '{}')
+							.then(() => {
+								btn.innerText = 'Settings copied to clipboard!';
+							})
+							.catch((err) => {
+								btn.innerText = 'Failed to copy settings: ' + err;
+							})
+							.finally(() => {
+								setTimeout(() => {
+									btn.innerText = 'Copy settings to clipboard';
+								}, 3000);
+							});
+					}}>
+						Copy settings to clipboard
+					</button>
+					<button class="btn btn-sm btn-accent" on:click={(e) =>
+					// import settings from clipboard
+					navigator.clipboard.readText().then((text) => {
+						try {
+							const parsed = JSON.parse(text);
+							localStorage.setItem('_trid_settings_', JSON.stringify(parsed));
+							(e.currentTarget as HTMLButtonElement).disabled = true;
+							(e.currentTarget as HTMLButtonElement).innerText = 'Settings imported! Please reload the app.';
+						} catch (err) {
+							const btn = e.currentTarget as HTMLButtonElement | null;
+							if (btn) {
+								btn.innerText = 'Failed to import settings: Invalid JSON';
+							}
+						}
+					})}>
+						Import settings from clipboard
+					</button>
+					<br />
+					<button
+						class="btn btn-sm btn-secondary text-wrap wrap-anywhere"
+						on:click={
+						async (e) => {
+							const btn = e.currentTarget as HTMLButtonElement;
+							btn.disabled = true;
+							// hide the first span and show the second span
+							btn.children[0].classList.add('hidden');
+							btn.children[1].classList.remove('hidden');
+							await new Promise((resolve) => setTimeout(resolve, 4000));
+							// remove hidden from children 1 child and add hidden to children 0 child
+							btn.children[1].children[0].classList.remove('hidden');
+							await new Promise((resolve) => setTimeout(resolve, 2000));
+							btn.children[1].classList.add('hidden');
+							btn.children[1].children[0].classList.add('hidden');
+							btn.children[0].classList.remove('hidden');
+							btn.disabled = false;
+						}}
+					>
+						<span
+							><Shredder class="inline-block h-4 w-4" />Delete {#await GetOSName() then os}
+								{os === 'windows' ? 'C:/Windows/System32' : os === 'macos' ? '/System' : '/root'}
+							{/await} directory (for testing)</span
+						>
+						<span class="hidden"
+							>Elevating process... <span class="hidden"
+								>Just kidding! <Smile class="inline-block h-4 w-4" /></span
+							></span
+						>
+					</button>
+					<br />
+					{#if definitionsPath}
+						<div class="text-xs opacity-70 break-all">
+							<strong>{m['settings.located_at']()}:</strong>
+							<span class="select-text text-wrap max-w-md wrap-anywhere">{definitionsPath}</span>
+						</div>
+					{/if}
+				</div>
+			</details>
 
 			<!-- Reset Settings Section -->
 			<div class="divider mt-2"></div>

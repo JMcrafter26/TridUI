@@ -8,14 +8,28 @@
 	import '../app.css';
 	let { children } = $props();
 
+	function getSetting(key: string): any {
+		const settingsData = localStorage.getItem('_trid_settings_');
+		if (!settingsData) return null;
+		
+		const settings = JSON.parse(settingsData);
+		return settings[key] !== undefined ? settings[key] : null;
+	}
+
+	function setSetting(key: string, value: any): void {
+		const settings = JSON.parse(localStorage.getItem('_trid_settings_') || '{}');
+		settings[key] = value;
+		localStorage.setItem('_trid_settings_', JSON.stringify(settings));
+	}
+
 	// Apply theme immediately before mount to prevent flash
 	if (typeof window !== 'undefined') {
-		const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'auto' | 'triduidark' | 'triduilight' | null;
+		const savedTheme = getSetting('theme') as 'light' | 'dark' | 'auto' | 'triduidark' | 'triduilight' | null;
 		const theme = savedTheme || 'auto';
 		
 		if (theme === 'auto') {
 			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-			document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+			document.documentElement.setAttribute('data-theme', prefersDark ? 'triduidark' : 'triduilight');
 		} else {
 			document.documentElement.setAttribute('data-theme', theme);
 		}
@@ -26,7 +40,7 @@
 		
 		if (theme === 'auto') {
 			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-			document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+			document.documentElement.setAttribute('data-theme', prefersDark ? 'triduidark' : 'triduilight');
 		} else {
 			document.documentElement.setAttribute('data-theme', theme);
 		}
@@ -36,7 +50,7 @@
 		// Listen for system theme changes when in auto mode
 		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 		const handleSystemThemeChange = () => {
-			const currentTheme = localStorage.getItem('theme');
+			const currentTheme = getSetting('theme');
 			if (currentTheme === 'auto' || !currentTheme) {
 				applyTheme('auto');
 			}
@@ -44,7 +58,7 @@
 		mediaQuery.addEventListener('change', handleSystemThemeChange);
 
 		// Check if user has manually set a language preference
-		const hasManualPreference = localStorage.getItem('language-manually-set');
+		const hasManualPreference = getSetting('languageManuallySet');
 		
 		if (!hasManualPreference) {
 			// Auto-detect browser language on first visit
@@ -67,8 +81,8 @@
 		}
 
 		// Auto-update definitions on startup if enabled
-		const autoUpdateDefinitions = localStorage.getItem('autoUpdateDefinitions');
-		if (autoUpdateDefinitions !== 'false') { // Default to true if not set
+		const autoUpdateDefinitions = getSetting('autoUpdateDefinitions');
+		if (autoUpdateDefinitions !== false) { // Default to true if not set
 			CheckDefinitionsExist()
 				.then((exists) => {
 					if (exists) {
@@ -86,8 +100,8 @@
 		}
 
 		// Check for app updates on startup if enabled (non-blocking)
-		const checkAppUpdatesOnStartup = localStorage.getItem('checkAppUpdatesOnStartup');
-		if (checkAppUpdatesOnStartup !== 'false') { // Default to true if not set
+		const checkAppUpdatesOnStartup = getSetting('checkAppUpdatesOnStartup');
+		if (checkAppUpdatesOnStartup !== false) { // Default to true if not set
 			CheckForUpdates()
 				.then((info) => {
 					if (info) {

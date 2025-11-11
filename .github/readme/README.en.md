@@ -1,4 +1,4 @@
-<div style="display: flex; align-items: center; margin-bottom: 16px;">
+iv style="display: flex; align-items: center; margin-bottom: 16px;">
   <img src="../../icon.png" alt="TrID UI Icon" style="width: 64px; height: 64px; border-radius: 12px;" />
   <h1 style="margin-left: 16px;">TrID UI</h1>
 </div>
@@ -28,6 +28,11 @@ The application uses a native Go implementation of the TrID file identification 
 
 > [!TIP]
 > Download TridUI from the [Releases Page](https://github.com/JMcrafter26/TridUI/releases)
+
+[![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/JMcrafter26/TridUI?style=flat&logo=go)](https://github.com/JMcrafter26/TridUI)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/JMcrafter26/TridUI?style=flat&label=latest+release&logo=github)](https://github.com/JMcrafter26/TridUI/releases/latest)
+[![GitHub issues](https://img.shields.io/github/issues/JMcrafter26/TridUI?style=flat&logo=github)](https://github.com/JMcrafter26/TridUI/issues)
+[![Actions Status](https://img.shields.io/github/actions/workflow/status/JMcrafter26/TridUI/release.yml?branch=main&label=build&logo=github&style=flat)](https://github.com/JMcrafter26/TridUI/actions/workflows/release.yml)
 
 ## Features
 
@@ -205,6 +210,10 @@ Please refer to the LICENSE file for more details.
 The trid.go scanner is a clean-room Go implementation by JMcrafter26 and is licensed under the GNU AGPLv3 license.
 
 The app icon is based on eye icon by icons8.com
+
+<a href="https://github.com/JMcrafter26/TridUI/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=JMcrafter26/TridUI" />
+</a>
 
 ## Contributing
 

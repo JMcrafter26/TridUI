@@ -4,7 +4,7 @@
 </div>
 
 <div style="text-align: center; margin-bottom: 16px;">
-<img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/demo.gif?raw=true" alt="Dimostrazione TrID UI" style="width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 16px;" />
+<img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.2/demo.gif?raw=true" alt="Dimostrazione TrID UI" style="width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 16px;" />
 </div>
 
 <p align="center">
@@ -28,6 +28,11 @@ L’app utilizza un’implementazione nativa in Go dell’algoritmo di identific
 
 > [!TIP]
 > Scarica TridUI dalla [pagina delle release](https://github.com/JMcrafter26/TridUI/releases)
+
+[![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/JMcrafter26/TridUI?style=flat&logo=go)](https://github.com/JMcrafter26/TridUI)
+[![Release GitHub (ultima)](https://img.shields.io/github/v/release/JMcrafter26/TridUI?style=flat&label=ultima+release&logo=github)](https://github.com/JMcrafter26/TridUI/releases/latest)
+[![Issue GitHub](https://img.shields.io/github/issues/JMcrafter26/TridUI?style=flat&logo=github)](https://github.com/JMcrafter26/TridUI/issues)
+[![Actions Status](https://img.shields.io/github/actions/workflow/status/JMcrafter26/TridUI/release.yml?branch=main&label=build&logo=github&style=flat)](https://github.com/JMcrafter26/TridUI/actions/workflows/release.yml)
 
 ## Funzionalità
 
@@ -205,6 +210,10 @@ Consulta il file LICENSE per maggiori dettagli.
 Lo scanner `trid.go` è una implementazione clean‑room in Go di JMcrafter26 con licenza GNU AGPLv3.
 
 L’icona dell’app è basata sull’icona "eye" di icons8.com.
+
+<a href="https://github.com/JMcrafter26/TridUI/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=JMcrafter26/TridUI" />
+</a>
 
 ## Contribuire
 

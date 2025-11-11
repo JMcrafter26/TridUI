@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=TridUI
+GenericName=File Type Identifier
+Comment=Identify file types using TrID definitions
+Icon=com.github.jmcrafter26.TridUI
+Exec=TridUI %F
+Terminal=false
+Categories=Utility;FileTools;
+Keywords=file;identify;trid;scanner;filetype;
+MimeType=application/octet-stream;
+StartupNotify=true
+StartupWMClass=TridUI

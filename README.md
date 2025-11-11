@@ -5,7 +5,7 @@
 </div>
 
 <div style="text-align: center; margin-bottom: 16px;">
-<img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/demo.gif?raw=true" alt="TrID UI Demonstration" style="width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 16px;" />
+<img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.2/demo.gif?raw=true" alt="TrID UI Demonstration" style="width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 16px;" />
 </div>
 
 <p align="center">
@@ -29,6 +29,11 @@ The application uses a native Go implementation of the TrID file identification 
 
 > [!TIP]
 > Download TridUI from the [Releases Page](https://github.com/JMcrafter26/TridUI/releases)
+
+[![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/JMcrafter26/TridUI?style=flat&logo=go)](https://github.com/JMcrafter26/TridUI)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/JMcrafter26/TridUI?style=flat&label=latest+release&logo=github)](https://github.com/JMcrafter26/TridUI/releases/latest)
+[![GitHub issues](https://img.shields.io/github/issues/JMcrafter26/TridUI?style=flat&logo=github)](https://github.com/JMcrafter26/TridUI/issues)
+[![Actions Status](https://img.shields.io/github/actions/workflow/status/JMcrafter26/TridUI/release.yml?branch=main&label=build&logo=github&style=flat)](https://github.com/JMcrafter26/TridUI/actions/workflows/release.yml)
 
 ## Features
 
@@ -110,7 +115,7 @@ https://github.com/user-attachments/assets/bde82ca9-fa8e-45a3-acd4-c31040aea11b
 ## Setup
 
 > [!TIP]
-> You can find the pre-built binaries on the [Releases Page](https://github.com/JMcrafter26/TridUI/releases).
+> You can find the pre-built binaries on the [Releases Page](https://github.com/JMcrafter26/TridUI/releases/latest).
 
 ### Prerequisites
 
@@ -208,6 +213,10 @@ The trid.go scanner is a clean-room Go implementation by JMcrafter26 and is lice
 The app icon is based on eye icon by icons8.com
 
 ## Contributing
+
+<a href="https://github.com/JMcrafter26/TridUI/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=JMcrafter26/TridUI" />
+</a>
 
 Contributions are welcome! If you'd like to contribute to TrID UI, please fork the repository and submit a pull request with your changes. For major changes, please open an issue first to discuss what you would like to change.
 

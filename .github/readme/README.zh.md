@@ -4,7 +4,7 @@
 </div>
 
 <div style="text-align: center; margin-bottom: 16px;">
-<img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/demo.gif?raw=true" alt="TrID UI 演示" style="width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 16px;" />
+<img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.2/demo.gif?raw=true" alt="TrID UI 演示" style="width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 16px;" />
 </div>
 
 <p align="center">
@@ -28,6 +28,11 @@ TrID UI 是一款轻量级桌面应用，为强大的 TrID 文件扫描与分析
 
 > [!TIP]
 > 在 [Releases 页面](https://github.com/JMcrafter26/TridUI/releases) 下载 TridUI
+
+[![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/JMcrafter26/TridUI?style=flat&logo=go)](https://github.com/JMcrafter26/TridUI)
+[![GitHub release (最新)](https://img.shields.io/github/v/release/JMcrafter26/TridUI?style=flat&label=最新+发布&logo=github)](https://github.com/JMcrafter26/TridUI/releases/latest)
+[![GitHub issues](https://img.shields.io/github/issues/JMcrafter26/TridUI?style=flat&logo=github)](https://github.com/JMcrafter26/TridUI/issues)
+[![Actions Status](https://img.shields.io/github/actions/workflow/status/JMcrafter26/TridUI/release.yml?branch=main&label=build&logo=github&style=flat)](https://github.com/JMcrafter26/TridUI/actions/workflows/release.yml)
 
 ## 功能特性
 
@@ -205,6 +210,10 @@ TrID UI 采用 GNU AGPLv3 开源许可证。UI 由 Cufiy（即 JMcrafter26）开
 `trid.go` 扫描器由 JMcrafter26 以 clean‑room 方式实现，采用 GNU AGPLv3 许可。
 
 应用图标基于 icons8.com 的 eye 图标。
+
+<a href="https://github.com/JMcrafter26/TridUI/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=JMcrafter26/TridUI" />
+</a>
 
 ## 贡献
 

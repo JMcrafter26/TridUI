@@ -392,7 +392,7 @@
 											</div>
 											{#if scanResult.bestMatch.description}
 												<button
-													class="text-sm cursor-pointer tooltip"
+													class="text-sm cursor-pointer tooltip text-wrap wrap-anywhere"
 													class:tooltip-open={copiedItem === 'best-description'}
 													data-tip={copiedItem === 'best-description' ? m['home.copied']() : ''}
 													on:click={() =>
@@ -418,7 +418,7 @@
 													<div>
 														<span class="opacity-70">MIME:</span>
 														<button
-															class="tooltip font-mono text-xs ml-1 cursor-pointer"
+															class="tooltip font-mono text-xs ml-1 cursor-pointer text-wrap wrap-anywhere"
 															class:tooltip-open={copiedItem === 'best-mime'}
 															data-tip={copiedItem === 'best-mime' ? m['home.copied']() : ''}
 															on:click={() =>
@@ -457,7 +457,7 @@
 											<div class="flex items-center justify-between">
 												<div>
 													<button
-														class="tooltip font-medium cursor-pointer text-left"
+														class="tooltip font-medium cursor-pointer text-left text-wrap wrap-anywhere"
 														class:tooltip-open={copiedItem === `match-${index}-name`}
 														data-tip={copiedItem === `match-${index}-name`
 															? m['home.copied']()
@@ -496,7 +496,7 @@
 											</div>
 											{#if match.description}
 												<button
-													class="text-sm cursor-pointer tooltip"
+													class="text-sm cursor-pointer tooltip text-wrap wrap-anywhere"
 													class:tooltip-open={copiedItem === 'match-description'}
 													data-tip={copiedItem === 'match-description' ? m['home.copied']() : ''}
 													on:click={() =>

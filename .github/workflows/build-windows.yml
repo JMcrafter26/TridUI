@@ -1,7 +1,17 @@
 name: "Build Windows App"
 on:
   workflow_dispatch:
-    # This allows manual triggering from the GitHub Actions tab
+    inputs:
+      enable_upx:
+        description: 'Enable UPX packing'
+        required: false
+        default: true
+        type: boolean
+      enable_installer:
+        description: 'Enable installer creation (NSIS)'
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   build-windows:
@@ -42,25 +52,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Install UPX
+      - name: Install UPX (if enabled)
+        if: ${{ inputs.enable_upx == 'true' }}
         run: |
           choco install upx -y
 
-      - name: Install NSIS
+      - name: Install NSIS (if enabled)
+        if: ${{ inputs.enable_installer == 'true' }}
         run: |
           choco install nsis -y
-          # Add NSIS to PATH for current session
           $nsisPath = "C:\Program Files (x86)\NSIS"
           echo "$nsisPath" >> $env:GITHUB_PATH
 
       - name: Install Wails
         run: |
           go install github.com/wailsapp/wails/v2/cmd/wails@latest
-
-      # - name: Install frontend dependencies
-      #   working-directory: frontend
-      #   run: |
-      #     pnpm install --no-frozen-lockfile
 
       - name: Clean build directory
         run: |
@@ -73,13 +79,15 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: |
-          wails build -platform windows/amd64 -upx -nsis -clean
+          $upxFlag = ""
+          if (${{ inputs.enable_upx }} -eq 'true') { $upxFlag = "-upx" }
+          $nsisFlag = ""
+          if (${{ inputs.enable_installer }} -eq 'true') { $nsisFlag = "-nsis" }
+          wails build -platform windows/amd64 $upxFlag $nsisFlag -clean
           New-Item -ItemType Directory -Force -Path "build\bin\windows"
-          # Move the binary
           if (Test-Path "build\bin\TridUI.exe") {
             Move-Item -Force "build\bin\TridUI.exe" "build\bin\windows\TridUI-win-amd64.exe"
           }
-          # Move the installer (Wails names it with -amd64-installer suffix)
           if (Test-Path "build\bin\TridUI-amd64-installer.exe") {
             Move-Item -Force "build\bin\TridUI-amd64-installer.exe" "build\bin\windows\TridUI-win-amd64-installer.exe"
           }
@@ -88,13 +96,15 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: |
-          wails build -platform windows/arm64 -nsis
+          $upxFlag = ""
+          if (${{ inputs.enable_upx }} -eq 'true') { $upxFlag = "-upx" }
+          $nsisFlag = ""
+          if (${{ inputs.enable_installer }} -eq 'true') { $nsisFlag = "-nsis" }
+          wails build -platform windows/arm64 $upxFlag $nsisFlag
           New-Item -ItemType Directory -Force -Path "build\bin\windows"
-          # Move the binary
           if (Test-Path "build\bin\TridUI.exe") {
             Move-Item -Force "build\bin\TridUI.exe" "build\bin\windows\TridUI-win-arm64.exe"
           }
-          # Move the installer
           if (Test-Path "build\bin\TridUI-arm64-installer.exe") {
             Move-Item -Force "build\bin\TridUI-arm64-installer.exe" "build\bin\windows\TridUI-win-arm64-installer.exe"
           }

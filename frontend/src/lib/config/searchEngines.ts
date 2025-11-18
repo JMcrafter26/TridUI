@@ -1,6 +1,6 @@
 export const searchEngines = [
 	{ name: 'FileInfo', url: 'https://fileinfo.com/extension/' },
-    { name: 'FileExt', url: 'https://filext.com/file-extension/' },
+	{ name: 'FileExt', url: 'https://filext.com/file-extension/' },
 	{ name: 'Google', url: 'https://www.google.com/search?q=' },
 	{ name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
 	{ name: 'Bing', url: 'https://www.bing.com/search?q=' },

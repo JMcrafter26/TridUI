@@ -36,7 +36,7 @@
 	function getSetting(key: string): any {
 		const settingsData = localStorage.getItem('_trid_settings_');
 		if (!settingsData) return null;
-		
+
 		const settings = JSON.parse(settingsData);
 		return settings[key] !== undefined ? settings[key] : null;
 	}
@@ -265,10 +265,12 @@
 
 					<div class="max-w-4xl mx-auto">
 						<p class="text-xs opacity-60 mt-4 sm:justify-center">
-							<a role="button" on:click|stopPropagation={() => goto('/about')}
+							<a
+								role="button"
+								on:click|stopPropagation={() => goto('/about')}
 								class="hover:underline"
 								aria-label={m['about.about']()}
-							>&copy; 2025 TridUI {m['home.contribute']()}
+								>&copy; 2025 TridUI {m['home.contribute']()}
 							</a>
 						</p>
 					</div>

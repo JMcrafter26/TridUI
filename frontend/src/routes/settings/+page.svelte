@@ -67,20 +67,20 @@
 	};
 
 	if (typeof localStorage === 'undefined' || localStorage === null) {
-			window.location.href = '/';
-		}
+		window.location.href = '/';
+	}
 
 	// LocalStorage helper functions
 	function getSetting<K extends keyof Settings>(key: K): Settings[K] {
 		const settingsData = localStorage.getItem('_trid_settings_');
 		if (!settingsData) return defaultSettings[key];
-		
+
 		const settings = JSON.parse(settingsData);
 		const value = settings[key];
-		
+
 		// If value doesn't exist in settings, return default
 		if (value === undefined || value === null) return defaultSettings[key];
-		
+
 		// JSON.parse already converts types correctly, just return the value
 		return value as Settings[K];
 	}
@@ -149,7 +149,10 @@
 
 		if (theme === 'auto') {
 			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-			document.documentElement.setAttribute('data-theme', prefersDark ? 'triduidark' : 'triduilight');
+			document.documentElement.setAttribute(
+				'data-theme',
+				prefersDark ? 'triduidark' : 'triduilight'
+			);
 		} else {
 			document.documentElement.setAttribute('data-theme', theme);
 		}
@@ -286,8 +289,6 @@
 		};
 
 		document.addEventListener('click', handleLinkClick);
-
-		
 
 		return () => {
 			EventsOff('trid:update:progress');
@@ -802,45 +803,52 @@
 						Reset window size
 					</button>
 					<br />
-					<button class="btn btn-sm btn-secondary" on:click={(e) => {
-						const btn = e.currentTarget as HTMLButtonElement;
-						navigator.clipboard.writeText(localStorage.getItem('_trid_settings_') || '{}')
-							.then(() => {
-								btn.innerText = 'Settings copied to clipboard!';
-							})
-							.catch((err) => {
-								btn.innerText = 'Failed to copy settings: ' + err;
-							})
-							.finally(() => {
-								setTimeout(() => {
-									btn.innerText = 'Copy settings to clipboard';
-								}, 3000);
-							});
-					}}>
+					<button
+						class="btn btn-sm btn-secondary"
+						on:click={(e) => {
+							const btn = e.currentTarget as HTMLButtonElement;
+							navigator.clipboard
+								.writeText(localStorage.getItem('_trid_settings_') || '{}')
+								.then(() => {
+									btn.innerText = 'Settings copied to clipboard!';
+								})
+								.catch((err) => {
+									btn.innerText = 'Failed to copy settings: ' + err;
+								})
+								.finally(() => {
+									setTimeout(() => {
+										btn.innerText = 'Copy settings to clipboard';
+									}, 3000);
+								});
+						}}
+					>
 						Copy settings to clipboard
 					</button>
-					<button class="btn btn-sm btn-accent" on:click={(e) =>
-					// import settings from clipboard
-					navigator.clipboard.readText().then((text) => {
-						try {
-							const parsed = JSON.parse(text);
-							localStorage.setItem('_trid_settings_', JSON.stringify(parsed));
-							(e.currentTarget as HTMLButtonElement).disabled = true;
-							(e.currentTarget as HTMLButtonElement).innerText = 'Settings imported! Please reload the app.';
-						} catch (err) {
-							const btn = e.currentTarget as HTMLButtonElement | null;
-							if (btn) {
-								btn.innerText = 'Failed to import settings: Invalid JSON';
-							}
-						}
-					})}>
+					<button
+						class="btn btn-sm btn-accent"
+						on:click={(e) =>
+							// import settings from clipboard
+							navigator.clipboard.readText().then((text) => {
+								try {
+									const parsed = JSON.parse(text);
+									localStorage.setItem('_trid_settings_', JSON.stringify(parsed));
+									(e.currentTarget as HTMLButtonElement).disabled = true;
+									(e.currentTarget as HTMLButtonElement).innerText =
+										'Settings imported! Please reload the app.';
+								} catch (err) {
+									const btn = e.currentTarget as HTMLButtonElement | null;
+									if (btn) {
+										btn.innerText = 'Failed to import settings: Invalid JSON';
+									}
+								}
+							})}
+					>
 						Import settings from clipboard
 					</button>
 					<br />
 					<button
 						class="btn btn-sm btn-secondary text-wrap wrap-anywhere"
-						on:click={
-						async (e) => {
+						on:click={async (e) => {
 							const btn = e.currentTarget as HTMLButtonElement;
 							btn.disabled = true;
 							// hide the first span and show the second span

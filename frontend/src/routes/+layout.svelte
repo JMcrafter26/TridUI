@@ -4,7 +4,12 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { setLocale, getLocale, locales, baseLocale } from '$lib/paraglide/runtime.js';
-	import { CheckDefinitionsExist, CheckForDefsUpdates, UpdateDefinitions, CheckForUpdates } from '../../wailsjs/go/main/App';
+	import {
+		CheckDefinitionsExist,
+		CheckForDefsUpdates,
+		UpdateDefinitions,
+		CheckForUpdates
+	} from '../../wailsjs/go/main/App';
 	import { updateAvailable } from '$lib/stores/updateStore';
 	import '../app.css';
 	let { children } = $props();
@@ -12,7 +17,7 @@
 	function getSetting(key: string): any {
 		const settingsData = localStorage.getItem('_trid_settings_');
 		if (!settingsData) return null;
-		
+
 		const settings = JSON.parse(settingsData);
 		return settings[key] !== undefined ? settings[key] : null;
 	}
@@ -25,12 +30,21 @@
 
 	// Apply theme immediately before mount to prevent flash
 	if (typeof window !== 'undefined') {
-		const savedTheme = getSetting('theme') as 'light' | 'dark' | 'auto' | 'triduidark' | 'triduilight' | null;
+		const savedTheme = getSetting('theme') as
+			| 'light'
+			| 'dark'
+			| 'auto'
+			| 'triduidark'
+			| 'triduilight'
+			| null;
 		const theme = savedTheme || 'auto';
-		
+
 		if (theme === 'auto') {
 			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-			document.documentElement.setAttribute('data-theme', prefersDark ? 'triduidark' : 'triduilight');
+			document.documentElement.setAttribute(
+				'data-theme',
+				prefersDark ? 'triduidark' : 'triduilight'
+			);
 		} else {
 			document.documentElement.setAttribute('data-theme', theme);
 		}
@@ -38,10 +52,13 @@
 
 	function applyTheme(theme: 'light' | 'dark' | 'triduilight' | 'triduidark' | 'auto') {
 		if (typeof window === 'undefined') return;
-		
+
 		if (theme === 'auto') {
 			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-			document.documentElement.setAttribute('data-theme', prefersDark ? 'triduidark' : 'triduilight');
+			document.documentElement.setAttribute(
+				'data-theme',
+				prefersDark ? 'triduidark' : 'triduilight'
+			);
 		} else {
 			document.documentElement.setAttribute('data-theme', theme);
 		}
@@ -80,15 +97,15 @@
 
 		// Check if user has manually set a language preference
 		const hasManualPreference = getSetting('languageManuallySet');
-		
+
 		if (!hasManualPreference) {
 			// Auto-detect browser language on first visit
 			const browserLanguages = navigator.languages || [navigator.language];
-			
+
 			for (const browserLang of browserLanguages) {
 				// Extract base language code (e.g., 'en' from 'en-US')
 				const langCode = browserLang.split('-')[0].toLowerCase();
-				
+
 				// Check if this language is available in our app
 				if (locales.includes(langCode as any)) {
 					const currentLocale = getLocale();
@@ -103,7 +120,8 @@
 
 		// Auto-update definitions on startup if enabled
 		const autoUpdateDefinitions = getSetting('autoUpdateDefinitions');
-		if (autoUpdateDefinitions !== false) { // Default to true if not set
+		if (autoUpdateDefinitions !== false) {
+			// Default to true if not set
 			CheckDefinitionsExist()
 				.then((exists) => {
 					if (exists) {
@@ -122,7 +140,8 @@
 
 		// Check for app updates on startup if enabled (non-blocking)
 		const checkAppUpdatesOnStartup = getSetting('checkAppUpdatesOnStartup');
-		if (checkAppUpdatesOnStartup !== false) { // Default to true if not set
+		if (checkAppUpdatesOnStartup !== false) {
+			// Default to true if not set
 			CheckForUpdates()
 				.then((info) => {
 					if (info) {
@@ -145,7 +164,7 @@
 
 <div class="app h-screen flex flex-col">
 	<Header />
- 
+
 	<main class="flex-1 overflow-auto">
 		{@render children()}
 	</main>

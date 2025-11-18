@@ -3,7 +3,17 @@
 	import { m } from '$lib/paraglide/messages.js';
 	import { updateAvailable } from '$lib/stores/updateStore';
 	import logo from '$lib/images/app-icon.png';
-	import { Github, Download, RefreshCw, CircleCheck, CircleAlert, X, Rocket, ChevronDown, ChevronUp } from '@lucide/svelte';
+	import {
+		Github,
+		Download,
+		RefreshCw,
+		CircleCheck,
+		CircleAlert,
+		X,
+		Rocket,
+		ChevronDown,
+		ChevronUp
+	} from '@lucide/svelte';
 	import { GetVersion, CheckForUpdates } from '../../../wailsjs/go/main/App';
 	import { BrowserOpenURL } from '../../../wailsjs/runtime/runtime';
 	import type { main } from '../../../wailsjs/go/models';
@@ -19,7 +29,7 @@
 	let imgClickCount = 0;
 	let imgColorHue = 0;
 
-		// LocalStorage helper functions
+	// LocalStorage helper functions
 	function getSetting(key: string): string | null {
 		const array = localStorage.getItem('_trid_settings_');
 		const value = array ? JSON.parse(array)[key] : null;
@@ -54,8 +64,7 @@
 	});
 
 	onMount(() => {
-
-				const storedHue = getSetting('imgColorHue');
+		const storedHue = getSetting('imgColorHue');
 		if (storedHue) {
 			imgColorHue = parseInt(storedHue, 10) || 0;
 			const img = document.querySelector('img[alt="App icon"]') as HTMLImageElement;
@@ -73,13 +82,10 @@
 			}
 		};
 
-
 		document.addEventListener('click', handleLinkClick);
 		return () => {
 			document.removeEventListener('click', handleLinkClick);
 		};
-
-		
 	});
 
 	async function checkForUpdates() {
@@ -166,8 +172,8 @@
 	<div class="card bg-base-200 shadow-lg h-full overflow-auto">
 		<div class="card-body p-6 md:p-10 flex flex-col md:flex-row items-center gap-6 mb-4">
 			<div class="shrink-0">
-				<button on:click={
-					() => {
+				<button
+					on:click={() => {
 						imgClickCount++;
 						const img = document.querySelector('img[alt="App icon"]') as HTMLImageElement;
 						if (img) {
@@ -179,16 +185,19 @@
 								imgColorHue = 0;
 								img.style.transform = 'scale(1) rotate(360deg)';
 								img.style.filter = 'hue-rotate(0deg)';
-								img.addEventListener('transitionend', () => {
-									img.style.transform = 'rotate(0deg)';
-									void img.offsetWidth;
-									img.style.transition = '';
-								}, { once: true });
+								img.addEventListener(
+									'transitionend',
+									() => {
+										img.style.transform = 'rotate(0deg)';
+										void img.offsetWidth;
+										img.style.transition = '';
+									},
+									{ once: true }
+								);
 							}
 							setSetting('imgColorHue', imgColorHue.toString());
 						}
-					}
-				}
+					}}
 					on:mouseleave={() => {
 						const img = document.querySelector('img[alt="App icon"]') as HTMLImageElement;
 						if (img) {
@@ -197,7 +206,10 @@
 						}
 					}}
 				>
-					<img src={logo} alt="App icon" class="w-32 h-32 object-cover transition-all hover:scale-110 hover:rotate-3"
+					<img
+						src={logo}
+						alt="App icon"
+						class="w-32 h-32 object-cover transition-all hover:scale-110 hover:rotate-3"
 						loading="lazy"
 					/>
 				</button>
@@ -309,35 +321,33 @@
 							</a>
 						</div>
 					{/if}
-				{:else}
-					{#if showSuccessAlert}
-						<div class="alert alert-soft alert-success mt-4 fixed bottom-3 md:bottom-6 max-w-md">
-							<CircleCheck class="h-5 w-5 my-auto" />
-							<span>{m['about.up_to_date']()}</span>
-							<button
-								class="btn btn-ghost btn-sm rounded-full p-1 my-auto hover:bg-success/10"
-								on:click={() => (showSuccessAlert = false)}
-							>
-								<X />
-							</button>
-						</div>
-					{/if}
+				{:else if showSuccessAlert}
+					<div class="alert alert-soft alert-success mt-4 fixed bottom-3 md:bottom-6 max-w-md z-10">
+						<CircleCheck class="h-5 w-5 my-auto" />
+						<span>{m['about.up_to_date']()}</span>
+						<button
+							class="btn btn-ghost btn-sm rounded-full p-1 my-auto hover:bg-success/10"
+							on:click={() => (showSuccessAlert = false)}
+						>
+							<X />
+						</button>
+					</div>
 				{/if}
 
-			{#if updateInfo && !updateInfo.updateAvailable && updateInfo.releaseNotes}
-				<details class="mt-4 w-full group" open={showReleaseNotes}>
-							<summary
-								class="cursor-pointer select-none p-3 bg-base-300 rounded-lg hover:bg-base-300/80 transition-colors flex items-center justify-between sticky top-0
+				{#if updateInfo && !updateInfo.updateAvailable && updateInfo.releaseNotes}
+					<details class="mt-4 w-full group" open={showReleaseNotes}>
+						<summary
+							class="cursor-pointer select-none p-3 bg-base-300 rounded-lg hover:bg-base-300/80 transition-colors flex items-center justify-between sticky top-0
 
 								group-open:rounded-b-none"
-								on:click|preventDefault={toggleReleaseNotes}
-							>
-								<span class="font-medium flex items-center gap-2">
-									{m['about.current_release_notes']()}
-									{#if updateInfo.publishedAt && !showReleaseNotes}
-										<span class="text-xs text-base-content/70 font-normal">
-											({formatDate(updateInfo.publishedAt)})
-										</span>
+							on:click|preventDefault={toggleReleaseNotes}
+						>
+							<span class="font-medium flex items-center gap-2">
+								{m['about.current_release_notes']()}
+								{#if updateInfo.publishedAt && !showReleaseNotes}
+									<span class="text-xs text-base-content/70 font-normal">
+										({formatDate(updateInfo.publishedAt)})
+									</span>
 								{/if}
 							</span>
 							{#if showReleaseNotes}
@@ -345,19 +355,21 @@
 							{:else}
 								<ChevronDown class="h-4 w-4" />
 							{/if}
-							</summary>
-					{#if showReleaseNotes}
-						<div class="p-4 bg-base-300/50 rounded-b-md max-h-80 overflow-auto">
-									<div class="text-sm mb-2">
-										<span class="font-medium">Version {updateInfo.currentVersion}</span>
-										{#if updateInfo.publishedAt}
-											<span class="text-base-content/70"> • {formatDate(updateInfo.publishedAt)}</span>
-										{/if}
-									</div>
-									<div
-										class="text-sm space-y-2 [&_h1]:text-xl [&_h1]:font-bold [&_h2]:text-lg [&_h2]:font-semibold [&_h3]:text-base [&_h3]:font-medium [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:ml-4 [&_ol]:space-y-1 [&_a]:text-primary [&_a]:underline [&_a]:hover:opacity-80 [&_strong]:font-semibold [&_em]:italic [&_code]:bg-base-100 [&_code]:px-1 [&_code]:rounded text-wrap wrap-anywhere"
-									>
-										{@html formatReleaseNotes(updateInfo.releaseNotes)}
+						</summary>
+						{#if showReleaseNotes}
+							<div class="p-4 bg-base-300/50 rounded-b-md max-h-80 overflow-auto">
+								<div class="text-sm mb-2">
+									<span class="font-medium">Version {updateInfo.currentVersion}</span>
+									{#if updateInfo.publishedAt}
+										<span class="text-base-content/70">
+											• {formatDate(updateInfo.publishedAt)}</span
+										>
+									{/if}
+								</div>
+								<div
+									class="text-sm space-y-2 [&_h1]:text-xl [&_h1]:font-bold [&_h2]:text-lg [&_h2]:font-semibold [&_h3]:text-base [&_h3]:font-medium [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:ml-4 [&_ol]:space-y-1 [&_a]:text-primary [&_a]:underline [&_a]:hover:opacity-80 [&_strong]:font-semibold [&_em]:italic [&_code]:bg-base-100 [&_code]:px-1 [&_code]:rounded text-wrap wrap-anywhere"
+								>
+									{@html formatReleaseNotes(updateInfo.releaseNotes)}
 								</div>
 								{#if updateInfo.releaseUrl}
 									<button
@@ -367,12 +379,12 @@
 										<Github class="h-4 w-4" />
 										{m['about.view_on_github']()}
 									</button>
-									{/if}
-								</div>
-							{/if}
-						</details>
-					{/if}
+								{/if}
+							</div>
+						{/if}
+					</details>
 				{/if}
+			{/if}
 
 			<div class="divider md:divider-horizontal"></div>
 

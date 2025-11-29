@@ -15,6 +15,7 @@
 		ChevronUp
 	} from '@lucide/svelte';
 	import { GetVersion, CheckForUpdates } from '../../../wailsjs/go/main/App';
+	import * as App from '../../../wailsjs/go/main/App';
 	import { BrowserOpenURL } from '../../../wailsjs/runtime/runtime';
 	import type { main } from '../../../wailsjs/go/models';
 	import snarkdown from 'snarkdown';
@@ -40,6 +41,11 @@
 		const settings = JSON.parse(localStorage.getItem('_trid_settings_') || '{}');
 		settings[key] = value;
 		localStorage.setItem('_trid_settings_', JSON.stringify(settings));
+		try {
+			(App as { SaveSetting?: (key: string, value: string | null) => Promise<void> | void }).SaveSetting?.(key, value);
+		} catch (err) {
+			console.debug('SaveSetting call failed:', err);
+		}
 	}
 
 	onMount(async () => {
@@ -89,40 +95,41 @@
 	});
 
 	async function checkForUpdates() {
-		isChecking = true;
-		errorTitle = '';
-		errorMessage = '';
-		updateInfo = null;
-		showReleaseNotes = false;
-		showSuccessAlert = true;
-
-		try {
-			updateInfo = await CheckForUpdates();
-			// Update the store for the indicator
-			if (updateInfo && updateInfo.updateAvailable) {
-				updateAvailable.set(updateInfo);
-			} else {
-				updateAvailable.set(null);
+			isChecking = true;
+			errorTitle = '';
+			errorMessage = '';
+			updateInfo = null;
+			showReleaseNotes = false;
+			showSuccessAlert = true;
+	
+			try {
+				updateInfo = await CheckForUpdates();
+				// Update the store for the indicator
+				if (updateInfo && updateInfo.updateAvailable) {
+					updateAvailable.set(updateInfo);
+				} else {
+					updateAvailable.set(null);
+				}
+			} catch (err: unknown) {
+				console.error('Update check failed - full error:', err);
+	
+				errorTitle = m['about.update_check_failed']();
+	
+				if (err instanceof Error) {
+					errorMessage = err.message;
+				} else if (typeof err === 'string') {
+					errorMessage = err;
+				} else if (err && typeof err === 'object') {
+					// Handle Wails error object
+					const e = err as { message?: string };
+					errorMessage = e.message || JSON.stringify(err);
+				} else {
+					errorMessage = 'An unknown error occurred';
+				}
+			} finally {
+				isChecking = false;
 			}
-		} catch (err) {
-			console.error('Update check failed - full error:', err);
-
-			errorTitle = m['about.update_check_failed']();
-
-			if (err instanceof Error) {
-				errorMessage = err.message;
-			} else if (typeof err === 'string') {
-				errorMessage = err;
-			} else if (err && typeof err === 'object') {
-				// Handle Wails error object
-				errorMessage = (err as any).message || JSON.stringify(err);
-			} else {
-				errorMessage = 'An unknown error occurred';
-			}
-		} finally {
-			isChecking = false;
 		}
-	}
 
 	function openReleaseURL() {
 		if (updateInfo?.releaseUrl) {

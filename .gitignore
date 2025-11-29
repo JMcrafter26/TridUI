@@ -6,3 +6,5 @@ tmp/
 temp/
 *.tmp.*
 *.temp.*
+
+wiki/

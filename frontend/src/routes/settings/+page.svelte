@@ -18,6 +18,7 @@
 		OpenAppDir,
 		GetOSName
 	} from '../../../wailsjs/go/main/App';
+	import * as App from '../../../wailsjs/go/main/App';
 	import {
 		Download,
 		RefreshCw,
@@ -26,8 +27,6 @@
 		CircleAlert,
 		Info,
 		Languages,
-		Moon,
-		Sun,
 		Monitor,
 		Search,
 		List,
@@ -89,6 +88,11 @@
 		const settings = JSON.parse(localStorage.getItem('_trid_settings_') || '{}');
 		settings[key] = value;
 		localStorage.setItem('_trid_settings_', JSON.stringify(settings));
+		try {
+			(App as any).SaveSetting(key as any, value);
+		} catch (err) {
+			console.debug('SaveSetting call failed:', err);
+		}
 	}
 
 	function resetAllSettings(): void {
@@ -487,8 +491,7 @@
 								{m['settings.downloaded_from']()}:
 								<a
 									href="http://mark0.net/soft-trid-e.html"
-									target="_blank"
-									rel="noopener noreferrer"
+									data-browserOpen="true"
 									class="link"
 									aria-label="mark0.net">mark0.net</a
 								>
@@ -521,7 +524,7 @@
 								on:change={handleLanguageChange}
 								aria-label={m['settings.language']()}
 							>
-								{#each availableLanguages as { code, name }}
+								{#each availableLanguages as { code, name } (code)}
 									<option value={code}>{name.charAt(0).toUpperCase() + name.slice(1)}</option>
 								{/each}
 							</select>
@@ -627,7 +630,7 @@
 								on:change={() => handleSettingChange('searchEngine', currentSearchEngine)}
 								aria-label={m['settings.search_engine']()}
 							>
-								{#each searchEngines as engine}
+								{#each searchEngines as engine (engine.name)}
 									<option value={engine.name}>{engine.name}</option>
 								{/each}
 							</select>
@@ -824,26 +827,49 @@
 					>
 						Copy settings to clipboard
 					</button>
+
 					<button
-						class="btn btn-sm btn-accent"
-						on:click={(e) =>
-							// import settings from clipboard
-							navigator.clipboard.readText().then((text) => {
-								try {
-									const parsed = JSON.parse(text);
-									localStorage.setItem('_trid_settings_', JSON.stringify(parsed));
-									(e.currentTarget as HTMLButtonElement).disabled = true;
-									(e.currentTarget as HTMLButtonElement).innerText =
-										'Settings imported! Please reload the app.';
-								} catch (err) {
-									const btn = e.currentTarget as HTMLButtonElement | null;
-									if (btn) {
-										btn.innerText = 'Failed to import settings: Invalid JSON';
+						class="btn btn-sm btn-ghost"
+						on:click={async (e) => {
+							const btn = e.currentTarget as HTMLButtonElement;
+							btn.disabled = true;
+							const orig = btn.innerText;
+							btn.innerText = 'Reloading...';
+							try {
+								const cfg = await (App as unknown as { GetConfig?: () => Promise<string | null> }).GetConfig?.();
+								if (!cfg) throw new Error('empty config');
+								const parsed = JSON.parse(cfg || '{}') as Record<string, unknown>;
+								localStorage.setItem('_trid_settings_', JSON.stringify(parsed));
+								// update component state from loaded settings (with typed casts)
+								currentTheme = (parsed.theme as Settings['theme']) || defaultSettings.theme;
+								currentSearchEngine = (parsed.searchEngine as string) || defaultSettings.searchEngine;
+								maxVisibleMatches = (parsed.maxVisibleMatches as number) ?? defaultSettings.maxVisibleMatches;
+								confidenceThreshold = (parsed.confidenceThreshold as number) ?? defaultSettings.confidenceThreshold;
+								maxTotalResults = (parsed.maxTotalResults as number) ?? defaultSettings.maxTotalResults;
+								autoUpdateDefinitions = (parsed.autoUpdateDefinitions as boolean) ?? defaultSettings.autoUpdateDefinitions;
+								checkAppUpdatesOnStartup = (parsed.checkAppUpdatesOnStartup as boolean) ?? defaultSettings.checkAppUpdatesOnStartup;
+								startPinned = (parsed.startPinned as boolean) ?? defaultSettings.startPinned;
+								// apply theme and language if present
+								applyTheme(currentTheme);
+								if (typeof parsed.language === 'string') {
+									const lang = parsed.language as typeof locales[number];
+									if (locales.includes(lang)) {
+										setLocale(lang);
 									}
 								}
-							})}
+								btn.innerText = 'Reloaded';
+							} catch (err) {
+								console.error('Failed to reload settings from file:', err);
+								btn.innerText = 'Reload failed';
+							} finally {
+								setTimeout(() => {
+									btn.disabled = false;
+									btn.innerText = orig;
+								}, 1500);
+							}
+						}}
 					>
-						Import settings from clipboard
+						Reload settings from file
 					</button>
 					<br />
 					<button

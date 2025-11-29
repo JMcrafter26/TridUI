@@ -27,8 +27,8 @@ func main() {
 		Height:      400,
 		Frameless:   true,
 		AlwaysOnTop: false,
-		MaxHeight:   600,
-		MaxWidth:    700,
+		MaxHeight:   700,
+		MaxWidth:    900,
 		MinHeight:   300,
 		MinWidth:    400,
 		DragAndDrop: &options.DragAndDrop{

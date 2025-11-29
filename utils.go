@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -102,4 +104,64 @@ func (a *App) GetConfig() (string, error) {
 		return "", fmt.Errorf("failed to read config.json: %w", err)
 	}
 	return string(configJSON), nil
+}
+
+// SaveConfig writes the provided JSON string to the config file (overwrites)
+func SaveConfig(ctx context.Context, jsonData string) error {
+	appDataDir, err := getAppDataDir()
+	if err != nil {
+		wailsruntime.LogError(ctx, "Failed to get app data dir: "+err.Error())
+		return fmt.Errorf("failed to get app data dir: %w", err)
+	}
+	configPath := filepath.Join(appDataDir, "config.json")
+	// ensure directory exists
+	if err := os.MkdirAll(appDataDir, 0755); err != nil {
+		wailsruntime.LogErrorf(ctx, "Failed to create app data dir %s: %v", appDataDir, err)
+		return err
+	}
+	if err := os.WriteFile(configPath, []byte(jsonData), 0644); err != nil {
+		wailsruntime.LogErrorf(ctx, "Failed to write config.json to %s: %v", configPath, err)
+		return fmt.Errorf("failed to write config.json: %w", err)
+	}
+	return nil
+}
+
+// UpdateConfigKey updates a single key inside the config JSON file and writes it back.
+func UpdateConfigKey(ctx context.Context, key string, value interface{}) error {
+	appDataDir, err := getAppDataDir()
+	if err != nil {
+		wailsruntime.LogError(ctx, "Failed to get app data dir: "+err.Error())
+		return fmt.Errorf("failed to get app data dir: %w", err)
+	}
+	configPath := filepath.Join(appDataDir, "config.json")
+
+	// Read existing config; if missing, start with empty map
+	var data map[string]interface{}
+	raw, err := os.ReadFile(configPath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			data = make(map[string]interface{})
+		} else {
+			wailsruntime.LogErrorf(ctx, "Failed to read config.json from %s: %v", configPath, err)
+			return fmt.Errorf("failed to read config.json: %w", err)
+		}
+	} else {
+		if err := json.Unmarshal(raw, &data); err != nil {
+			// corrupted file: start fresh
+			wailsruntime.LogErrorf(ctx, "Failed to parse config.json: %v", err)
+			data = make(map[string]interface{})
+		}
+	}
+
+	data[key] = value
+
+	out, err := json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		return fmt.Errorf("failed to marshal config: %w", err)
+	}
+	if err := os.WriteFile(configPath, out, 0644); err != nil {
+		wailsruntime.LogErrorf(ctx, "Failed to write config.json to %s: %v", configPath, err)
+		return fmt.Errorf("failed to write config.json: %w", err)
+	}
+	return nil
 }

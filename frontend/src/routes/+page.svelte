@@ -261,7 +261,7 @@
 						<p class="text-xs opacity-60 mt-4 sm:justify-center">
 							<a
 								role="button"
-								on:click|stopPropagation={() => goto('/about')}
+								on:click|stopPropagation={() => goto(resolve('/about'))}
 								class="hover:underline"
 								aria-label={m['about.about']()}
 								>&copy; 2025 TridUI {m['home.contribute']()}

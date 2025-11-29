@@ -15,9 +15,10 @@
 		UpdateDefinitions,
 		GetDefinitionsPath,
 		OpenAppDir,
-		GetOSName
+		GetOSName,
+		GetConfig,
+		SaveSetting
 	} from '../../../wailsjs/go/main/App';
-	import { SaveSetting } from '../../../wailsjs/go/main/App';
 	import {
 		Download,
 		RefreshCw,
@@ -682,11 +683,11 @@
 										handleSettingChange('maxVisibleMatches', maxVisibleMatches)}
 									aria-label={m['settings.max_visible_matches']()}
 								/>
-								<label class="label">
+								<div class="label">
 									<span class="label-text-alt text-xs opacity-70 text-wrap max-w-md">
 										{m['settings.max_visible_matches_description']()}
 									</span>
-								</label>
+								</div>
 							</div>
 
 							<!-- Confidence Threshold -->
@@ -716,11 +717,11 @@
 										{confidenceThreshold.toFixed(1)}%
 									</span>
 								</div>
-								<label class="label">
+								<div class="label">
 									<span class="label-text-alt text-xs opacity-70 text-wrap max-w-md">
 										{m['settings.confidence_threshold_description']()}
 									</span>
-								</label>
+								</div>
 							</div>
 
 							<!-- Max Total Results -->
@@ -851,7 +852,7 @@
 							const orig = btn.innerText;
 							btn.innerText = 'Reloading...';
 							try {
-								const cfg = await (App as unknown as { GetConfig?: () => Promise<string | null> }).GetConfig?.();
+								const cfg = await GetConfig();
 								if (!cfg) throw new Error('empty config');
 								const parsed = JSON.parse(cfg || '{}') as Record<string, unknown>;
 								localStorage.setItem('_trid_settings_', JSON.stringify(parsed));

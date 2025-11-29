@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { resolve } from '$app/paths';
 	import { m } from '$lib/paraglide/messages.js';
 	import { updateAvailable } from '$lib/stores/updateStore';
 
@@ -126,7 +127,7 @@
 		class="btn btn-lg btn-circle {$updateAvailable && $updateAvailable.updateAvailable
 			? 'indicator'
 			: ''}"
-		href="/about"
+		href={resolve('/about')}
 		title={m['header.about']()}
 		aria-label={m['header.about']()}
 	>
@@ -137,7 +138,7 @@
 	</a>
 	<a
 		class="btn btn-lg btn-circle"
-		href="/settings"
+		href={resolve('/settings')}
 		title={m['header.settings']()}
 		aria-label={m['header.settings']()}
 	>
@@ -145,7 +146,7 @@
 	</a>
 	<a
 		class="btn btn-lg btn-circle"
-		href="/"
+		href={resolve('/')}
 		title={m['header.home']()}
 		aria-label={m['header.home']()}
 	>

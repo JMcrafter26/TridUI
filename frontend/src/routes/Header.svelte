@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
 	import { m } from '$lib/paraglide/messages.js';
 	import { updateAvailable } from '$lib/stores/updateStore';
 
@@ -8,12 +7,12 @@
 	import { WindowSetAlwaysOnTop, WindowMinimise, Quit } from '../../wailsjs/runtime/runtime.js';
 
 	// Helper to get settings from localStorage
-	function getSetting(key: string): any {
+	function getSetting(key: string): unknown | null {
 		const settingsData = localStorage.getItem('_trid_settings_');
 		if (!settingsData) return null;
 
-		const settings = JSON.parse(settingsData);
-		return settings[key] !== undefined ? settings[key] : null;
+		const settings: Record<string, unknown> = JSON.parse(settingsData);
+		return Object.prototype.hasOwnProperty.call(settings, key) ? settings[key] : null;
 	}
 
 	// pin button

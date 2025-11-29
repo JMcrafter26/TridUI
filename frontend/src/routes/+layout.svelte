@@ -28,11 +28,11 @@ type Settings = {
 
 let { children } = $props();
 
-function getSetting<T = unknown>(key: string): T | null {
+function getSetting(key: string): unknown | null {
 	const settingsData = localStorage.getItem('_trid_settings_');
 	if (!settingsData) return null;
-	const settings = JSON.parse(settingsData) as Record<string, T>;
-	return settings[key] !== undefined ? (settings[key] as T) : null;
+	const settings = JSON.parse(settingsData) as Record<string, unknown>;
+	return Object.prototype.hasOwnProperty.call(settings, key) ? settings[key] : null;
 }
 
 // function setSetting(key: string, value: any): void {

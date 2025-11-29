@@ -14,8 +14,7 @@
 		ChevronDown,
 		ChevronUp
 	} from '@lucide/svelte';
-	import { GetVersion, CheckForUpdates } from '../../../wailsjs/go/main/App';
-	import * as App from '../../../wailsjs/go/main/App';
+	import { GetVersion, CheckForUpdates, SaveSetting } from '../../../wailsjs/go/main/App';
 	import { BrowserOpenURL } from '../../../wailsjs/runtime/runtime';
 	import type { main } from '../../../wailsjs/go/models';
 	import snarkdown from 'snarkdown';
@@ -42,7 +41,7 @@
 		settings[key] = value;
 		localStorage.setItem('_trid_settings_', JSON.stringify(settings));
 		try {
-			(App as { SaveSetting?: (key: string, value: string | null) => Promise<void> | void }).SaveSetting?.(key, value);
+			SaveSetting(key, value);
 		} catch (err) {
 			console.debug('SaveSetting call failed:', err);
 		}

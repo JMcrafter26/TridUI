@@ -7,8 +7,7 @@
 		EventsOn,
 		EventsOff,
 		LogPrint,
-		BrowserOpenURL,
-		OnFileDrop
+		BrowserOpenURL
 	} from '../../../wailsjs/runtime/runtime';
 	import {
 		CheckDefinitionsExist,
@@ -18,7 +17,7 @@
 		OpenAppDir,
 		GetOSName
 	} from '../../../wailsjs/go/main/App';
-	import * as App from '../../../wailsjs/go/main/App';
+	import { SaveSetting } from '../../../wailsjs/go/main/App';
 	import {
 		Download,
 		RefreshCw,
@@ -38,7 +37,6 @@
 		Bug
 	} from '@lucide/svelte';
 	import { searchEngines } from '$lib/config/searchEngines';
-	import { goto } from '$app/navigation';
 
 	// Settings storage with defaults
 	type Settings = {
@@ -89,7 +87,7 @@
 		settings[key] = value;
 		localStorage.setItem('_trid_settings_', JSON.stringify(settings));
 		try {
-			(App as any).SaveSetting(key as any, value);
+			SaveSetting(String(key), value);
 		} catch (err) {
 			console.debug('SaveSetting call failed:', err);
 		}
@@ -102,7 +100,17 @@
 	// Component state
 	let definitionsExist = false;
 	let definitionsPath = '';
-	let updateInfo: any | null = null;
+
+	// Typed shape for update information returned by CheckForDefsUpdates
+	type UpdateInfo = {
+		defsCount: number;
+		lastUpdated?: string;
+		currentMD5?: string;
+		isUpToDate: boolean;
+		error?: string;
+	};
+
+	let updateInfo: UpdateInfo | null = null;
 	let isCheckingUpdates = false;
 	let isUpdating = false;
 	let updateProgress = 0;
@@ -139,11 +147,11 @@
 	}
 
 	function handleLanguageChange(event: Event) {
-		const newLocale = (event.target as HTMLSelectElement).value;
-		if (locales.includes(newLocale as any)) {
+		const newLocale = (event.target as HTMLSelectElement).value as typeof locales[number];
+		if (locales.includes(newLocale)) {
 			setSetting('languageManuallySet', true);
-			setLocale(newLocale as any);
-			currentLocale = newLocale as any;
+			setLocale(newLocale);
+			currentLocale = newLocale;
 			window.location.href = '/';
 		}
 	}
@@ -267,7 +275,14 @@
 			});
 
 		// Listen for update progress events
-		EventsOn('trid:update:progress', (data: any) => {
+		type UpdateProgressEvent = {
+			percentage?: number;
+			message?: string;
+			downloaded?: number;
+			total?: number;
+		};
+
+		EventsOn('trid:update:progress', (data: UpdateProgressEvent) => {
 			updateProgress = data.percentage || 0;
 			updateMessage = data.message || '';
 			// if message includes DOWNLOADING, replace it with localized string

@@ -312,7 +312,7 @@
 						<div class="mt-1 p-4 bg-base-300 rounded-md max-h-80 overflow-auto w-full">
 							<h4 class="font-medium mb-2">{m['about.release_notes']()}:</h4>
 							<div
-								class="text-sm space-y-2 [&_h1]:text-xl [&_h1]:font-bold [&_h2]:text-lg [&_h2]:font-semibold [&_h3]:text-base [&_h3]:font-medium [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:ml-4 [&_ol]:space-y-1 [&_a]:text-primary [&_a]:underline [&_a]:hover:opacity-80 [&_strong]:font-semibold [&_em]:italic [&_code]:bg-base-100 [&_code]:px-1 [&_code]:rounded"
+								class="text-sm space-y-2 [&_h1]:text-xl [&_h1]:font-bold [&_h2]:text-lg [&_h2]:font-semibold [&_h3]:text-base [&_h3]:font-medium [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:ml-4 [&_ol]:space-y-1 [&_a]:text-primary [&_a]:underline [&_a]:hover:opacity-80 [&_strong]:font-semibold [&_em]:italic [&_code]:bg-base-100 [&_code]:px-1 [&_code]:rounded [&_img]:max-w-full [&_img]:h-auto"
 							>
 								{@html formatReleaseNotes(updateInfo.releaseNotes)}
 							</div>

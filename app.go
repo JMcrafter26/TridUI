@@ -22,7 +22,26 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+
+	// If the application was launched with a file path (e.g. user dropped a file
+	// onto the executable/shortcut), emit an event so the frontend can handle it.
+	// os.Args[0] is the executable; any additional args are file paths.
+	args := os.Args[1:]
+	if len(args) > 0 {
+		// Use the first argument as the file to open
+		filePath := args[0]
+		// Verify the file exists before emitting
+		if _, err := os.Stat(filePath); err == nil {
+			go func(p string) {
+				wailsruntime.LogInfof(a.ctx, "Startup file provided: %s", p)
+				wailsruntime.EventsEmit(a.ctx, "app:openFile", p)
+			}(filePath)
+		} else {
+			wailsruntime.LogInfof(a.ctx, "Startup arg not a valid file: %s", filePath)
+		}
+	}
 }
+
 
 // ConfigExists returns true if config.json exists in the app data directory
 func (a *App) ConfigExists() (bool, error) {

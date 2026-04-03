@@ -16,13 +16,16 @@ A fast, Go-native Command Line Interface for file type identification using TrID
 
 Requires [Go](https://go.dev/dl/) 1.23 or higher.
 
-```bash
+```powershell
 # Clone the repository
 git clone https://github.com/JMcrafter26/TridUI.git
 cd TridUI
 
-# Build the binary
-go build -o trid.exe ./cli/main.go
+# Build the binary (optimized for size)
+go build -ldflags="-s -w" -o trid.exe ./cli/main.go
+
+# Optional: Further compress using UPX
+upx -9 trid.exe
 ```
 
 ## Usage

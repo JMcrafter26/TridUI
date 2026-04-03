@@ -1,0 +1,70 @@
+name: Build TrID CLI
+
+on:
+  workflow_dispatch:
+    inputs:
+      use_upx:
+        description: 'Compress binaries with UPX'
+        required: true
+        type: boolean
+        default: true
+      version:
+        description: 'Version tag for the build'
+        required: false
+        default: 'v1.0.0'
+
+jobs:
+  build:
+    name: Build CLI for ${{ matrix.os }} (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+          - os: windows
+            arch: amd64
+            runner: windows-latest
+            suffix: .exe
+          - os: linux
+            arch: amd64
+            runner: ubuntu-latest
+            suffix: ''
+          - os: darwin
+            arch: amd64
+            runner: macos-latest
+            suffix: ''
+          - os: darwin
+            arch: arm64
+            runner: macos-latest
+            suffix: '-arm64'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+          cache: true
+
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
+        run: |
+          go build -ldflags="-s -w" -o trid-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.suffix }} ./cli/main.go
+
+      - name: Install UPX
+        if: ${{ inputs.use_upx }}
+        uses: svenstaro/upx-action@v2
+        with:
+          files: |
+            trid-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.suffix }}
+          args: -9
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: trid-${{ matrix.os }}-${{ matrix.arch }}
+          path: trid-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.suffix }}
+          if-no-files-found: error

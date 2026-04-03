@@ -1,5 +1,10 @@
 {
     "github-actions.workflows.pinned.workflows": [
         ".github/workflows/release.yml"
+    ],
+    "cSpell.words": [
+        "Pontello",
+        "trid",
+        "triddefs"
     ]
 }

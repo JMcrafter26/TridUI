@@ -45,6 +45,9 @@ The application uses a native Go implementation of the TrID file identification 
 <a href="https://svelte.dev" target="_blank" rel="noopener noreferrer">
   <img alt="badge name" src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/built-with/svelte/cozy-minimal.svg">
 </a>
+<a href="https://golang.org" target="_blank" rel="noopener noreferrer">
+  <img alt="badge name" src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/built-with/go/cozy-minimal.svg">
+</a>
 <a href="https://daisyui.com" target="_blank" rel="noopener noreferrer">
   <img alt="badge name" src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/built-with/daisyui/cozy-minimal.svg">
 </a>

@@ -35,6 +35,21 @@ The application uses a native Go implementation of the TrID file identification 
 [![GitHub issues](https://img.shields.io/github/issues/JMcrafter26/TridUI?style=flat&logo=github)](https://github.com/JMcrafter26/TridUI/issues)
 [![Actions Status](https://img.shields.io/github/actions/workflow/status/JMcrafter26/TridUI/release.yml?branch=main&label=build&logo=github&style=flat)](https://github.com/JMcrafter26/TridUI/actions/workflows/release.yml)
 
+<div>
+<a href="https://fmhy.net/file-tools#file-info-metadata:~:text=TridUI" target="_blank" rel="noopener noreferrer">
+<img alt="badge name" src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/available/fmhy/cozy.svg">
+</a>
+<a href="https://wails.io" target="_blank" rel="noopener noreferrer">
+  <img alt="badge name" src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/built-with/wails/cozy.svg">
+</a>
+<a href="https://svelte.dev" target="_blank" rel="noopener noreferrer">
+  <img alt="badge name" src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/built-with/svelte/cozy-minimal.svg">
+</a>
+<a href="https://daisyui.com" target="_blank" rel="noopener noreferrer">
+  <img alt="badge name" src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/built-with/daisyui/cozy-minimal.svg">
+</a>
+</div>
+
 ## Features
 
 - 🚀 Fast native Go-based file scanning

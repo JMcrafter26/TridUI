@@ -193,6 +193,14 @@ go install github.com/wailsapp/wails/v2/cmd/wails@latest
 - macOS: `build/bin/darwin/TridUI-macOS-{arch}.dmg` (+ .app, .zip)
 - Linux: `build/bin/linux/TridUI-linux-{arch}`
 
+## Command Line Interface (CLI)
+
+The next release will include a standalone CLI version of TridUI. This is a Go-native, fast, and light replacement for the original TrID utility with full **Unicode support**.
+
+- **Source Code**: [cli/](cli/)
+- **Documentation**: [cli/README.md](cli/README.md)
+- **Direct Downloads**: Latest builds are available on the [GitHub Actions page](https://github.com/JMcrafter26/TridUI/actions/workflows/build-cli.yml).
+
 ## Usage
 
 1. Launch TrID UI

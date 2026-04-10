@@ -51,6 +51,65 @@ trid document.docx -d:C:\Custom\triddefs.trd
 trid -f document.docx -d C:\Custom\triddefs.trd
 ```
 
+### Advanced Usage
+
+**Read file list from stdin**:
+```bash
+# Windows
+Get-ChildItem *.bin -Name | trid -file-list -
+
+# Linux / WSL
+find . -name "*.bin" | trid -file-list -
+```
+
+**Export Results**:
+```bash
+# JSON output
+trid -f my_file.iso -j results.json
+
+# CSV output
+trid -f my_file.iso -o results.csv
+# OR (long version)
+trid -f my_file.iso -out results.csv
+```
+
+**Recursion & Extensions**:
+```bash
+# Recursively scan a folder
+trid -r ./my_folder
+# OR
+trid --recursive ./my_folder
+
+# Automatically add guessed extensions to filenames
+trid -ae image_without_ext
+# OR
+trid --add-ext image_without_ext
+
+# Change extensions to the best match
+trid -ce file.wrong_ext
+# OR
+trid --change-ext file.wrong_ext
+```
+
+### Options Reference
+
+| Short | Long | Description |
+| :--- | :--- | :--- |
+| `-ae` | `-add-ext` | Add guessed extension to filenames |
+| `-ce` | `-change-ext` | Change filenames extensions |
+| `-r` | `-recursive` | Recursively include files in subdirectories |
+| `-d` | `-defs` | Use specified definitions package |
+| `-f` | `-file` | File to scan (standard flag) |
+| `-fl` | `-file-list` | File list path (use `-` for stdin) |
+| `-n` | `-num` | Show the first RESNUM matches (default: 5) |
+| `-ns` | `-no-strings` | Disable strings check |
+| `-o` | `-out` | Create a CSV file with results |
+| `-j` | `-json` | Create a JSON file with results |
+| `-v` | `-verbose` | Verbose output |
+| `-w` | `-wait` | Wait for key press at end |
+| `-u` | `-update` | Update definitions package |
+| `-h` | `-help` | Show help |
+
 ### Updating Definitions
 
 Download or update the `triddefs.trd` file automatically:

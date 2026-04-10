@@ -2,7 +2,9 @@ package main
 
 import (
 	"TridUI/trid"
+	"bufio"
 	"encoding/csv"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -11,7 +13,7 @@ import (
 	"strings"
 )
 
-const versionNumber = "1.0.0"
+const versionNumber = "1.1.0"
 
 type ScanResult struct {
 	File  string
@@ -27,25 +29,57 @@ func main() {
 	var filePath string
 	var fileListPath string
 	var outFilePath string
+	var jsonFilePath string
 	var resNum int
 
 	// Define all flags inspired by original TrID
 	flag.StringVar(&defsPath, "d", "", "Use specified definitions package")
+	flag.StringVar(&defsPath, "defs", "", "Use specified definitions package (long)")
 	flag.StringVar(&filePath, "f", "", "File to scan (standard flag)")
-	flag.StringVar(&fileListPath, "file-list", "", "Specify a text file containing a list of files to scan")
+	flag.StringVar(&filePath, "file", "", "File to scan (long)")
+	flag.StringVar(&fileListPath, "file-list", "", "Specify a text file containing a list of files to scan (use - to read from stdin)")
+	flag.StringVar(&fileListPath, "fl", "", "Specify a text file containing a list of files to scan (use - to read from stdin) (short)")
 	flag.StringVar(&outFilePath, "o", "", "Create a CSV file with the results")
+	flag.StringVar(&outFilePath, "out", "", "Create a CSV file with the results (long)")
+	flag.StringVar(&jsonFilePath, "j", "", "Create a JSON file with the results")
+	flag.StringVar(&jsonFilePath, "json", "", "Create a JSON file with the results (long)")
 	flag.IntVar(&resNum, "n", 5, "Show the first RESNUM matches")
+	flag.IntVar(&resNum, "num", 5, "Show the first RESNUM matches (long)")
 
 	addExt := flag.Bool("ae", false, "Add guessed extension to filenames")
+	addExtLong := flag.Bool("add-ext", false, "Add guessed extension to filenames (long)")
 	changeExt := flag.Bool("ce", false, "Change filenames extensions")
+	changeExtLong := flag.Bool("change-ext", false, "Change filenames extensions (long)")
 	recursive := flag.Bool("r", false, "Recursively include files in subdirectories")
+	recursiveLong := flag.Bool("recursive", false, "Recursively include files in subdirectories (long)")
 	noStrings := flag.Bool("ns", false, "Disable strings check")
+	noStringsLong := flag.Bool("no-strings", false, "Disable strings check (long)")
 	verbose := flag.Bool("v", false, "Verbose output")
+	verboseLong := flag.Bool("verbose", false, "Verbose output (long)")
 	wait := flag.Bool("w", false, "Wait for a key press at the end")
+	waitLong := flag.Bool("wait", false, "Wait for a key press at the end (long)")
 	update := flag.Bool("u", false, "Update definitions package")
+	updateLong := flag.Bool("update", false, "Update definitions package (long)")
 	help := flag.Bool("h", false, "Show help")
+	helpLong := flag.Bool("help", false, "Show help (long)")
 
 	flag.Parse()
+
+	// Handle standard flag parsing for variables where multiple flags write to the same target
+	// Go's flag.StringVar with the same pointer works, but we need to check which one was provided
+	// actually the flag package updates the variable for every occurrence, and uses the last one.
+	// However, if we want to ensure we don't overwrite a value with an empty string, we can
+	// check what was passed. But with StringVar(&var, ...), 'var' is shared.
+
+	// Normalize long variants for bools (which were separate pointers in my previous step)
+	*addExt = *addExt || *addExtLong
+	*changeExt = *changeExt || *changeExtLong
+	*recursive = *recursive || *recursiveLong
+	*noStrings = *noStrings || *noStringsLong
+	*verbose = *verbose || *verboseLong
+	*wait = *wait || *waitLong
+	*update = *update || *updateLong
+	*help = *help || *helpLong
 
 	if *help {
 		printUsage()
@@ -197,6 +231,10 @@ func main() {
 		saveCSV(outFilePath, allResults)
 	}
 
+	if jsonFilePath != "" {
+		saveJSON(jsonFilePath, allResults)
+	}
+
 	if *wait {
 		fmt.Println("\nPress Enter to continue...")
 		fmt.Scanln()
@@ -204,19 +242,26 @@ func main() {
 }
 
 func readFilesFromList(path string) ([]string, error) {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return nil, err
+	var scanner *bufio.Scanner
+	if path == "-" {
+		scanner = bufio.NewScanner(os.Stdin)
+	} else {
+		f, err := os.Open(path)
+		if err != nil {
+			return nil, err
+		}
+		defer f.Close()
+		scanner = bufio.NewScanner(f)
 	}
-	lines := strings.Split(string(data), "\n")
+
 	var result []string
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
 		if line != "" {
 			result = append(result, line)
 		}
 	}
-	return result, nil
+	return result, scanner.Err()
 }
 
 func expandFiles(patterns []string, recursive bool) []string {
@@ -323,6 +368,20 @@ func saveCSV(path string, results []ScanResult) {
 		w.Write([]string{r.File, fmt.Sprint(r.Score), r.Perc, r.Ext, r.Type, r.Mime})
 	}
 	fmt.Printf("\nCSV file '%s' written (%d rows).\n", path, len(results))
+}
+
+func saveJSON(path string, results []ScanResult) {
+	data, err := json.MarshalIndent(results, "", "  ")
+	if err != nil {
+		fmt.Printf("Error generating JSON: %v\n", err)
+		return
+	}
+	err = os.WriteFile(path, data, 0644)
+	if err != nil {
+		fmt.Printf("Error writing JSON file: %v\n", err)
+		return
+	}
+	fmt.Printf("\nJSON file '%s' written (%d rows).\n", path, len(results))
 }
 
 func loadDefaultDefinitions(a *trid.Analyzer) error {

@@ -52,7 +52,7 @@ jobs:
           GOOS: ${{ matrix.os }}
           GOARCH: ${{ matrix.arch }}
         run: |
-          go build -ldflags="-s -w" -o trid-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.suffix }} ./cli/main.go
+          go build -trimpath -ldflags="-s -w" -o trid-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.suffix }} ./cli/main.go
 
       - name: Install UPX
         if: ${{ inputs.use_upx }}

@@ -21,6 +21,9 @@ A fast, Go-native Command Line Interface for file type identification using TrID
 - **Production Build (Optimized)**: [GitHub Run 24255339319](https://github.com/JMcrafter26/TridUI/actions/runs/24255339319) ([VirusTotal](https://www.virustotal.com/gui/file-analysis/ZTZkNGU3ZGQ1M2I2ZmY5MmFjNjVjZWM5MjkyZWViMzg6MTc3NTg0MjA4NA==))
 - **Small Build (UPX Compressed)**: [GitHub Run 24255516178](https://github.com/JMcrafter26/TridUI/actions/runs/24255516178) ([VirusTotal](https://www.virustotal.com/gui/file-analysis/NDJmOTczYzQxNzhhNDdlYjEwZWRmY2MzOWQ2ZDEyZWE6MTc3NTg0MjI3NA==) | [Threat.rip](https://www.threat.rip/file/d0dfa0c020295d0ca589f534aac029783fbcd317279ea5be097f962e3676e79f))
   - *Note: UPX compression significantly reduces file size (e.g., 2MB vs 6MB), but often causes Antivirus (AV) software to flag the binary as a **false positive** due to its packing nature.*
+ 
+> [!NOTE]
+> You need to be signed-in in order to see the build artifacts
 
 ### From Source
 

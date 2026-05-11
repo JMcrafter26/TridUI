@@ -102,56 +102,42 @@
 	</div>
 </div>
 
-<div class="fab">
-	<div
-		tabindex="0"
-		role="button"
-		class="btn btn-soft btn-lg btn-circle btn-primary {$updateAvailable &&
-		$updateAvailable.updateAvailable
-			? 'indicator'
-			: ''}"
-	>
-		{#if $updateAvailable && $updateAvailable.updateAvailable}
-			<span class="indicator-item badge badge-secondary badge-xs mt-1.5 mr-1.5"></span>
-		{/if}
-		<Menu />
-	</div>
 
-	<!-- close button should not be focusable so it can close the FAB when clicked. It's just a visual placeholder -->
-	<div class="fab-close">
-		<span class="btn btn-circle btn-lg btn-primary"><X /></span>
-	</div>
+<!-- Bottom Hitbox & Dock -->
+<div class="fixed bottom-0 left-1/2 -translate-x-1/2 z-20 w-64 h-12 group flex items-end justify-center pb-2">
+	<!-- Dash hint (visible when resting) -->
+	<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-25 h-1.5 rounded-full bg-base-content/30 transition-all duration-300 ease-out group-hover:opacity-0 group-hover:translate-y-2 pointer-events-none"></div>
 
-	<!-- buttons that show up when FAB is open -->
-	<a
-		class="btn btn-lg btn-circle {$updateAvailable && $updateAvailable.updateAvailable
-			? 'indicator'
-			: ''}"
-		href={resolve('/about')}
-		title={m['header.about']()}
-		aria-label={m['header.about']()}
-	>
-		{#if $updateAvailable && $updateAvailable.updateAvailable}
-			<span class="indicator-item badge badge-secondary badge-xs mt-1.5 mr-1.5"></span>
-		{/if}
-		<Info />
-	</a>
-	<a
-		class="btn btn-lg btn-circle"
-		href={resolve('/settings')}
-		title={m['header.settings']()}
-		aria-label={m['header.settings']()}
-	>
-		<Settings />
-	</a>
-	<a
-		class="btn btn-lg btn-circle"
-		href={resolve('/')}
-		title={m['header.home']()}
-		aria-label={m['header.home']()}
-	>
-		<House />
-	</a>
+	<!-- Collapsed Dock (slides up and fades in on hover) -->
+	<div class="flex gap-2 p-2 rounded-full bg-base-200/80 backdrop-blur-md shadow-lg border border-base-content/10 transition-all duration-300 ease-out translate-y-8 opacity-0 scale-95 pointer-events-none group-hover:translate-y-0 group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto focus-within:translate-y-0 focus-within:opacity-100 focus-within:scale-100 focus-within:pointer-events-auto">
+		<a
+			class="btn btn-ghost btn-circle btn-sm"
+			href={resolve('/')}
+			title={m['header.home']()}
+			aria-label={m['header.home']()}
+		>
+			<House size={20} />
+		</a>
+		<a
+			class="btn btn-ghost btn-circle btn-sm"
+			href={resolve('/settings')}
+			title={m['header.settings']()}
+			aria-label={m['header.settings']()}
+		>
+			<Settings size={20} />
+		</a>
+		<a
+			class="btn btn-ghost btn-circle btn-sm {$updateAvailable && $updateAvailable.updateAvailable ? 'indicator' : ''}"
+			href={resolve('/about')}
+			title={m['header.about']()}
+			aria-label={m['header.about']()}
+		>
+			{#if $updateAvailable && $updateAvailable.updateAvailable}
+				<span class="indicator-item badge badge-secondary badge-xs mt-1 mr-1"></span>
+			{/if}
+			<Info size={20} />
+		</a>
+	</div>
 </div>
 
 <style>

@@ -276,7 +276,7 @@
 						</p>
 					</div>
 
-					<div class="flex items-center justify-center gap-1.5 text-xs opacity-60 pb-2">
+					<div class="flex items-center justify-center gap-1.5 text-xs opacity-60 pb-10">
 						<CloudOff class="h-4 w-4" />
 						<span>{m['home.files_processed_locally']()}</span>
 					</div>

@@ -3,6 +3,10 @@ package main
 import (
 	"context"
 	"embed"
+	"os"
+	"strings"
+
+	"TridUI/internal/clirunner"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -16,7 +20,29 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
+func isCLIMode(args []string) bool {
+	if len(args) == 0 {
+		return false
+	}
+	// If given more than 1 argument, or the first argument starts with '-', assume CLI mode.
+	// Otherwise, it's likely a drag-and-drop of a single file, which goes to the GUI.
+	if len(args) > 1 || strings.HasPrefix(args[0], "-") {
+		return true
+	}
+	// Check if the single argument isn't an existing file, defaulting to CLI just in case
+	if _, err := os.Stat(args[0]); os.IsNotExist(err) {
+		return true
+	}
+	return false
+}
+
 func main() {
+	args := os.Args[1:]
+	if isCLIMode(args) {
+		attachConsole()
+		os.Exit(clirunner.Run(args))
+	}
+
 	// Create an instance of the app structure
 	app := NewApp()
 

@@ -579,18 +579,19 @@
 								value={currentTheme}
 								on:change={handleThemeChange}
 							>
+								<option value="auto">
+									{m['settings.theme_auto']()}
+								</option>
+
+								<option value="triduilight"> TridUI {m['settings.theme_light']()} </option>
+								<option value="triduidark"> TridUI {m['settings.theme_dark']()} </option>
 								<option value="light">
 									{m['settings.theme_light']()}
 								</option>
 								<option value="dark">
 									{m['settings.theme_dark']()}
 								</option>
-								<option value="auto">
-									{m['settings.theme_auto']()}
-								</option>
 
-								<option value="triduilight"> TridUI Light </option>
-								<option value="triduidark"> TridUI Dark </option>
 							</select>
 							<div class="mt-2">
 								<span class="label-text-alt text-xs opacity-70 text-wrap max-w-md">

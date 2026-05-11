@@ -101,3 +101,75 @@ img,
 	--moz-user-drag: unset !important;
 	-ms-user-drag: unset !important;
 }
+
+
+/* Page transitions */
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+}
+
+@keyframes fade-out {
+	to {
+		opacity: 0;
+	}
+}
+
+@keyframes slide-from-right {
+	from {
+		transform: translateX(30px);
+	}
+}
+
+@keyframes slide-to-left {
+	to {
+		transform: translateX(-30px);
+	}
+}
+
+@keyframes slide-from-left {
+	from {
+		transform: translateX(-30px);
+	}
+}
+
+@keyframes slide-to-right {
+	to {
+		transform: translateX(30px);
+	}
+}
+
+:root::view-transition-old(page) {
+	animation:
+		90ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+		300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+}
+
+:root::view-transition-new(page) {
+	animation:
+		210ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+		300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+}
+
+:root[data-direction='back']::view-transition-old(page) {
+	animation:
+		90ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+		300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-right;
+}
+
+:root[data-direction='back']::view-transition-new(page) {
+	animation:
+		210ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+		300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-left;
+}
+
+/* Disable the default page root crossfade since we are animating the specific 'page' container */
+:root::view-transition-old(root),
+:root::view-transition-new(root) {
+	animation: none;
+}
+
+.nav-dock {
+	view-transition-name: dock;
+}

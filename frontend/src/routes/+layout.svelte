@@ -2,7 +2,7 @@
 import { resolve } from '$app/paths';
 import { onMount } from 'svelte';
 import Header from './Header.svelte';
-import { goto } from '$app/navigation';
+import { goto, onNavigate } from '$app/navigation';
 import { setLocale, getLocale, locales } from '$lib/paraglide/runtime.js';
 import {
 	CheckDefinitionsExist,
@@ -56,6 +56,36 @@ function applyTheme(theme: 'light' | 'dark' | 'triduilight' | 'triduidark' | 'au
 		document.documentElement.setAttribute('data-theme', theme);
 	}
 }
+
+onNavigate((navigation) => {
+	if (!document.startViewTransition) return;
+	
+	if (navigation.from?.route.id === navigation.to?.route.id) return;
+
+	// Determine route direction for transition
+	const routeOrder = ['/', '/settings', '/about'];
+	const fromIdx = navigation.from?.route.id ? routeOrder.indexOf(navigation.from.route.id) : 0;
+	const toIdx = navigation.to?.route.id ? routeOrder.indexOf(navigation.to.route.id) : 0;
+
+	if (fromIdx > toIdx) {
+		document.documentElement.setAttribute('data-direction', 'back');
+	} else {
+		document.documentElement.removeAttribute('data-direction');
+	}
+
+	document.documentElement.classList.add('is-transitioning');
+
+	return new Promise((resolve) => {
+		const transition = document.startViewTransition(async () => {
+			resolve();
+			await navigation.complete;
+		});
+		
+		transition.finished.finally(() => {
+			document.documentElement.classList.remove('is-transitioning');
+		});
+	});
+});
 
 onMount(() => {
 	(async () => {
@@ -176,7 +206,7 @@ onMount(() => {
 <div class="app h-screen flex flex-col">
 	<Header />
 
-	<main class="flex-1 overflow-auto">
+	<main class="flex-1 overflow-auto" style="view-transition-name: page;">
 		{@render children()}
 	</main>
 </div>

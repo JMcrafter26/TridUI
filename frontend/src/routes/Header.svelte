@@ -3,6 +3,7 @@
 	import { resolve } from '$app/paths';
 	import { m } from '$lib/paraglide/messages.js';
 	import { updateAvailable } from '$lib/stores/updateStore';
+	import { page } from '$app/state';
 
 	import { House, Settings, Info, X, Minus, Pin } from '@lucide/svelte';
 	import { WindowSetAlwaysOnTop, WindowMinimise, Quit } from '../../wailsjs/runtime/runtime.js';
@@ -24,6 +25,11 @@
 		WindowSetAlwaysOnTop(isPinned);
 	}
 
+	// Get current page for aria-current
+	function isCurrentPage(path: string): boolean {
+		return page.url.pathname === path;
+	}
+
 	onMount(() => {
 		// Check if app should start pinned
 		const startPinned = getSetting('startPinned');
@@ -37,6 +43,7 @@
 <div
 	class="fixed top-1 left-1/2 -translate-x-1/2 z-20 transition-all duration-300 ease-out mt-0.5"
 	aria-hidden="true"
+	style="view-transition-name: top-controls;"
 >
 	<div
 		class="group relative flex items-center justify-center h-6 w-20 rounded-full cursor-grab transition-all duration-300 ease-out hover:w-44 hover:h-8 active:w-44 active:h-8"
@@ -104,17 +111,19 @@
 
 
 <!-- Bottom Hitbox & Dock -->
-<div class="fixed bottom-0 left-1/2 -translate-x-1/2 z-20 w-32 h-12 group flex items-end justify-center pb-2">
+<div class="fixed bottom-0 left-1/2 -translate-x-1/2 z-20 w-32 h-12 group flex items-end justify-center pb-2" style="view-transition-name: dock-container;">
 	<!-- Dash hint (visible when resting) -->
-	<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-25 h-1.5 rounded-full bg-base-content/30 transition-all duration-300 ease-out group-hover:opacity-0 group-hover:translate-y-2 pointer-events-none"></div>
+	<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-25 h-1.5 rounded-full bg-base-content/30 transition-all duration-300 ease-out group-hover:opacity-0 group-hover:translate-y-2 pointer-events-none [:root.is-transitioning_&]:opacity-0 [:root.is-transitioning_&]:translate-y-2"></div>
 
 	<!-- Collapsed Dock (slides up and fades in on hover) -->
-	<div class="flex gap-2 p-2 rounded-full bg-base-200/80 backdrop-blur-md shadow-lg border border-base-content/10 transition-all duration-300 ease-out translate-y-8 opacity-0 scale-95 pointer-events-none group-hover:translate-y-0 group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto focus-within:translate-y-0 focus-within:opacity-100 focus-within:scale-100 focus-within:pointer-events-auto">
+	<div class="nav-dock flex gap-2 p-2 rounded-full bg-base-200/80 backdrop-blur-md shadow-lg border border-base-content/10 transition-all duration-300 ease-out translate-y-8 opacity-0 scale-95 pointer-events-none group-hover:translate-y-0 group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto focus-within:translate-y-0 focus-within:opacity-100 focus-within:scale-100 focus-within:pointer-events-auto [:root.is-transitioning_&]:translate-y-0 [:root.is-transitioning_&]:opacity-100 [:root.is-transitioning_&]:scale-100">
 		<a
 			class="btn btn-ghost btn-circle btn-sm"
 			href={resolve('/')}
 			title={m['header.home']()}
 			aria-label={m['header.home']()}
+			aria-current={isCurrentPage('/') ? 'page' : undefined}
+			
 		>
 			<House size={20} />
 		</a>
@@ -123,6 +132,7 @@
 			href={resolve('/settings')}
 			title={m['header.settings']()}
 			aria-label={m['header.settings']()}
+			aria-current={isCurrentPage('/settings') ? 'page' : undefined}
 		>
 			<Settings size={20} />
 		</a>
@@ -131,6 +141,7 @@
 			href={resolve('/about')}
 			title={m['header.about']()}
 			aria-label={m['header.about']()}
+			aria-current={isCurrentPage('/about') ? 'page' : undefined}
 		>
 			{#if $updateAvailable && $updateAvailable.updateAvailable}
 				<span class="indicator-item badge badge-secondary badge-xs mt-1 mr-1"></span>
@@ -153,5 +164,9 @@
 			transform: translateY(0) scale(1);
 			opacity: 1;
 		}
+	}
+
+	nav.nav-dock {
+		view-transition-name: nav-dock;
 	}
 </style>

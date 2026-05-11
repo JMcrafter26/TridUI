@@ -3,8 +3,8 @@
   "name": "TridUI",
   "outputfilename": "TridUI",
   "frontend:install": "pnpm install",
-  "frontend:build": "pnpm run build",
-  "frontend:dev:watcher": "pnpm run dev",
+  "frontend:build": "pnpm build",
+  "frontend:dev:watcher": "pnpm dev",
   "frontend:dev:serverUrl": "auto",
   "author": {
     "name": "JMcrafter26",
@@ -13,6 +13,8 @@
   "info": {
     "productName": "TridUI",
     "companyName": "Cufiy",
-    "ProductVersion": "1.1.2"
+    "ProductVersion": "1.1.3",
+    "comments": "Trid UI is a lightweight desktop application that provides a user-friendly interface for TrID, a powerful tool for scanning and analyzing files.",
+    "copyright": "Copyright (c) 2026 Cufiy"
   }
 }

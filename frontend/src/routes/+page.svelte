@@ -271,12 +271,12 @@
 								on:click|stopPropagation={() => goto(resolve('/about'))}
 								class="hover:underline"
 								aria-label={m['about.about']()}
-								>&copy; 2025 TridUI {m['home.contribute']()}
+								>&copy; 2026 TridUI {m['home.contribute']()}
 							</a>
 						</p>
 					</div>
 
-					<div class="flex items-center justify-center gap-1.5 text-xs opacity-60 pb-10">
+					<div class="flex items-center justify-center gap-1.5 text-xs opacity-60 pb-2">
 						<CloudOff class="h-4 w-4" />
 						<span>{m['home.files_processed_locally']()}</span>
 					</div>

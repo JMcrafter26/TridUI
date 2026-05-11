@@ -4,7 +4,7 @@
 	import { m } from '$lib/paraglide/messages.js';
 	import { updateAvailable } from '$lib/stores/updateStore';
 
-	import { House, Settings, Info, Menu, X, Minus, Pin } from '@lucide/svelte';
+	import { House, Settings, Info, X, Minus, Pin } from '@lucide/svelte';
 	import { WindowSetAlwaysOnTop, WindowMinimise, Quit } from '../../wailsjs/runtime/runtime.js';
 
 	// Helper to get settings from localStorage
@@ -104,7 +104,7 @@
 
 
 <!-- Bottom Hitbox & Dock -->
-<div class="fixed bottom-0 left-1/2 -translate-x-1/2 z-20 w-64 h-12 group flex items-end justify-center pb-2">
+<div class="fixed bottom-0 left-1/2 -translate-x-1/2 z-20 w-32 h-12 group flex items-end justify-center pb-2">
 	<!-- Dash hint (visible when resting) -->
 	<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-25 h-1.5 rounded-full bg-base-content/30 transition-all duration-300 ease-out group-hover:opacity-0 group-hover:translate-y-2 pointer-events-none"></div>
 

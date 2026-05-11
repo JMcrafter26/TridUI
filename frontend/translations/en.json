@@ -111,6 +111,8 @@
 		"check_app_updates_description": "Automatically check for new app versions when the app starts",
 		"updates": "Updates",
 		"start_pinned": "Start app in always-on-top mode",
-		"start_pinned_description": "Automatically pin the window to stay on top when the app starts"
+		"start_pinned_description": "Automatically pin the window to stay on top when the app starts",
+		"disable_transitions": "Disable UI transitions",
+		"disable_transitions_description": "Removes page transition animations for a more instantaneous experience. This can improve performance on older devices."
 	}
 }

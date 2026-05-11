@@ -111,6 +111,8 @@
 		"check_app_updates_description": "Controlla automaticamente le nuove versioni dell'app all'avvio",
 		"updates": "Aggiornamenti",
 		"start_pinned": "Avvia app in modalità sempre in primo piano",
-		"start_pinned_description": "Fissa automaticamente la finestra in primo piano all'avvio dell'app"
+		"start_pinned_description": "Fissa automaticamente la finestra in primo piano all'avvio dell'app",
+		"disable_transitions": "Disattiva transizioni interfaccia",
+		"disable_transitions_description": "Rimuove le animazioni di transizione delle pagine per un'esperienza più immediata. Questo può migliorare le prestazioni sui dispositivi più vecchi."
 	}
 }

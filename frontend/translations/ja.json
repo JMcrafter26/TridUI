@@ -111,6 +111,8 @@
 		"check_app_updates_description": "アプリ起動時に新しいバージョンを自動的に確認します",
 		"updates": "更新",
 		"start_pinned": "常に最前面モードでアプリを起動",
-		"start_pinned_description": "アプリ起動時にウィンドウを自動的に最前面に固定します"
+		"start_pinned_description": "アプリ起動時にウィンドウを自動的に最前面に固定します",
+		"disable_transitions": "UIのトランジションを無効にする",
+		"disable_transitions_description": "ページ切り替え時のアニメーションを削除し、より瞬時のレスポンスを提供します。これにより、古いデバイスでのパフォーマンスが向上する可能性があります。"
 	}
 }

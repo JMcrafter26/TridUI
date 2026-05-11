@@ -111,6 +111,8 @@
 		"check_app_updates_description": "Verificar automaticamente novas versões do aplicativo ao iniciar",
 		"updates": "Atualizações",
 		"start_pinned": "Iniciar app em modo sempre visível",
-		"start_pinned_description": "Fixar automaticamente a janela na frente ao iniciar o aplicativo"
+		"start_pinned_description": "Fixar automaticamente a janela na frente ao iniciar o aplicativo",
+		"disable_transitions": "Desativar transições de interface",
+		"disable_transitions_description": "Remove as animações de transição de página para uma experiência mais instantânea. Isso pode melhorar o desempenho em dispositivos mais antigos."
 	}
 }

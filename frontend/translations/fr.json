@@ -111,6 +111,8 @@
 		"check_app_updates_description": "Vérifier automatiquement les nouvelles versions de l'application au démarrage",
 		"updates": "Mises à jour",
 		"start_pinned": "Démarrer l'application en mode toujours visible",
-		"start_pinned_description": "Épingler automatiquement la fenêtre au premier plan au démarrage"
+		"start_pinned_description": "Épingler automatiquement la fenêtre au premier plan au démarrage",
+		"disable_transitions": "Désactiver les transitions de l'interface",
+		"disable_transitions_description": "Supprime les animations de transition de page pour une expérience plus instantanée. Cela peut améliorer les performances sur les appareils plus anciens."
 	}
 }

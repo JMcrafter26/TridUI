@@ -111,6 +111,8 @@
 		"check_app_updates_description": "应用启动时自动检查新版本",
 		"updates": "更新",
 		"start_pinned": "以置顶模式启动应用",
-		"start_pinned_description": "应用启动时自动将窗口固定在最前面"
+		"start_pinned_description": "应用启动时自动将窗口固定在最前面",
+		"disable_transitions": "禁用界面过渡效果",
+		"disable_transitions_description": "移除页面过渡动画以获得更即时的体验。这可以提高旧设备的性能。"
 	}
 }

@@ -111,6 +111,8 @@
 		"check_app_updates_description": "Automatycznie sprawdź nowe wersje aplikacji podczas uruchamiania",
 		"updates": "Aktualizacje",
 		"start_pinned": "Uruchom aplikację w trybie zawsze na wierzchu",
-		"start_pinned_description": "Automatycznie przypnij okno na wierzchu przy uruchomieniu aplikacji"
+		"start_pinned_description": "Automatycznie przypnij okno na wierzchu przy uruchomieniu aplikacji",
+		"disable_transitions": "Wyłącz przejścia interfejsu",
+		"disable_transitions_description": "Usuwa animacje przejścia między stronami, zapewniając natychmiastowe wrażenia. Może to poprawić wydajność na starszych urządzeniach."
 	}
 }

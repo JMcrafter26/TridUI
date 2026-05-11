@@ -111,6 +111,8 @@
 		"check_app_updates_description": "Beim App-Start automatisch nach neuen App-Versionen suchen",
 		"updates": "Updates",
 		"start_pinned": "App im Vordergrund-Modus starten",
-		"start_pinned_description": "Fenster beim App-Start automatisch im Vordergrund fixieren"
+		"start_pinned_description": "Fenster beim App-Start automatisch im Vordergrund fixieren",
+		"disable_transitions": "Übergängsanimationen deaktivieren",
+		"disable_transitions_description": "Entfernt die Übergänge und Animationen beim Wechseln von Seiten für ein sofortigeres Erlebnis. Dies kann die Leistung auf älteren Geräten verbessern."
 	}
 }

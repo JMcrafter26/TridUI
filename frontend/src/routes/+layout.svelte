@@ -23,6 +23,7 @@ type Settings = {
 	languageManuallySet?: boolean;
 	autoUpdateDefinitions?: boolean;
 	checkAppUpdatesOnStartup?: boolean;
+	disableTransitions?: boolean;
 	[key: string]: unknown;
 };
 
@@ -61,6 +62,9 @@ onNavigate((navigation) => {
 	if (!document.startViewTransition) return;
 	
 	if (navigation.from?.route.id === navigation.to?.route.id) return;
+	if (getSetting('disableTransitions') === true) return;
+	// Disable transitions if user has reduced motion preference
+	if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
 	// Determine route direction for transition
 	const routeOrder = ['/', '/settings', '/about'];

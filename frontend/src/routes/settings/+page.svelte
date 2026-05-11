@@ -48,6 +48,7 @@
 		maxTotalResults: number;
 		autoUpdateDefinitions: boolean;
 		checkAppUpdatesOnStartup: boolean;
+		disableTransitions: boolean;
 		startPinned: boolean;
 		languageManuallySet: boolean;
 	};
@@ -60,6 +61,7 @@
 		maxTotalResults: 50,
 		autoUpdateDefinitions: true,
 		checkAppUpdatesOnStartup: true,
+		disableTransitions: false,
 		startPinned: false,
 		languageManuallySet: false
 	};
@@ -126,6 +128,7 @@
 	let autoUpdateDefinitions = getSetting('autoUpdateDefinitions');
 	let checkAppUpdatesOnStartup = getSetting('checkAppUpdatesOnStartup');
 	let startPinned = getSetting('startPinned');
+	let disableTransitions = getSetting('disableTransitions');
 
 	// Dynamically get language display names based on available locales
 	const availableLanguages = locales.map((locale) => {
@@ -598,6 +601,25 @@
 									{m['settings.theme_auto_description']()}
 								</span>
 							</div>
+						</div>
+
+						<div class="form-control">
+							<label class="label cursor-pointer justify-start gap-3">
+								<input
+									type="checkbox"
+									class="checkbox checkbox-primary"
+									bind:checked={disableTransitions}
+									on:change={() => handleSettingChange('disableTransitions', disableTransitions)}
+								/>
+								<div>
+									<span class="label-text font-medium text-wrap max-w-md"
+										>{m['settings.disable_transitions']()}</span
+									>
+									<p class="label-text-alt text-xs opacity-70 mt-1 text-wrap max-w-md">
+										{m['settings.disable_transitions_description']()}
+									</p>
+								</div>
+							</label>
 						</div>
 						<div class="divider my-2"></div>
 						<div class="form-control">

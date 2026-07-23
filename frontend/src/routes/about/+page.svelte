@@ -176,7 +176,7 @@
 
 <div class="max-w-4xl mx-auto px-4 py-4 h-full">
 	<div class="card bg-base-200 shadow-lg h-full overflow-auto">
-		<div class="card-body p-6 md:p-10 flex flex-col md:flex-row items-center gap-6 mb-4">
+		<div class="card-body p-6 md:p-10 flex flex-col items-center gap-6 mb-4">
 			<div class="shrink-0">
 				<button
 					on:click={() => {
@@ -261,7 +261,7 @@
 			<!-- Update Check Results -->
 			{#if errorTitle}
 				<div
-					class="alert alert-soft alert-error mt-4 fixed bottom-3 md:bottom-6 max-w-md flex items-start gap-4 mr-20 ml-4"
+					class="alert alert-soft alert-error z-50 shadow-lg fixed bottom-4 sm:mx-4 md:bottom-6 left-1/2 sm:left-auto -translate-x-1/2 sm:translate-0 w-[calc(100%-2rem)] sm:max-w-md flex items-start gap-4"
 				>
 					<CircleAlert class="h-5 w-5 my-auto" />
 					<div class="flex-1 select-text">

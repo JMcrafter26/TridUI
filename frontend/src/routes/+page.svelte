@@ -578,7 +578,7 @@
 
 {#if showDefinitionsAlert}
 	<div
-		class="alert alert-soft alert-warning mt-4 z-50 shadow-lg fixed bottom-3 md:bottom-6 max-w-md flex items-start gap-4 mr-20 ml-4"
+	class="alert alert-soft alert-warning z-50 shadow-lg fixed bottom-4 sm:mx-4 md:bottom-6 left-1/2 sm:left-auto -translate-x-1/2 sm:translate-0 w-[calc(100%-2rem)] sm:max-w-md flex items-start gap-4"
 	>
 		<CircleAlert class="h-6 w-6 text-warning my-auto" />
 		<div class="flex-1">

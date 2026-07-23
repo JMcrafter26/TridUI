@@ -151,7 +151,6 @@ onMount(() => {
 		}
 		if (e.dataTransfer?.types.includes('Files')) {
 			e.preventDefault();
-			e.stopPropagation();
 		}
 	};
 

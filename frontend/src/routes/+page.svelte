@@ -170,6 +170,11 @@
 	}
 
 	onMount(() => {
+		const handleResetHome = () => {
+			resetState();
+		};
+		window.addEventListener('trid:reset-home', handleResetHome);
+
 		// Check for pending file drop from layout
 		const pendingFile = sessionStorage.getItem('pendingFilePath');
 		if (pendingFile) {
@@ -222,6 +227,7 @@
 
 		// Return cleanup function to remove the listener when component is destroyed
 		return () => {
+			window.removeEventListener('trid:reset-home', handleResetHome);
 			OnFileDropOff();
 			EventsOff('app:openFile');
 		};

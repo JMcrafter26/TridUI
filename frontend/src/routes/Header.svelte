@@ -30,6 +30,12 @@
 		return page.url.pathname === path;
 	}
 
+	function handleHomeClick(e: MouseEvent) {
+		if (!isCurrentPage('/')) return;
+		e.preventDefault();
+		window.dispatchEvent(new CustomEvent('trid:reset-home'));
+	}
+
 	onMount(() => {
 		// Check if app should start pinned
 		const startPinned = getSetting('startPinned');
@@ -120,6 +126,7 @@
 		<a
 			class="btn btn-ghost btn-circle btn-sm"
 			href={resolve('/')}
+			on:click={handleHomeClick}
 			title={m['header.home']()}
 			aria-label={m['header.home']()}
 			aria-current={isCurrentPage('/') ? 'page' : undefined}

@@ -144,7 +144,7 @@
 	function handleSettingChange<K extends keyof Settings>(
 		key: K,
 		value: Settings[K],
-		callback?: () => void
+		callback: (() => void) | undefined = undefined
 	) {
 		setSetting(key, value);
 		if (callback) callback();

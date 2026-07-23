@@ -156,7 +156,7 @@
 			});
 	}
 
-	function searchOnline(name: string, extension?: string) {
+	function searchOnline(name: string, extension: string | undefined = undefined) {
 		if (!name) return;
 		const savedEngine = String(getSetting('searchEngine') ?? 'Google');
 		const engine = searchEngines.find((e) => e.name === savedEngine) || searchEngines[0];

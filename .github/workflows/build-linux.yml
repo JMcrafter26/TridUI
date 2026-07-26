@@ -241,15 +241,15 @@ jobs:
             <launchable type="desktop-id">tridui.desktop</launchable>
             <screenshots>
               <screenshot type="default">
-                <image>https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/home.png?raw=true</image>
+                <image>https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/home.png?raw=true</image>
                 <caption>Main interface with drag-and-drop support</caption>
               </screenshot>
               <screenshot>
-                <image>https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/scan.png?raw=true</image>
+                <image>https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/scan.png?raw=true</image>
                 <caption>File scan results with confidence scores</caption>
               </screenshot>
               <screenshot>
-                <image>https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/settings.png?raw=true</image>
+                <image>https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/settings.png?raw=true</image>
                 <caption>Settings and automatic updates</caption>
               </screenshot>
             </screenshots>
@@ -260,7 +260,7 @@ jobs:
             <developer_name>JMcrafter26 (Cufiy)</developer_name>
             <content_rating type="oars-1.1" />
             <releases>
-              <release version="1.1.0" date="2025-11-04">
+              <release version="1.2.0" date="2026-07-26">
                 <description>
                   <p>Latest stable release with enhanced features and improvements.</p>
                 </description>
@@ -324,7 +324,7 @@ jobs:
           # Create control file with extended description
           cat > tridui-deb/DEBIAN/control << 'EOF'
           Package: tridui
-          Version: 1.1.0
+          Version: 1.2.0
           Section: utils
           Priority: optional
           Architecture: amd64

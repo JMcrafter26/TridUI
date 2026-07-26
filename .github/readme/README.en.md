@@ -4,7 +4,7 @@ iv style="display: flex; align-items: center; margin-bottom: 16px;">
 </div>
 
 <div style="text-align: center; margin-bottom: 16px;">
-<img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/demo.gif?raw=true" alt="TrID UI Demonstration" style="width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 16px;" />
+<img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/demo.gif?raw=true" alt="TrID UI Demonstration" style="width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 16px;" />
 </div>
 
 <p align="center">
@@ -33,6 +33,24 @@ The application uses a native Go implementation of the TrID file identification 
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/JMcrafter26/TridUI?style=flat&label=latest+release&logo=github)](https://github.com/JMcrafter26/TridUI/releases/latest)
 [![GitHub issues](https://img.shields.io/github/issues/JMcrafter26/TridUI?style=flat&logo=github)](https://github.com/JMcrafter26/TridUI/issues)
 [![Actions Status](https://img.shields.io/github/actions/workflow/status/JMcrafter26/TridUI/release.yml?branch=main&label=build&logo=github&style=flat)](https://github.com/JMcrafter26/TridUI/actions/workflows/release.yml)
+
+<div>
+<a href="https://fmhy.net/file-tools#file-info-metadata:~:text=TridUI" target="_blank" rel="noopener noreferrer">
+<img alt="badge name" src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/available/fmhy/cozy.svg">
+</a>
+<a href="https://wails.io" target="_blank" rel="noopener noreferrer">
+  <img alt="badge name" src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/built-with/wails/cozy.svg">
+</a>
+<a href="https://svelte.dev" target="_blank" rel="noopener noreferrer">
+  <img alt="badge name" src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/built-with/svelte/cozy-minimal.svg">
+</a>
+<a href="https://golang.org" target="_blank" rel="noopener noreferrer">
+  <img alt="badge name" src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/built-with/go/cozy-minimal.svg">
+</a>
+<a href="https://daisyui.com" target="_blank" rel="noopener noreferrer">
+  <img alt="badge name" src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/built-with/daisyui/cozy-minimal.svg">
+</a>
+</div>
 
 ## Features
 
@@ -97,17 +115,17 @@ https://github.com/user-attachments/assets/bde82ca9-fa8e-45a3-acd4-c31040aea11b
 ### Screenshots
 
 <div style="overflow-x: scroll; display: flex; gap: 16px; padding-bottom: 16px; max-height: 400px; width: 100%;">
-  <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/home.png?raw=true" alt="TrID UI Screenshot 1" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
-  <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/scan.png?raw=true" alt="TrID UI Screenshot 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
-    <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/scanning.png?raw=true" alt="TrID UI Screenshot 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+  <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/home.png?raw=true" alt="TrID UI Screenshot 1" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+  <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/scan.png?raw=true" alt="TrID UI Screenshot 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+    <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/scanning.png?raw=true" alt="TrID UI Screenshot 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
 
 <details>
  <summary>Show more</summary>
-  <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/settings.png?raw=true" alt="TrID UI Screenshot 4" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
-  <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/settings2.png?raw=true" alt="TrID UI Screenshot 5" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
-    <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/settings3.png?raw=true" alt="TrID UI Screenshot 5" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
-      <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/unknown.png?raw=true" alt="TrID UI Screenshot 3" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
-      <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/about.png?raw=true" alt="TrID UI Screenshot 5" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+  <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/settings.png?raw=true" alt="TrID UI Screenshot 4" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+  <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/settings2.png?raw=true" alt="TrID UI Screenshot 5" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+    <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/settings3.png?raw=true" alt="TrID UI Screenshot 5" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+      <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/unknown.png?raw=true" alt="TrID UI Screenshot 3" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+      <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/about.png?raw=true" alt="TrID UI Screenshot 5" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
 </details>
 </div>
 

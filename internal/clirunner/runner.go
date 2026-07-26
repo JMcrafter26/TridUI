@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-const versionNumber = "1.1.0"
+const versionNumber = "1.2.0"
 
 type ScanResult struct {
 	File  string

@@ -86,6 +86,16 @@ body {
 	/* background-color: transparent !important; */
 }
 
+@media (hover: hover) and (pointer: fine) {
+	.app {
+		--wails-draggable: drag;
+	}
+
+	.app :is(button, a, input, textarea, select, label, summary, [role='button'], [contenteditable='true'], [data-no-drag]) {
+		--wails-draggable: no-drag;
+	}
+}
+
 a,
 img,
 .user-no-drag {

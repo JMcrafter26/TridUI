@@ -422,15 +422,15 @@ jobs:
             <launchable type="desktop-id">tridui.desktop</launchable>
             <screenshots>
               <screenshot type="default">
-                <image>https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/home.png?raw=true</image>
+                <image>https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/home.png?raw=true</image>
                 <caption>Main interface with drag-and-drop support</caption>
               </screenshot>
               <screenshot>
-                <image>https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/scan.png?raw=true</image>
+                <image>https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/scan.png?raw=true</image>
                 <caption>File scan results with confidence scores</caption>
               </screenshot>
               <screenshot>
-                <image>https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.1.0/settings.png?raw=true</image>
+                <image>https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/settings.png?raw=true</image>
                 <caption>Settings and automatic updates</caption>
               </screenshot>
             </screenshots>
@@ -441,7 +441,7 @@ jobs:
             <developer_name>JMcrafter26 (Cufiy)</developer_name>
             <content_rating type="oars-1.1" />
             <releases>
-              <release version="1.1.0" date="2025-11-04">
+              <release version="1.2.0" date="2026-07-26">
                 <description>
                   <p>Latest stable release with enhanced features and improvements.</p>
                 </description>
@@ -505,7 +505,7 @@ jobs:
           # Create control file with extended description
           cat > tridui-deb/DEBIAN/control << 'EOF'
           Package: tridui
-          Version: 1.1.0
+          Version: 1.2.0
           Section: utils
           Priority: optional
           Architecture: amd64
@@ -602,32 +602,32 @@ jobs:
 
       - name: Create combined zip
         run: |
-          mkdir -p TridUI-v1.1.0-all-platforms
+          mkdir -p TridUI-v1.2.0-all-platforms
           
           # Copy Windows binaries
           if [ -d "artifacts/TridUI-windows" ]; then
-            mkdir -p TridUI-v1.1.0-all-platforms/windows
-            cp -r artifacts/TridUI-windows/* TridUI-v1.1.0-all-platforms/windows/
+            mkdir -p TridUI-v1.2.0-all-platforms/windows
+            cp -r artifacts/TridUI-windows/* TridUI-v1.2.0-all-platforms/windows/
           fi
           
           # Copy macOS binaries
           if [ -d "artifacts/TridUI-macos" ]; then
-            mkdir -p TridUI-v1.1.0-all-platforms/macos
-            cp -r artifacts/TridUI-macos/* TridUI-v1.1.0-all-platforms/macos/
+            mkdir -p TridUI-v1.2.0-all-platforms/macos
+            cp -r artifacts/TridUI-macos/* TridUI-v1.2.0-all-platforms/macos/
           fi
           
           # Copy Linux binaries
           if [ -d "artifacts/TridUI-linux" ]; then
-            mkdir -p TridUI-v1.1.0-all-platforms/linux
-            cp -r artifacts/TridUI-linux/* TridUI-v1.1.0-all-platforms/linux/
+            mkdir -p TridUI-v1.2.0-all-platforms/linux
+            cp -r artifacts/TridUI-linux/* TridUI-v1.2.0-all-platforms/linux/
           fi
           
           # Create the combined zip
-          zip -r TridUI-v1.1.0-all-platforms.zip TridUI-v1.1.0-all-platforms
+          zip -r TridUI-v1.2.0-all-platforms.zip TridUI-v1.2.0-all-platforms
 
       - name: Upload combined binaries
         uses: actions/upload-artifact@v4
         with:
           name: TridUI-all-platforms
-          path: TridUI-v1.1.0-all-platforms.zip
+          path: TridUI-v1.2.0-all-platforms.zip
           retention-days: 90

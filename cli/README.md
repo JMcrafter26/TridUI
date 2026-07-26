@@ -16,7 +16,10 @@ A fast, Go-native Command Line Interface for file type identification using TrID
 
 #### Prebuilt Binaries
 
-CLI it now comes bundled with the TridUI GUI application. You can also download the standalone CLI binaries from the [Releases page](https://github.com/JMcrafter26/TridUI/releases)
+> [!TIP]
+> CLI it now comes bundled with the TridUI GUI application. You can also download the standalone CLI binaries from the [Releases page](https://github.com/JMcrafter26/TridUI/releases)
+
+If you are still wanting to use the **CLI only** version, you can find the latest CLI downloads on the [Releases page](https://github.com/JMcrafter26/TridUI/releases/tag/CLI-v1.2.0).
 
 #### Latest Build Reference
 
@@ -24,12 +27,11 @@ You can find the latest build artifacts from the GitHub Actions workflow runs:
 
 [https://github.com/JMcrafter26/TridUI/actions/workflows/build-cli.yml](https://github.com/JMcrafter26/TridUI/actions/workflows/build-cli.yml)
 
-- **Production Build (Optimized)**: [GitHub Run 30212926748](https://github.com/JMcrafter26/TridUI/actions/runs/30212926748) ([VirusTotal](https://www.virustotal.com/gui/file-analysis/ZTZkNGU3ZGQ1M2I2ZmY5MmFjNjVjZWM5MjkyZWViMzg6MTc3NTg0MjA4NA==))
-- **Small Build (UPX Compressed)**: [GitHub Run 30213044175](https://github.com/JMcrafter26/TridUI/actions/runs/30213044175) ([VirusTotal](https://www.virustotal.com/gui/file-analysis/NDJmOTczYzQxNzhhNDdlYjEwZWRmY2MzOWQ2ZDEyZWE6MTc3NTg0MjI3NA==) | [Threat.rip](https://www.threat.rip/file/d0dfa0c020295d0ca589f534aac029783fbcd317279ea5be097f962e3676e79f))
-  - *Note: UPX compression significantly reduces file size (e.g., 2MB vs 6MB), but often causes Antivirus (AV) software to flag the binary as a **false positive** due to its packing nature.*
- 
 > [!NOTE]
 > You need to be signed-in in order to see the build artifacts
+
+> [!WARNING]
+> UPX compression significantly reduces file size (e.g., 2MB vs 6MB), but often causes Antivirus (AV) software to flag the binary as a **false positive** due to its packing nature.*
 
 ### From Source
 

@@ -62,7 +62,7 @@ TrID UI は、ファイルのスキャンと解析に強力な TrID を、扱い
 - 📊 信頼度スコア付きの詳細な結果
 - 🔄 ファイルのドラッグ＆ドロップ対応
 - 🔁 ワンクリックで定義ファイルを自動更新
-- 📅 最終更新日と定義数を表示
+- 🖥️ 高度なユーザー向けコマンドラインインターフェース（CLI）
 
 ## 目次
 
@@ -117,7 +117,7 @@ https://github.com/user-attachments/assets/bde82ca9-fa8e-45a3-acd4-c31040aea11b
 <div style="overflow-x: scroll; display: flex; gap: 16px; padding-bottom: 16px; max-height: 400px; width: 100%;">
   <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/home.png?raw=true" alt="TrID UI スクリーンショット 1" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
   <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/scan.png?raw=true" alt="TrID UI スクリーンショット 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
-    <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/scanning.png?raw=true" alt="TrID UI スクリーンショット 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+    <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/about.png?raw=true" alt="TrID UI スクリーンショット 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
 
 <details>
  <summary>さらに表示</summary>

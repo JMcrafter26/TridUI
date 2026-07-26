@@ -62,7 +62,7 @@ TrID UI — легкое настольное приложение с удобн
 - 📊 Подробные результаты с оценкой доверия
 - 🔄 Поддержка перетаскивания файлов (drag & drop)
 - 🔁 Автообновление определений в один клик
-- 📅 Отслеживание даты последнего обновления и количества определений
+- 🖥️ Интерфейс командной строки (CLI) для продвинутых пользователей
 
 ## Оглавление
 
@@ -117,7 +117,7 @@ https://github.com/user-attachments/assets/bde82ca9-fa8e-45a3-acd4-c31040aea11b
 <div style="overflow-x: scroll; display: flex; gap: 16px; padding-bottom: 16px; max-height: 400px; width: 100%;">
   <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/home.png?raw=true" alt="TrID UI Скриншот 1" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
   <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/scan.png?raw=true" alt="TrID UI Скриншот 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
-    <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/scanning.png?raw=true" alt="TrID UI Скриншот 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+    <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/about.png?raw=true" alt="TrID UI Скриншот 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
 
 <details>
  <summary>Показать ещё</summary>

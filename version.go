@@ -11,7 +11,7 @@ import (
 
 // Version constants
 const (
-	AppVersion = "1.1.3"
+	AppVersion = "1.2.0"
 	RepoOwner  = "JMcrafter26"
 	RepoName   = "TridUI"
 )

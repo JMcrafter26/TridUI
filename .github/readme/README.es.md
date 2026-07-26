@@ -62,7 +62,7 @@ La aplicación utiliza una implementación nativa en Go del algoritmo de identif
 - 📊 Resultados detallados con puntuaciones de confianza
 - 🔄 Compatibilidad con arrastrar y soltar archivos
 - 🔁 Actualización automática de definiciones con un clic
-- 📅 Seguimiento de la fecha de la última actualización y número de definiciones
+- 🖥️ Interfaz de línea de comandos (CLI) para usuarios avanzados
 
 ## Tabla de contenidos
 
@@ -117,7 +117,7 @@ https://github.com/user-attachments/assets/bde82ca9-fa8e-45a3-acd4-c31040aea11b
 <div style="overflow-x: scroll; display: flex; gap: 16px; padding-bottom: 16px; max-height: 400px; width: 100%;">
   <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/home.png?raw=true" alt="Captura de TrID UI 1" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
   <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/scan.png?raw=true" alt="Captura de TrID UI 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
-    <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/scanning.png?raw=true" alt="Captura de TrID UI 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+    <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/about.png?raw=true" alt="Captura de TrID UI 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
 
 <details>
  <summary>Mostrar más</summary>

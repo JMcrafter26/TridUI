@@ -63,7 +63,7 @@ Die Anwendung nutzt eine native Go-Implementierung des TrID-Dateierkennungsalgor
 - 📊 Detailierte Treffer mit Vertrauenswerten
 - 🔄 Drag-and-drop für Dateien
 - 🔁 Automatische Definitions-Updates mit einem Klick
-- 📅 Letztes Update-Datum und Definitionsanzahl im Blick
+- 🖥️ Kommandozeilenschnittstelle (CLI) für fortgeschrittene Benutzer
 
 ## Inhaltsverzeichnis
 
@@ -118,7 +118,7 @@ https://github.com/user-attachments/assets/bde82ca9-fa8e-45a3-acd4-c31040aea11b
 <div style="overflow-x: scroll; display: flex; gap: 16px; padding-bottom: 16px; max-height: 400px; width: 100%;">
   <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/home.png?raw=true" alt="TrID UI Screenshot 1" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
   <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/scan.png?raw=true" alt="TrID UI Screenshot 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
-    <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/scanning.png?raw=true" alt="TrID UI Screenshot 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+    <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/about.png?raw=true" alt="TrID UI Screenshot 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
 
 <details>
  <summary>Mehr anzeigen</summary>

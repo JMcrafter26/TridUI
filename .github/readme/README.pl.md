@@ -62,7 +62,7 @@ Aplikacja korzysta z natywnej implementacji algorytmu identyfikacji plików TrID
 - 📊 Szczegółowe wyniki z poziomami ufności
 - 🔄 Obsługa przeciągnij‑i‑upuść
 - 🔁 Automatyczne aktualizacje definicji jednym kliknięciem
-- 📅 Informacje o dacie ostatniej aktualizacji i liczbie definicji
+- 🖥️ Interfejs wiersza poleceń (CLI) dla zaawansowanych użytkowników
 
 ## Spis treści
 
@@ -117,7 +117,7 @@ https://github.com/user-attachments/assets/bde82ca9-fa8e-45a3-acd4-c31040aea11b
 <div style="overflow-x: scroll; display: flex; gap: 16px; padding-bottom: 16px; max-height: 400px; width: 100%;">
   <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/home.png?raw=true" alt="Zrzut TrID UI 1" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
   <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/scan.png?raw=true" alt="Zrzut TrID UI 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
-    <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/scanning.png?raw=true" alt="Zrzut TrID UI 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
+    <img src="https://github.com/JMcrafter26/TridUI/blob/main/.github/assets/1.2.0/about.png?raw=true" alt="Zrzut TrID UI 2" style="width: 300px; border: 1px solid #ccc; border-radius: 8px;" />
 
 <details>
  <summary>Pokaż więcej</summary>

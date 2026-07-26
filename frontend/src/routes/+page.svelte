@@ -19,6 +19,8 @@
 	import { goto } from '$app/navigation';
 	import { searchEngines } from '$lib/config/searchEngines';
 	import { resolve } from '$app/paths';
+	import { updateAvailable } from '$lib/stores/updateStore';
+
 
 	let fileSelected = false;
 	let selectedFileName = '';
@@ -225,6 +227,13 @@
 			if (p) processSelectedFile(p as unknown as string);
 		});
 
+		// DEBUG log update availability
+		// updateAvailable.subscribe((info) => {
+		// 	if (info) {
+		// 		console.log('Update available:', info);
+		// 	}
+		// });
+
 		// Return cleanup function to remove the listener when component is destroyed
 		return () => {
 			window.removeEventListener('trid:reset-home', handleResetHome);
@@ -269,6 +278,20 @@
 						<p class="font-semibold text-xl">{m['home.click_to_browse']()}</p>
 						<p class="text-sm sm:text-sm opacity-75 mt-2">{m['home.any_file_type']()}</p>
 					</div>
+
+					<!-- if app update is available, show a small notice -->
+					{#if $updateAvailable && $updateAvailable.updateAvailable}
+						<div class="text-xs opacity-60 mt-4 sm:justify-center flex items-center gap-1">
+							<Info class="h-4 w-4" />
+							<div>
+								<a class="text-sm hover:transition hover:scale-105 hover:underline cursor-pointer"
+								role="button"
+								on:click|stopPropagation={() => goto(resolve('/about'))}
+								aria-label={m['about.update_available']()}
+								>{m['about.update_available']()}</a>
+							</div>
+						</div>
+					{/if}
 
 					<div class="max-w-4xl mx-auto">
 						<p class="text-xs opacity-60 mt-4 sm:justify-center">

@@ -23,7 +23,7 @@ import (
 
 const (
 	HeaderFrontSize = 2048
-	MaxFileSize     = 10 * 1024 * 1024
+	MaxFileSize     = 1024 * 1024 * 6 // 6 MB
 )
 
 // FileType represents an identified file type
@@ -133,9 +133,23 @@ func (a *Analyzer) AnalyzeReader(reader io.ReaderAt, size int64) ([]Result, erro
 			return nil, err
 		}
 		fullData = bytes.ToUpper(fullData)
+		return a.analyze(header, fullData, size)
 	}
 
-	return a.analyze(header, fullData, size)
+	halfsize := int64(MaxFileSize / 2)
+	fullData = make([]byte, MaxFileSize+1)
+	_, err = reader.ReadAt(fullData[:halfsize], 0)
+	if err != nil && err != io.EOF {
+		return nil, err
+	}
+	fullData[halfsize] = '|'
+	offset := size - halfsize
+	_, err = reader.ReadAt(fullData[halfsize+1:], offset)
+	if err != nil && err != io.EOF {
+		return nil, err
+	}
+	fullData = bytes.ToUpper(fullData)
+	return a.analyze(header, fullData, MaxFileSize+1)
 }
 
 // GetSupportedTypes returns all supported file types

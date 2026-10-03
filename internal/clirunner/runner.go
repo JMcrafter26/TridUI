@@ -57,14 +57,16 @@ func Run(args []string) int {
 	changeExtLong := fs.Bool("change-ext", false, "Change filenames extensions (long)")
 	recursive := fs.Bool("r", false, "Recursively include files in subdirectories")
 	recursiveLong := fs.Bool("recursive", false, "Recursively include files in subdirectories (long)")
-	noStrings := fs.Bool("ns", false, "Disable strings check")
-	noStringsLong := fs.Bool("no-strings", false, "Disable strings check (long)")
+	//noStrings := fs.Bool("ns", false, "Disable strings check")
+	//noStringsLong := fs.Bool("no-strings", false, "Disable strings check (long)")
 	verbose := fs.Bool("v", false, "Verbose output")
 	verboseLong := fs.Bool("verbose", false, "Verbose output (long)")
 	wait := fs.Bool("w", false, "Wait for a key press at the end")
 	waitLong := fs.Bool("wait", false, "Wait for a key press at the end (long)")
 	update := fs.Bool("u", false, "Update definitions package")
 	updateLong := fs.Bool("update", false, "Update definitions package (long)")
+	onlyExt := fs.Bool("e", false, "Show only extensions")
+	onlyExtLong := fs.Bool("ext", false, "Show only extensions (long)")
 	help := fs.Bool("h", false, "Show help")
 	helpLong := fs.Bool("help", false, "Show help (long)")
 
@@ -80,10 +82,11 @@ func Run(args []string) int {
 	*addExt = *addExt || *addExtLong
 	*changeExt = *changeExt || *changeExtLong
 	*recursive = *recursive || *recursiveLong
-	*noStrings = *noStrings || *noStringsLong
+	//*noStrings = *noStrings || *noStringsLong
 	*verbose = *verbose || *verboseLong
 	*wait = *wait || *waitLong
 	*update = *update || *updateLong
+	*onlyExt = *onlyExt || *onlyExtLong
 	*help = *help || *helpLong
 
 	if *help {
@@ -96,7 +99,7 @@ func Run(args []string) int {
 		return 0
 	}
 
-	_ = noStrings
+	//_ = noStrings
 
 	cmdArgs := fs.Args()
 	var targets []string
@@ -153,7 +156,7 @@ func Run(args []string) int {
 
 	if *verbose {
 		fmt.Printf("TrID - File Identifier v%s - (C) 2003-2025 By M.Pontello\n", "2.43")
-		fmt.Printf("TridUI CLI v%s - (C) 2025 By Cufiy\n\n", versionNumber)
+		fmt.Printf("TridUI CLI v%s - Copyright (c) 2025-present Cufiy and TridUI Contributors\n\n", versionNumber)
 		fmt.Printf("Definitions loaded: %d\n", analyzer.GetDefinitionCount())
 	}
 
@@ -170,7 +173,11 @@ func Run(args []string) int {
 		}
 
 		if len(results) == 0 {
-			fmt.Println("      Unknown!")
+			if *onlyExt {
+				fmt.Println("Extensions: Unknown!")
+			} else {
+				fmt.Println("      Unknown!")
+			}
 			allResults = append(allResults, ScanResult{File: file})
 			continue
 		}
@@ -180,17 +187,22 @@ func Run(args []string) int {
 			limit = len(results)
 		}
 
+		var allExt string
 		for i := 0; i < limit; i++ {
 			res := results[i]
 			if res.Confidence < 0.1 && i > 0 {
 				break
 			}
 
-			fmt.Printf("%5.1f%% (.%s) %s", res.Confidence, res.Definition.FileType.Extension, res.Definition.FileType.Name)
-			if *verbose {
-				fmt.Printf(" (%d/%d/%d)", res.Score, len(res.Definition.Patterns), len(res.Definition.Strings))
+			if *onlyExt {
+				allExt += res.Definition.FileType.Extension + "/"
+			} else {
+				fmt.Printf("%5.1f%% (.%s) %s", res.Confidence, res.Definition.FileType.Extension, res.Definition.FileType.Name)
+				if *verbose {
+					fmt.Printf(" (%d/%d/%d)", res.Score, len(res.Definition.Patterns), len(res.Definition.Strings))
+				}
+				fmt.Println()
 			}
-			fmt.Println()
 
 			if *verbose {
 				if res.Definition.FileType.MimeType != "" {
@@ -217,6 +229,10 @@ func Run(args []string) int {
 					Mime:  res.Definition.FileType.MimeType,
 				})
 			}
+		}
+
+		if *onlyExt {
+			fmt.Printf("Extensions: %s\n", allExt[:len(allExt)-1])
 		}
 
 		if (*addExt || *changeExt) && len(results) > 0 {
@@ -414,10 +430,10 @@ func loadDefaultDefinitions(a *trid.Analyzer) error {
 
 func printUsage(fs *flag.FlagSet) {
 	fmt.Println("TrID - File Identifier v2.43 - (C) 2003-2025 By M.Pontello")
-	fmt.Println("TridUI CLI v" + versionNumber + " - (C) 2025 By Cufiy")
+	fmt.Println("TridUI CLI v" + versionNumber + " - Copyright (c) 2025-present Cufiy and TridUI Contributors")
 	fmt.Printf("https://github.com/JMcrafter26/TridUI/\n\n")
 	fmt.Println("\nUsage:")
-	fmt.Println("  trid [files ...] [options]")
+	fmt.Println("  trid [options] [files ...]")
 	fmt.Println("\nOptions:")
 	fs.PrintDefaults()
 }

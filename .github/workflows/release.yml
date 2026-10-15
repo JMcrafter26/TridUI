@@ -160,6 +160,9 @@ jobs:
             cp -R build/bin/TridUI.app build/bin/darwin/TridUI.app
           fi
 
+      - name: Ad-hoc sign app
+        run: codesign --force --deep --sign - build/bin/darwin/TridUI.app
+
       - name: Install create-dmg
         run: |
           brew install create-dmg

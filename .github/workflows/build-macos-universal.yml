@@ -77,6 +77,9 @@ jobs:
       #     echo "Signing Package"
       #     gon -log-level=info ./build/darwin/gon-sign.json
 
+      - name: Ad-hoc sign app
+        run: codesign --force --deep --sign - build/bin/darwin/TridUI.app
+
       - name: Install create-dmg
         run: |
           brew install create-dmg

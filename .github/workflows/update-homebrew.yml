@@ -18,7 +18,7 @@ jobs:
       - name: Update cask in tap
         env:
           TAP_TOKEN: ${{ secrets.TAP_TOKEN }}
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
         run: |
           VERSION="${TAG#v}"
           URL="https://github.com/JMcrafter26/TridUI/releases/download/${TAG}/TridUI-macOS.dmg"

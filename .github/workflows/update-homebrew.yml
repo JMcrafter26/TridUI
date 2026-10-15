@@ -1,0 +1,61 @@
+name: Update Homebrew tap
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag'
+        required: true
+        default: 'v1.0.0'
+
+jobs:
+  update-tap:
+    if: ${{ !github.event.release.prerelease }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update cask in tap
+        env:
+          TAP_TOKEN: ${{ secrets.TAP_TOKEN }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          VERSION="${TAG#v}"
+          URL="https://github.com/JMcrafter26/TridUI/releases/download/${TAG}/TridUI-macOS.dmg"
+          SHA=$(curl -fsSL "$URL" | sha256sum | cut -d' ' -f1)
+
+          git clone "https://x-access-token:${TAP_TOKEN}@github.com/JMcrafter26/homebrew-tap.git"
+          cd homebrew-tap
+          mkdir -p Casks
+          cat > Casks/tridui.rb <<EOF
+          cask "tridui" do
+            version "${VERSION}"
+            sha256 "${SHA}"
+
+            url "https://github.com/JMcrafter26/TridUI/releases/download/v#{version}/TridUI-macOS.dmg"
+            name "TrID UI"
+            desc "Desktop UI for TrID file type identification"
+            homepage "https://github.com/JMcrafter26/TridUI"
+
+            livecheck do
+              url :url
+              strategy :github_latest
+            end
+
+            app "TridUI.app"
+
+            zap trash: "~/Library/Application Support/TridUI"
+
+            caveats <<~TEXT
+              TridUI is not signed or notarized. If macOS blocks it, run:
+                xattr -dr com.apple.quarantine "#{appdir}/TridUI.app"
+              or allow it under System Settings → Privacy & Security → "Open Anyway".
+            TEXT
+          end
+          EOF
+
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add Casks/tridui.rb
+          git commit -m "tridui ${VERSION}" || exit 0
+          git push

@@ -76,6 +76,7 @@ The application uses a native Go implementation of the TrID file identification 
   - [Demonstration Videos](#demonstration-videos)
   - [Screenshots](#screenshots)
 - [Setup](#setup)
+  - [MacOS Homebrew](#macos-homebrew)
   - [Prerequisites](#prerequisites)
     - [Option 1: Automatic Download (Recommended)](#option-1-automatic-download-recommended)
     - [Option 2: Manual Installation](#option-2-manual-installation)
@@ -135,6 +136,20 @@ https://github.com/user-attachments/assets/bde82ca9-fa8e-45a3-acd4-c31040aea11b
 
 > [!TIP]
 > You can find the pre-built binaries on the [Releases Page](https://github.com/JMcrafter26/TridUI/releases/latest).
+
+### MacOS Homebrew
+
+For macOS, you can use Homebrew to install TrID UI:
+
+```bash
+# Install TrID UI
+brew install --cask JMcrafter26/tap/tridui
+
+# Remove quarantine attribute if needed because it is not notarized
+xattr -dr com.apple.quarantine "/Applications/TridUI.app"
+```
+
+---
 
 ### Prerequisites
 
